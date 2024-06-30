@@ -1,0 +1,27 @@
+{
+  "name": "@knowingly/backend",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "convex dev",
+    "setup": "convex dev --until-success"
+  },
+  "author": "",
+  "dependencies": {
+    "@ai-sdk/openai": "^0.0.34",
+    "@clerk/clerk-sdk-node": "^5.0.12",
+    "ai": "^3.2.14",
+    "convex": "^1.8.0",
+    "convex-ents": "^0.7.7",
+    "convex-helpers": "^0.1.43",
+    "convex-test": "^0.0.21",
+    "hono": "^4.4.9",
+    "openai": "^4.52.1",
+    "stripe": "^16.0.0",
+    "svix": "^1.24.0",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^10.0.0"
+  }
+}

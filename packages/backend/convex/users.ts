@@ -1,0 +1,87 @@
+import { v } from "convex/values";
+
+import { internalMutation, query } from "./functions";
+
+
+export const getMe = query({
+    args: {},
+    handler: async (ctx) => {
+        console.log("getMe")
+        console.log(ctx.userId)
+
+        const user = await ctx.user()
+        console.log(user)
+        return user
+    },
+    });
+
+
+
+export const createUser = internalMutation({
+  args: { email: v.string(), tokenIdentifier: v.string(), name: v.string(), imageUrl: v.string()},
+  handler: async (ctx, args) => {
+    const { tokenIdentifier, email, name, imageUrl } = args;
+    const user = await ctx.table("users").insert({
+        tokenIdentifier,
+        email,
+        name,
+        imageUrl,
+        role: "USER",
+        });
+  },
+});
+
+export const getMyHubs = query({
+    args: {},
+    handler: async (ctx) => {
+        console.log("getMyHubs")
+        console.log("userId", ctx.userId)
+        
+        return await ctx.table("members").filter(q => q.eq(q.field("userId"), ctx.userId)).map(async (member) => {
+            return {
+                ... await member.edge("hub"),
+                role: member.role
+            }
+        }
+    )
+    },
+    });
+
+
+
+// export const updateSubscription = internalMutation({
+//   args: { subscriptionId: v.string(), userId: v.string(), endsOn: v.number() },
+//   handler: async (ctx, args) => {
+//     const user = await getFullUser(ctx, args.userId);
+
+//     if (!user) {
+//       throw new Error("no user found with that user id");
+//     }
+
+//     await ctx.db.patch(user._id, {
+//       subscriptionId: args.subscriptionId,
+//       endsOn: args.endsOn,
+//     });
+//   },
+// });
+
+// export const updateSubscriptionBySubId = internalMutation({
+//   args: { subscriptionId: v.string(), endsOn: v.number() },
+//   handler: async (ctx, args) => {
+//     const user = await ctx.db
+//       .query("users")
+//       .withIndex("by_subscriptionId", (q) =>
+//         q.eq("subscriptionId", args.subscriptionId)
+//       )
+//       .first();
+
+//     if (!user) {
+//       throw new Error("no user found with that user id");
+//     }
+
+//     await ctx.db.patch(user._id, {
+//       endsOn: args.endsOn,
+//     });
+//   },
+// });
+
