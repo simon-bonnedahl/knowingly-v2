@@ -279,7 +279,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem
-                  onClick={() => signOut()}
+                  onClick={() => signOut({ returnTo: window.location.origin })}
                   className="flex gap-2 items-center"
                 >
                   <IconLogout className="h-4 w-4 text-foreground" />
