@@ -1,10 +1,10 @@
 import { type Metadata } from "next";
 import { getAllBlogs } from "@/lib/blog";
-import { Background } from "@/components/background";
-import { Container } from "@/components/container";
-import { Heading } from "@/components/heading";
-import { Subheading } from "@/components/subheading";
-import { BlogCard } from "@/components/blog-card";
+import { Background } from "@knowingly/background";
+import { Container } from "@knowingly/container";
+import { Heading } from "@knowingly/heading";
+import { Subheading } from "@knowingly/subheading";
+import { BlogCard } from "@knowingly/blog-card";
 
 export const metadata: Metadata = {
   title: "Blogs - Knowingly",

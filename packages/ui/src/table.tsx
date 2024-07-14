@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "@knowingly/ui";
+import { cn } from ".";
 
 const Table = React.forwardRef<
   HTMLTableElement,

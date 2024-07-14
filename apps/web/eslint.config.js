@@ -11,4 +11,16 @@ export default [
   ...reactConfig,
   ...nextjsConfig,
   ...restrictEnvAccess,
+  {
+    rules: {
+      // Disable the prefer-nullish-coalescing rule
+      "@typescript-eslint/prefer-nullish-coalescing": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unnecessary-condition": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "turbo/no-undeclared-env-vars": "off",
+    },
+  },
 ];

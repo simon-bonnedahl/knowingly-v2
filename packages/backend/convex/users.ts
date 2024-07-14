@@ -6,11 +6,8 @@ import { internalMutation, query } from "./functions";
 export const getMe = query({
     args: {},
     handler: async (ctx) => {
-        console.log("getMe")
-        console.log(ctx.userId)
 
         const user = await ctx.user()
-        console.log(user)
         return user
     },
     });
@@ -34,8 +31,6 @@ export const createUser = internalMutation({
 export const getMyHubs = query({
     args: {},
     handler: async (ctx) => {
-        console.log("getMyHubs")
-        console.log("userId", ctx.userId)
         
         return await ctx.table("members").filter(q => q.eq(q.field("userId"), ctx.userId)).map(async (member) => {
             return {

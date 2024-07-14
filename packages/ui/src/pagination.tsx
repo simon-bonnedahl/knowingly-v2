@@ -4,9 +4,9 @@ import {
   ChevronRightIcon,
   DotsHorizontalIcon,
 } from "@radix-ui/react-icons";
-import { ButtonProps, buttonVariants } from "src//button";
 
-import { cn } from "@knowingly/ui";
+import { cn } from ".";
+import { ButtonProps, buttonVariants } from "./button";
 
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
   <nav

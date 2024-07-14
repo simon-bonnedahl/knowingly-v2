@@ -69,7 +69,7 @@ export default async function Layout({
   children: ReactNode;
 }) {
   
-  const {userId, sessionClaims} = auth()
+  // const {userId} = auth()
   const domain = decodeURIComponent(params.domain);
   const subdomain = domain.split(".")[0];
 

@@ -13,6 +13,7 @@ const config = {
     "@knowingly/backend",
     "@knowingly/ui",
     "@knowingly/validators",
+    "geist"
   ],
 
   /** We already do linting and typechecking as separate tasks in CI */
@@ -20,9 +21,6 @@ const config = {
   typescript: { ignoreBuildErrors: true },
 
   images: {
-    domains: [
-      "api.microlink.io", // Microlink Image Preview
-    ],
     remotePatterns: [
       { hostname: "www.google.com" },
       { hostname: "media.licdn.com" },

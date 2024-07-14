@@ -30,6 +30,7 @@ const tokenCache = {
     },
   };
   
+
 const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL!);
 
 export default function ConvexClientProvider({ children } : { children: React.ReactNode }) {

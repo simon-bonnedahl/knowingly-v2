@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import { GeistSans } from "geist/font/sans";
-import { NavBar } from "@/components/navbar";
+import { NavBar } from "@knowingly/navbar";
 import { cn } from "@/lib/utils";
-import { Footer } from "@/components/footer";
+import { Footer } from "@knowingly/footer";
 
 export const metadata: Metadata = {
   title: "Knowingly",

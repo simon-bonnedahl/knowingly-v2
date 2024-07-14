@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useSelectedLayoutSegments } from "next/navigation";
+import { usePathname, useRouter, useSelectedLayoutSegments } from "next/navigation";
 import { ReactNode, useEffect, useMemo, useState } from "react";
-import { useConvexAuth } from "convex/react";
 
 import {
   IconBell,
@@ -14,9 +13,9 @@ import {
   IconHome,
   IconLogout,
   IconMessages,
-  IconSearch,
   IconSparkles,
   IconUser,
+  IconUserCheck,
 } from "@tabler/icons-react";
 import { cn, hexToHSL, truncate } from "~/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@knowingly/ui/avatar";
@@ -39,10 +38,12 @@ import { Skeleton } from "@knowingly/ui/skeleton";
 import { Search } from "./search";
 import { Notifications } from "./notifications";
 import { FunctionReturnType } from "convex/server";
+import { env } from "~/env";
 
 export default function Navbar({ subdomain }: { subdomain: string }) {
   const segments = useSelectedLayoutSegments();
   const { theme, setTheme } = useTheme();
+  const router = useRouter()
 
   const user = useQuery(api.users.getMe);
   const hubs = useQuery(api.users.getMyHubs);
@@ -99,17 +100,13 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
         icon: <IconUser width={24} className="h-5 w-5" />,
         visible: subdomain !== "app" && subdomain !== "admin",
       },
-      // {
-      //   name: "Admin panel",
-      //   href: "/admin/panel",
-      //   isActive: segments[2] === "panel",
-      //   icon: <MonitorDot width={24} className="h-5 w-5" />,
-      //   visible: session &&
-      //     session.user.hubs[subdomain]?.role === HubRole.ADMIN ||
-      //     (subdomain !== "app" &&
-      //       subdomain !== "admin" &&
-      //       session.user.role === UserRole.SUPERUSER),
-      // },
+      {
+        name: "Admin panel",
+        href: "/admin",
+        isActive: segments[1] === "admin",
+        icon: <IconUserCheck width={24} className="h-5 w-5" />,
+        visible: true,
+      }
       // {
       //   name: "Hub Settings",
       //   href: "/admin/settings",
@@ -155,11 +152,28 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
   }, [hubs]);
 
   useEffect(() => {
-    if (currentHub && currentHub.brandingColor)
-      document.documentElement.style.setProperty(
-        "--primary",
-        hexToHSL(currentHub.brandingColor)
-      );
+    if (currentHub && currentHub.brandingColor){
+      const brandingColor = hexToHSL(currentHub.brandingColor); // Assuming hexToHSL function is defined elsewhere
+  
+    const generateShades = (hsl:string, steps:number) => {
+      const [hue, saturation, lightness] = hsl.split(" ");
+      const shades = [];
+
+      for (let i = 1; i <= steps; i++) {
+        const newLightness = Math.min(5 + i * 7, 90); // Increase lightness by 10% for each step
+        shades.push(`${hue} ${saturation} ${newLightness}%`);
+      }
+      return shades;
+    };
+
+    const shades = generateShades(brandingColor, 5);
+
+    // Set CSS variables for the primary color and its shades
+    document.documentElement.style.setProperty("--primary", brandingColor);
+    shades.forEach((shade, index) => {
+      document.documentElement.style.setProperty(`--chart-${index + 1}`, shade);
+    });
+  }
   }, [currentHub]);
 
   return (

@@ -16,7 +16,6 @@ app.post("/api/chat", async (c) => {
   const subdomain = c.req.header("origin")!.split(".")[0].replace("https://", "").replace("http://", "");
 
 
-  console.log("sudomain", subdomain);
 
 
   const pages = await c.env.runQuery(api.pages.getPagesByHub, { subdomain});

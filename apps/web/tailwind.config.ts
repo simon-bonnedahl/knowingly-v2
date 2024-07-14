@@ -1,6 +1,5 @@
-/** @type {import('tailwindcss').Config} */
 
-const { fontFamily } = require("tailwindcss/defaultTheme")
+
 
 module.exports = {
   
@@ -21,7 +20,7 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
+        sans: ['var(--font-geist-sans)'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -116,7 +115,5 @@ module.exports = {
         "slide-down-fade": "slide-down-fade 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
       },
     },
-    
   },
-  plugins: [require("tailwindcss-animate"), require("@headlessui/tailwindcss"), require('@tailwindcss/forms'), require('@tailwindcss/typography')],
 };
