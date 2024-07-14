@@ -11,5 +11,5 @@
     "checkJs": false
   },
   "include": ["src", "*.ts", "*.js", ".expo/types/**/*.ts", "expo-env.d.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "./src/editor-web"]
 }

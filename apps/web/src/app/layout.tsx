@@ -1,12 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import "~/styles/globals.css"
-import { Inter as FontSans } from "next/font/google"
+
+import { GeistSans } from "geist/font/sans";
 
 import { ThemeProvider } from "../components/theme";
 import { TailwindIndicator } from "../components/tailwind-indicator";
 import { cn } from "~/lib/utils";
 import ConvexClientProvider from "./ConvexClientProvider";
-import { Toaster } from "@knowingly/ui/toaster";
+import { Toaster } from "@knowingly/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Knowingly",
@@ -22,10 +23,7 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
-const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-})
+
 
 export default function RootLayout({
   children,
@@ -37,7 +35,7 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
+          GeistSans.className
         )}
       >
         <ConvexClientProvider>

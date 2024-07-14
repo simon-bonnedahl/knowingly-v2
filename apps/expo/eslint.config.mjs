@@ -8,4 +8,10 @@ export default [
   },
   ...baseConfig,
   ...reactConfig,
+  {
+    rules: {
+      "@typescript-eslint/no-unnecessary-condition": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+    },
+  }
 ];

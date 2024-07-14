@@ -1,4 +1,5 @@
-import { cn } from "@knowingly/ui";
+import { cn } from ".";
+
 
 function Skeleton({
   className,

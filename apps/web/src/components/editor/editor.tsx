@@ -3,8 +3,7 @@
 import { useTheme } from "next-themes"
 import {  BlockNoteSchema, PartialBlock, defaultInlineContentSpecs, defaultStyleSchema } from "@blocknote/core"
 import {  DefaultReactSuggestionItem, SuggestionMenuController, getDefaultReactSlashMenuItems, useCreateBlockNote } from "@blocknote/react"
-import { BlockNoteView } from "@blocknote/shadcn";
-
+import { BlockNoteView, Theme} from "@blocknote/mantine"
 import "@blocknote/core/style.css"
 
 import {
@@ -14,14 +13,15 @@ import {
 } from "@blocknote/core";
 import "@blocknote/core/fonts/inter.css";
 
+import "@blocknote/mantine/style.css";
 import { BlocknoteProfileGallery } from "./components/profile-gallery"
 import { IconAlertCircle, IconGlobe, IconLayersSubtract, IconUsers } from "@tabler/icons-react"
 import { BlocknoteGlobe } from "./components/globe"
 import { BlocknoteButton } from "./components/button"
 import { BlocknoteMention } from "./components/mention"
 import { useQuery } from "convex/react"
-import { useSubdomain } from "~/lib/hooks/useSubdomain"
 import { api } from "@knowingly/backend/convex/_generated/api"
+import { useSubdomain } from "~/lib/hooks/useSubdomain"
 
 
 
@@ -39,6 +39,8 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
 
 
 
+
+
   const darkTheme = {
     ...defaultStyleSchema,
     colors: {
@@ -48,7 +50,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
       },
       sideMenu: "#ffffff",
     }
-  } 
+  } satisfies Theme;
 
   const schema = BlockNoteSchema.create({
     blockSpecs: {
@@ -138,9 +140,11 @@ const editor = useCreateBlockNote({
         editor={editor}
         editable={editable}
         onChange={() => onChange(editor.document)}
-        className="w-full "
+        className="w-full"
         slashMenu={false} // Disables the default slash menu
-        theme={resolvedTheme === "dark" ? "dark" : "light"}
+        
+        
+        theme={resolvedTheme === "dark" ? darkTheme : "light"}
       >
         <SuggestionMenuController
         triggerCharacter={"@"}

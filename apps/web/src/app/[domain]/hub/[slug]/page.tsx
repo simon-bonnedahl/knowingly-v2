@@ -68,7 +68,7 @@ export default  function PageLayout({
         <button  className="absolute top-2 left-2 bg-black  z-30 rounded-full p-2 hover:none" onClick={goBack} >
             <IconArrowLeft size={20} className="text-white" />
         </button>
-    <Banner url={page.image} />
+    <Banner url={page.image} preview={false} />
     <PageToolbar initialData={page} preview={false} />
     <div className="p-4 w-full">
     <Editor onChange={onChange} initialContent={page.customContent}  />

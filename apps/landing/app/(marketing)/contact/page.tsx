@@ -1,9 +1,9 @@
-import { Background } from "@/components/background";
+import { Background } from "@knowingly/background";
 import { Metadata } from "next";
-import { FeaturedTestimonials } from "@/components/featured-testimonials";
+import { FeaturedTestimonials } from "@knowingly/featured-testimonials";
 import { cn } from "@/lib/utils";
-import { HorizontalGradient } from "@/components/horizontal-gradient";
-import { ContactForm } from "@/components/contact";
+import { HorizontalGradient } from "@knowingly/horizontal-gradient";
+import { ContactForm } from "@knowingly/contact";
 
 export const metadata: Metadata = {
   title: "Contact Us - Knowingly",

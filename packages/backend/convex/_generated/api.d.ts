@@ -19,6 +19,7 @@ import type * as files from "../files.js";
 import type * as functions from "../functions.js";
 import type * as http from "../http.js";
 import type * as hubs from "../hubs.js";
+import type * as meetings from "../meetings.js";
 import type * as pages from "../pages.js";
 import type * as rules from "../rules.js";
 import type * as stripe from "../stripe.js";
@@ -40,6 +41,7 @@ declare const fullApi: ApiFromModules<{
   functions: typeof functions;
   http: typeof http;
   hubs: typeof hubs;
+  meetings: typeof meetings;
   pages: typeof pages;
   rules: typeof rules;
   stripe: typeof stripe;

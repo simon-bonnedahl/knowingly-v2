@@ -16,6 +16,7 @@ import { IconCheck, IconChevronDown, IconCirclePlus } from "@tabler/icons-react"
 import { Command, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "@knowingly/ui/command"
 import { FunctionReturnType } from "convex/server"
 import { api } from "@knowingly/backend/convex/_generated/api"
+import { useSubdomain } from "~/lib/hooks/useSubdomain"
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 
@@ -33,6 +34,7 @@ export default function HubSwitcher({ className, currentHub, hubs }: HubSwitcher
 
   const [open, setOpen] = useState(false)
   const [showNewHubDialog, setShowNewHubDialog] = useState(false)
+  const subdomain = useSubdomain()
 
 
 
@@ -112,7 +114,31 @@ export default function HubSwitcher({ className, currentHub, hubs }: HubSwitcher
                     <IconCheck
                       className={cn(
                         "ml-auto h-4 w-4",
-                        !currentHub
+                        subdomain === "app"
+                          ? "opacity-100"
+                          : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                  <CommandItem
+                    onSelect={() => {
+                      router.push(`${env.NEXT_PUBLIC_PROTOCOL}://admin.${env.NEXT_PUBLIC_ROOT_DOMAIN}`)
+                      setOpen(false)
+                    }}
+                    className="text-sm hover:cursor-pointer hover:text-card-foreground text-foreground"
+                  >
+                    <Avatar className="mr-2 h-5 w-5 rounded-md">
+                      <AvatarImage
+                        src="/logo-small-black.svg"
+                        alt="Knowingly"
+                      />
+                      <AvatarFallback>K</AvatarFallback>
+                    </Avatar>
+                    Knowingly Admin
+                    <IconCheck
+                      className={cn(
+                        "ml-auto h-4 w-4",
+                        subdomain === "admin"
                           ? "opacity-100"
                           : "opacity-0"
                       )}
