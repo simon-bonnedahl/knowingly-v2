@@ -16,7 +16,6 @@ interface BannerProps {
 }
 
 export const Banner = ({ url, preview }: BannerProps) => {
-//   const { edgestore } = useEdgeStore()
   const params = useParams()
   const subdomain = decodeURIComponent(params.domain as string).split(".")[0]
   const banner = useBanner()

@@ -19,8 +19,6 @@
     "@blocknote/react": "^0.14.6",
     "@blocknote/shadcn": "^0.14.6",
     "@clerk/nextjs": "^5.2.3",
-    "@edgestore/react": "^0.1.7",
-    "@edgestore/server": "^0.1.7",
     "@headlessui/tailwindcss": "^0.2.1",
     "@knowingly/backend": "workspace:*",
     "@knowingly/ui": "workspace:*",
