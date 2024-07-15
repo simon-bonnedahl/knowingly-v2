@@ -1,6 +1,5 @@
 "use client";
 
-// import PermissionPrompt from "@/components/PermissionPrompt";
 import {
   CallingState,
   DeviceSettings,
@@ -17,6 +16,7 @@ import useLoadCall from "~/lib/hooks/useLoadCall";
 import useStreamCall from "~/lib/hooks/useStreamCall";
 import { Button } from "@knowingly/ui/button";
 import FlexibleCallLayout from "./flexible-call-layout";
+import PermissionPrompt from "./permission-prompt";
 
 
 
@@ -29,7 +29,9 @@ const MeetingPage = () => {
   if (!isSignedIn || callLoading) {
     return (
       <div className="flex h-screen w-full justify-center items-center">
-        Loading ...
+       <div className="w-36 h-36">
+        <div className="animate-spin rounded-full h-36 w-36 border-t-2 border-b-4 border-foreground"></div>
+      </div>
       </div>
     )
     ;
@@ -97,7 +99,7 @@ function MeetingScreen() {
           Meeting description: <span className="font-bold">{description}</span>
         </p>
       )}
-      {true ? (
+      {setupComplete ? (
         <CallUI />
       ) : (
         <SetupUI onSetupComplete={handleSetupComplete} />
@@ -130,9 +132,9 @@ function SetupUI({ onSetupComplete }: SetupUIProps) {
     }
   }, [micCamDisabled, call]);
 
-//   if (!micState.hasBrowserPermission || !camState.hasBrowserPermission) {
-//     return <PermissionPrompt />;
-//   }
+  if (!micState.hasBrowserPermission || !camState.hasBrowserPermission) {
+    return <PermissionPrompt />;
+  }
 
   return (
     <div className="flex flex-col items-center gap-3">
@@ -161,7 +163,6 @@ function CallUI() {
   const callingState = useCallCallingState();
 
   if (callingState !== CallingState.JOINED) {
-    call.join();
     return  <div className="flex h-screen w-full justify-center items-center">
     Loading ...
   </div>
