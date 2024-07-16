@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
+import { render } from "@react-three/fiber";
 import { useMutation } from "convex/react";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
@@ -22,11 +23,10 @@ import {
 } from "@knowingly/ui/dropdown-menu";
 import { Input } from "@knowingly/ui/input";
 
+import { usePreview } from "~/lib/hooks/usePreview";
 import { Icon, IconKey, Icons } from "../icons";
 import { IconPicker } from "./icon-picker";
 import { CustomFieldTypeKey, CustomFieldTypes } from "./types";
-import { render } from "@react-three/fiber";
-import { usePreview } from "~/lib/hooks/usePreview";
 
 interface EditFieldProps {
   field: {
@@ -45,13 +45,17 @@ interface EditFieldProps {
     isLocked: boolean;
     isSuggested: boolean;
     slug: string;
-  },
+  };
   onEditValue: (id: string, value: any) => void;
   onDeleteField: (id: string) => void;
 }
 
-export function FieldSettings({ field, onEditValue, onDeleteField }: EditFieldProps) {
-  const {preview } = usePreview();
+export function FieldSettings({
+  field,
+  onEditValue,
+  onDeleteField,
+}: EditFieldProps) {
+  const { preview } = usePreview();
   const [name, setName] = useState(field.name);
   const [icon, setIcon] = useState(field.icon as IconKey);
   const [options, setOptions] = useState(field.options);
@@ -60,7 +64,7 @@ export function FieldSettings({ field, onEditValue, onDeleteField }: EditFieldPr
   const updateField = useMutation(api.customFields.update);
 
   useEffect(() => {
-    if(icon === field.icon) return;
+    if (icon === field.icon) return;
     updateField({
       slug: field.slug,
       field: "icon",
@@ -69,7 +73,7 @@ export function FieldSettings({ field, onEditValue, onDeleteField }: EditFieldPr
   }, [icon]);
 
   useEffect(() => {
-    if(name === field.name) return;
+    if (name === field.name) return;
     updateField({
       slug: field.slug,
       field: "name",
@@ -78,7 +82,7 @@ export function FieldSettings({ field, onEditValue, onDeleteField }: EditFieldPr
   }, [name]);
 
   useEffect(() => {
-    if(options === field.options) return;
+    if (options === field.options) return;
     updateField({
       slug: field.slug,
       field: "options",
@@ -86,34 +90,26 @@ export function FieldSettings({ field, onEditValue, onDeleteField }: EditFieldPr
     });
   }, [options]);
 
-  if(preview) return (
-    <div
-    className=" w-40 items-center justify-start gap-1 truncate text-muted-foreground inline-flex py-2 px-4 whitespace-nowrap rounded-md text-sm font-medium "
-  >
-    <Icon name={icon} className="h-5 w-5 " />
-    <span className=" truncate  max-w-24">
+  if (preview)
+    return (
+      <div className="flex w-48 items-center justify-start gap-1 truncate whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium text-muted-foreground ">
+        <Icon name={icon} className="h-5 w-5 " />
+        <span className=" max-w-28  truncate">{field.name}</span>
+      </div>
+    );
 
-    {field.name}
-    </span>
-
-  </div>
-  );
-
-  const RenderSettings = CustomFieldTypes[field.type as CustomFieldTypeKey].renderSettings ;
+  const RenderSettings =
+    CustomFieldTypes[field.type as CustomFieldTypeKey].renderSettings;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="flex w-40 items-center justify-start gap-1 truncate text-muted-foreground hover:text-muted-foreground  focus-visible:ring-0"
+          className="flex w-48 items-center justify-start gap-1 truncate text-muted-foreground hover:text-muted-foreground  focus-visible:ring-0"
           disabled={preview}
         >
           <Icon name={icon} className="h-5 w-5 " />
-          <span className=" truncate  max-w-24">
-
-          {field.name}
-          </span>
-
+          <span className=" max-w-28  truncate">{field.name}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
@@ -124,20 +120,17 @@ export function FieldSettings({ field, onEditValue, onDeleteField }: EditFieldPr
 
         <DropdownMenuSeparator />
         <DropdownMenuSub>
-          <DropdownMenuSubTrigger
-          >
+          <DropdownMenuSubTrigger>
             <div className="flex w-full  justify-between ">
+              <span>Type</span>
+              <div className="flex items-center gap-1 text-muted-foreground">
+                <Icon
+                  name={CustomFieldTypes[field.type as CustomFieldTypeKey].icon}
+                  className="h-4 w-4"
+                />
 
-            <span>Type</span>
-            <div className="flex items-center gap-1 text-muted-foreground">
-              <Icon
-                name={CustomFieldTypes[field.type as CustomFieldTypeKey].icon}
-                className="h-4 w-4"
-              />
-
-              {CustomFieldTypes[field.type as CustomFieldTypeKey].name}
-            </div>
-
+                {CustomFieldTypes[field.type as CustomFieldTypeKey].name}
+              </div>
             </div>
           </DropdownMenuSubTrigger>
           <DropdownMenuPortal>
@@ -152,7 +145,10 @@ export function FieldSettings({ field, onEditValue, onDeleteField }: EditFieldPr
                       field: "type",
                       value: key,
                     });
-                    onEditValue(field._id, CustomFieldTypes[key as CustomFieldTypeKey].defaultValue);
+                    onEditValue(
+                      field._id,
+                      CustomFieldTypes[key as CustomFieldTypeKey].defaultValue,
+                    );
                     setIcon(CustomFieldTypes[key as CustomFieldTypeKey].icon);
                     setOpenTypeList(false);
                   }}
@@ -169,15 +165,13 @@ export function FieldSettings({ field, onEditValue, onDeleteField }: EditFieldPr
         </DropdownMenuSub>
 
         <DropdownMenuSeparator />
-        <RenderSettings options={options} setOptions={setOptions}/>
+        <RenderSettings options={options} setOptions={setOptions} />
         <DropdownMenuSeparator />
 
-
-
-
-        
-
-        <DropdownMenuItem className="flex justify-between hover:cursor-pointer" onClick={() => onDeleteField(field._id)}>
+        <DropdownMenuItem
+          className="flex justify-between hover:cursor-pointer"
+          onClick={() => onDeleteField(field._id)}
+        >
           Delete
           <Icons.trash className="h-4 w-4" />
         </DropdownMenuItem>

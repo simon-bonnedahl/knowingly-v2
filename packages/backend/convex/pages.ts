@@ -51,7 +51,9 @@ export const getPagesByHub = query({
   export const update = mutation({
     args: {slug: v.string(), field: v.string(), value: v.any()},
     handler: async (ctx, args) => {
-      console.log("update", args);
+      //  if(field === "customFields") {
+      //   embedd
+      //  }
       const {slug, field, value} = args;
       const page = await ctx.table("pages").getX("slug", slug).patch({[field]: value});
       return page;
@@ -61,12 +63,10 @@ export const getPagesByHub = query({
   export const addCustomField = mutation({
     args: { slug : v.string() },
     handler: async (ctx, args) => {
-      const customFields = await ctx.table("customFields").search("search_name", (q) => q.search("name", "Text"));
-      console.log("customFields", customFields);
-      const name = `Text ${customFields.length + 1}`;
+      const slug = `text-${uuid().slice(0, 3)}`;
       const customField = await ctx.table("customFields").insert({
-        name,
-        slug: slugify(name, {lower: true}),
+        name: "New Field",
+        slug,
         icon : "alignLeft",
         type: "text",
         isLocked: false,

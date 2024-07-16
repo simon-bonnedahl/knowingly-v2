@@ -1,21 +1,24 @@
 import { url } from "inspector";
+import Link from "next/link";
 
 import { Input } from "@knowingly/ui/input";
 import { Label } from "@knowingly/ui/label";
 import { Progress } from "@knowingly/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@knowingly/ui/radio-group";
+import { Status } from "@knowingly/ui/status";
+import { Tag, TagInput } from "@knowingly/ui/tag-input";
 
+import { cn } from "~/lib/utils";
 import { IconKey } from "../icons";
 import { RingProgress } from "../ring-progress";
-import { cn } from "~/lib/utils";
-import Link from "next/link";
+import { useState } from "react";
 import { Badge } from "@knowingly/ui/badge";
 
 export const CustomFieldTypes = {
   text: {
     name: "Text",
     icon: "alignLeft" as IconKey,
-    defaultValue : "",
+    defaultValue: "",
     renderSettings: ({
       options,
       setOptions,
@@ -39,7 +42,7 @@ export const CustomFieldTypes = {
   number: {
     name: "Number",
     icon: "hash" as IconKey,
-    defaultValue : 0,
+    defaultValue: 0,
     renderSettings: ({
       options,
       setOptions,
@@ -50,26 +53,44 @@ export const CustomFieldTypes = {
       const onValueChange = (value: any) => {
         setOptions((options) => ({ ...options, showAs: value }));
       };
-      const number = 66
+      const number = 66;
       return (
         <div>
-        <span className="text-sm text-muted-foreground">Show as</span>
-        <div className="grid grid-cols-3 gap-1">
-            <button className={cn("w-full rounded-md border flex flex-col items-center pt-2 h-12 relative transition-all duration-150 ease-in-out", (options?.showAs !== "bar" && options?.showAs !== "ring") && "border-primary border-2")} onClick={() => onValueChange("number")}>
-                <span className="font-medium text-sm" >{number}</span>
-                <span className="text-xs absolute bottom-0">Number</span>
+          <span className="text-sm text-muted-foreground">Show as</span>
+          <div className="grid grid-cols-3 gap-1">
+            <button
+              className={cn(
+                "relative flex h-12 w-full flex-col items-center rounded-md border pt-2 transition-all duration-150 ease-in-out",
+                options?.showAs !== "bar" &&
+                  options?.showAs !== "ring" &&
+                  "border-2 border-primary",
+              )}
+              onClick={() => onValueChange("number")}
+            >
+              <span className="text-sm font-medium">{number}</span>
+              <span className="absolute bottom-0 text-xs">Number</span>
             </button>
-            <button className={cn("w-full rounded-md border flex flex-col items-center pt-4 h-12 relative transition-all duration-150 ease-in-out", options?.showAs === "bar" && "border-primary border-2")} onClick={() => onValueChange("bar")}>
-                <Progress value={number} max={100} className="w-8 h-1" />
-                <span className="text-xs absolute bottom-0">Bar</span>
+            <button
+              className={cn(
+                "relative flex h-12 w-full flex-col items-center rounded-md border pt-4 transition-all duration-150 ease-in-out",
+                options?.showAs === "bar" && "border-2 border-primary",
+              )}
+              onClick={() => onValueChange("bar")}
+            >
+              <Progress value={number} max={100} className="h-1 w-8" />
+              <span className="absolute bottom-0 text-xs">Bar</span>
             </button>
-            <button className={cn("w-full rounded-md border flex flex-col items-center h-12 relative transition-all duration-150 ease-in-out", options?.showAs === "ring" && "border-primary border-2")} onClick={() => onValueChange("ring")}>
-                <RingProgress value={number} max={100} radius={8} />
-                <span className="text-xs absolute bottom-0">Ring</span>
-                
+            <button
+              className={cn(
+                "relative flex h-12 w-full flex-col items-center rounded-md border transition-all duration-150 ease-in-out",
+                options?.showAs === "ring" && "border-2 border-primary",
+              )}
+              onClick={() => onValueChange("ring")}
+            >
+              <RingProgress value={number} max={100} radius={8} />
+              <span className="absolute bottom-0 text-xs">Ring</span>
             </button>
-
-        </div>
+          </div>
         </div>
       );
     },
@@ -81,9 +102,8 @@ export const CustomFieldTypes = {
       setValue: (value: any) => void;
     }) => (
       <Input
-        type="number"
         value={value}
-        onChange={(e) => setValue(e.currentTarget.value)}
+        onChange={(e) => setValue(parseInt(e.currentTarget.value))}
       />
     ),
     button: ({ value, options }: { value: any; options: any }) => {
@@ -91,10 +111,10 @@ export const CustomFieldTypes = {
         <div className="flex w-full items-center gap-1">
           {value}
           {options?.showAs === "bar" && (
-            <Progress value={value} max={100} className="w-16 h-2" />
+            <Progress value={value} max={100} className="h-2 w-16" />
           )}
           {options?.showAs === "ring" && (
-            <RingProgress value={value} max={100} radius={9} />
+            <RingProgress value={value} max={100} radius={7} />
           )}
         </div>
       );
@@ -103,7 +123,7 @@ export const CustomFieldTypes = {
   select: {
     name: "Select",
     icon: "select" as IconKey,
-    defaultValue : "",
+    defaultValue: null,
     renderSettings: ({
       options,
       setOptions,
@@ -118,22 +138,51 @@ export const CustomFieldTypes = {
       </div>
     ),
     valueInput: ({
-      value,
-      setValue,
-    }: {
-      value: any;
-      setValue: (value: any) => void;
-    }) => (
-      <Input value={value} onChange={(e) => setValue(e.currentTarget.value)} />
-    ),
-    button: ({ value, options }: { value: any; options: any }) => (
-      <div>{value}</div>
-    ),
+        value,
+        setValue,
+      }: {
+        value: string;
+        setValue: (value: any) => void;
+      }) => {
+       
+        const tags: Tag[] =  !!value ? [{ id: value, text: value }] : [];
+        const onSetTags = (newTags: Tag[]) => {
+          setValue(newTags[0]?.text);
+        }
+    const [activeTagIndex, setActiveTagIndex] = useState < number | null > (null);
+  
+        return (
+          <TagInput
+            tags={tags}
+            setTags={(newTags) => onSetTags(newTags as Tag[])}
+            placeholder="Add a tag"
+            styleClasses={{
+              input: "w-full sm:max-w-[350px]",
+            }}
+            activeTagIndex={activeTagIndex}
+            setActiveTagIndex={setActiveTagIndex}
+            variant="primary"
+            size="sm"
+            animation="fadeIn"
+            enableAutocomplete
+            autocompleteOptions={tags}
+            maxTags={1}
+          />
+        );
+      },
+      button: ({ value, options }: { value: any; options: any }) => (
+          <div className="flex gap-2 min-h-5">
+            {value && (
+             <Badge  className="font-normal text-xs rounded-sm px-2"> {value} </Badge>
+            )}
+        </div>
+        
+      ),
   },
   multiSelect: {
     name: "Multi Select",
     icon: "list" as IconKey,
-    defaultValue : [],
+    defaultValue: [],
     renderSettings: ({
       options,
       setOptions,
@@ -151,19 +200,52 @@ export const CustomFieldTypes = {
       value,
       setValue,
     }: {
-      value: any;
+      value: string[];
       setValue: (value: any) => void;
-    }) => (
-      <Input value={value} onChange={(e) => setValue(e.currentTarget.value)} />
-    ),
+    }) => {
+      const tags: Tag[] = value.map((tag) => {
+        return {
+          id: tag,
+          text: tag,
+        };
+      });
+      const onSetTags = (newTags: Tag[]) => {
+        setValue(newTags.map((tag) => tag.text));
+      }
+  const [activeTagIndex, setActiveTagIndex] = useState < number | null > (null);
+
+      return (
+        <TagInput
+          tags={tags}
+          setTags={(newTags) => onSetTags(newTags as Tag[])}
+          placeholder="Add a tag"
+          styleClasses={{
+            input: "w-full sm:max-w-[350px]",
+          }}
+          activeTagIndex={activeTagIndex}
+          setActiveTagIndex={setActiveTagIndex}
+          variant="primary"
+          size="sm"
+          animation="fadeIn"
+          enableAutocomplete
+          autocompleteOptions={tags}
+        />
+        //   <Input value={value} onChange={(e) => setValue(e.currentTarget.value)} />
+      );
+    },
     button: ({ value, options }: { value: any; options: any }) => (
-      <div>{value}</div>
+        <div className="flex gap-2 flex-wrap min-h-5">
+        {value.map((tag : string) => (
+          <Badge key={tag} className="font-normal text-xs rounded-sm px-2"> {tag} </Badge>
+        ))}
+      </div>
+      
     ),
   },
   status: {
     name: "Status",
     icon: "loader" as IconKey,
-    defaultValue : "",
+    defaultValue: "",
     renderSettings: ({
       options,
       setOptions,
@@ -172,7 +254,7 @@ export const CustomFieldTypes = {
       setOptions: (options: any) => void;
     }) => (
       <div className="w-full">
-        <span>Number</span>
+        <span>Numberssss</span>
         <span>Bar</span>
         <span>Circle</span>
       </div>
@@ -187,13 +269,13 @@ export const CustomFieldTypes = {
       <Input value={value} onChange={(e) => setValue(e.currentTarget.value)} />
     ),
     button: ({ value, options }: { value: any; options: any }) => (
-      <Badge variant="successful">{value}</Badge>
+      <Status>{value}</Status>
     ),
   },
   email: {
     name: "Email",
     icon: "at" as IconKey,
-    defaultValue : "",
+    defaultValue: "",
     renderSettings: ({
       options,
       setOptions,
@@ -217,13 +299,13 @@ export const CustomFieldTypes = {
       <Input value={value} onChange={(e) => setValue(e.currentTarget.value)} />
     ),
     button: ({ value, options }: { value: any; options: any }) => (
-        <a href={"mailto:" + value}>{value}</a>
-      ),
+      <a href={"mailto:" + value}>{value}</a>
+    ),
   },
   phone: {
     name: "Phone",
     icon: "phone" as IconKey,
-    defaultValue : "",
+    defaultValue: "",
     renderSettings: ({
       options,
       setOptions,
@@ -247,13 +329,13 @@ export const CustomFieldTypes = {
       <Input value={value} onChange={(e) => setValue(e.currentTarget.value)} />
     ),
     button: ({ value, options }: { value: any; options: any }) => (
-        <a href={"tel:" + value}>{value}</a>
+      <a href={"tel:" + value}>{value}</a>
     ),
   },
   url: {
     name: "URL",
     icon: "link" as IconKey,
-    defaultValue : "",
+    defaultValue: "",
     renderSettings: ({
       options,
       setOptions,
@@ -283,7 +365,7 @@ export const CustomFieldTypes = {
   file_media: {
     name: "Files & Media",
     icon: "paperclip" as IconKey,
-    defaultValue : "",
+    defaultValue: "",
     renderSettings: ({
       options,
       setOptions,
