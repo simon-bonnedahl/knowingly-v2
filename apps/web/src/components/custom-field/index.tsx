@@ -43,7 +43,7 @@ export const CustomField = ({field, onEditValue, onDeleteField, preview=false} :
       style={{  y }}
       dragListener={false}
       dragControls={dragControls}
-      className="flex items-center group"
+      className="flex group items-start"
     >
       <Button variant="ghost"   onPointerDown={(event) => dragControls.start(event)} className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 px-1 text-muted-foreground">
       <Icons.gripVertical className="w-4 h-4"/>

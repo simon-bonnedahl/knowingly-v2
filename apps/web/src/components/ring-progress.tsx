@@ -12,7 +12,7 @@ export const RingProgress = ({ value, max = 100, radius=10, className="" }: Ring
     return(
         <div
       x-data="scrollProgress"
-      className={cn("flex  w-8 h-8 items-center justify-center", className)}
+      className={cn("flex  w-5 h-5 items-center justify-center", className)}
     >
       <svg className="w-full h-full  transform -rotate-90">
         <circle
@@ -21,8 +21,8 @@ export const RingProgress = ({ value, max = 100, radius=10, className="" }: Ring
           stroke="currentColor"
           fill="transparent"
           r={radius}
-          cx="15"
-          cy="15"
+          cx="10"
+          cy="10"
         />
         <circle
           className="text-primary"
@@ -33,8 +33,8 @@ export const RingProgress = ({ value, max = 100, radius=10, className="" }: Ring
           stroke="currentColor"
           fill="transparent"
           r={radius}
-          cx="15"
-          cy="15"
+          cx="10"
+          cy="10"
         />
       </svg>
     </div>

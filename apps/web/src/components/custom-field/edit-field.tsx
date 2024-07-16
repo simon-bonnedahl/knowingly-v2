@@ -60,14 +60,14 @@ export const EditField = ({ field, onEditValue }: EditFieldProps) => {
   if(preview) {
     return(
         <div
-          className=" w-96 items-center justify-start truncate px-4 inline-flex whitespace-nowrap rounded-md text-sm font-medium"
+          className=" w-full items-center justify-start truncate px-4 inline-flex whitespace-nowrap rounded-md text-sm font-medium  py-2"
         >
         <CustomFieldButton value={value} options={field.options} />
         </div>
     )
   }
   return (
-    <div className="w-96" ref={ref}>
+    <div className="w-full" ref={ref}>
       {active ? (
         <CustomFieldValueInput
           value={value}
@@ -76,7 +76,7 @@ export const EditField = ({ field, onEditValue }: EditFieldProps) => {
       ) : (
         <Button
           variant="ghost"
-          className="flex w-full items-center justify-start truncate"
+          className="flex w-full items-center justify-start truncate h-fit"
           disabled={preview}
           onClick={() => setActive(true)}
         >   

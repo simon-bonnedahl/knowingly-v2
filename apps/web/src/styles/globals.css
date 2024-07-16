@@ -36,7 +36,7 @@
     --card-foreground: 0 0% 98%; /* #fafafa */
     --popover: 0 0% 9.8; /* #191919  */
     --popover-foreground: 0 0% 98%; /* #fafafa */
-    --primary: 216, 73%, 63%;/* hsl(216, 73%, 63%) */
+    --primary: 216 73% 63%;/* hsl(216, 73%, 63%) */
     --primary-foreground: 240 5.9% 10%; /* #f0f0f0 */
     --secondary: 240 3.7% 15.9%; /* #272727 */
     --secondary-foreground: 0 0% 98%; /* #fafafa */

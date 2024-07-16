@@ -55,13 +55,12 @@ const schema = defineEntSchema({
     customFields: v.array(
       v.object({
         id: v.id("customFields"),
-        value: v.union(
+        value: v.optional(v.union(
           v.string(),
           v.number(),
           v.boolean(),
           v.array(v.string()),
-          v.null()
-        ),
+        )),
       })
     ),
     customContent: v.optional(v.string()), // JSON stringified object (blockquote json structure for markdown)
@@ -86,8 +85,8 @@ const schema = defineEntSchema({
     ), //  JSON stringified object (own rules) ex. { "format": any, "suggestions": any,  }
   })
     .field("slug", v.string(), { unique: true })
-    .searchIndex("search_name", {
-      searchField: "name",
+    .searchIndex("search_slug", {
+      searchField: "slug",
     })
     .edges("hubs"),
 });
