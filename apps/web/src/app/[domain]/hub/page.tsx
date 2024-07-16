@@ -46,7 +46,7 @@ export default function HubPage() {
             onCheckedChange={togglePreview}
           />
       </div>
-      <Banner url={hub.banner} />
+      <Banner url={hub.banner} preview={preview} />
 
       <HubToolbar initialData={hub} preview={preview} />
       <div className="p-4 w-full pb-[400px]">

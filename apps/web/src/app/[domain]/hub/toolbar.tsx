@@ -102,13 +102,13 @@ export const HubToolbar = ({ initialData, preview }: ToolbarProps) => {
             size="sm"
           >
             <IconImageInPicture className="h-4 w-4 mr-2" />
-            Add cover
+            Add cover 
           </Button>
         )}
       </div>
         
-        <input type="text" value={name}  onChange={(e ) => setName(e.currentTarget.value)} className="text-4xl mt-4 dark:text-white text-black  font-bold w-full bg-transparent border-none focus:ring-0" />
-        <input type="text" value={description}  onChange={(e ) => setDescription(e.currentTarget.value)} className="text-md  dark:text-white text-black  font-bold w-full bg-transparent border-none focus:ring-0" />
+        <input type="text" disabled={preview} value={name}  onChange={(e ) => setName(e.currentTarget.value)} className="text-4xl mt-4 dark:text-white text-black  font-bold w-full bg-transparent border-none focus:ring-0" />
+        <input type="text" disabled={preview} value={description}  onChange={(e ) => setDescription(e.currentTarget.value)} className="text-md  dark:text-white text-black  font-bold w-full bg-transparent border-none focus:ring-0" />
     </div>
   )
 }

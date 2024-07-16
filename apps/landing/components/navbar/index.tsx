@@ -43,11 +43,3 @@ export function NavBar() {
   );
 }
 
-{
-  /* <div className="hidden md:block ">
-        <DesktopNavbar />
-      </div>
-      <div className="flex h-full w-full items-center md:hidden ">
-        <MobileNavbar navItems={navItems} />
-      </div> */
-}

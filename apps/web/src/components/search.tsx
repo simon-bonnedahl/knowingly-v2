@@ -1,7 +1,6 @@
 "use client"
 
 import { cn } from "~/lib/utils"
-import { IconSearch, IconUser } from "@tabler/icons-react"
 
 
 
@@ -9,20 +8,20 @@ import * as React from "react"
 import { useRouter } from "next/navigation"
 
 import { useTheme } from "next-themes"
-import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut } from "@knowingly/ui/command"
+import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandShortcut } from "@knowingly/ui/command"
 import { DialogProps } from "@radix-ui/react-dialog"
 import { useQuery } from "convex/react"
 import { api } from "@knowingly/backend/convex/_generated/api"
 import { useSubdomain } from "~/lib/hooks/useSubdomain"
+import { Icons } from "./icons"
 
 
 
 
 
-export function Search({ ...props }: DialogProps) {
+export function Search() {
   const router = useRouter()
   const [open, setOpen] = React.useState(false)
-  const { setTheme } = useTheme()
   const subdomain = useSubdomain()
   const profiles = useQuery(api.pages.getPagesByHub, { subdomain })
 
@@ -56,7 +55,7 @@ export function Search({ ...props }: DialogProps) {
     <>
        <button  className={cn("flex items-center rounded-md py-2 px-4 gap-3  transition-all duration-150 ease-in-out text-foreground hover:bg-card bg-transparent text-sm font-normal",
         )} onClick={() => setOpen(true)}>
-        <IconSearch className="w-4 h-4"/>
+        <Icons.search className="w-4 h-4"/>
             Search
         <CommandShortcut>⌘K</CommandShortcut>
         </button>
@@ -74,7 +73,7 @@ export function Search({ ...props }: DialogProps) {
                     runCommand(() => router.push(`/${profile.slug}`))
                   }}
                 >   
-                {profile.icon ?  <p className="text-lg">{profile.icon}</p> : <IconUser className="h-4 w-4"/>}
+                {profile.icon ?  <p className="text-lg">{profile.icon}</p> : <Icons.userSquareRounded className="h-4 w-4"/>}
                   {profile.name}
                 </CommandItem>
               ))}

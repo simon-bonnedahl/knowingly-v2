@@ -140,7 +140,7 @@ const editor = useCreateBlockNote({
         editor={editor}
         editable={editable}
         onChange={() => onChange(editor.document)}
-        className="w-full"
+        className="w-full "
         slashMenu={false} // Disables the default slash menu
         
         

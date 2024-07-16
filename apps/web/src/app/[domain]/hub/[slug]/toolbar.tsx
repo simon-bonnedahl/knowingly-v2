@@ -9,8 +9,8 @@ import { useBanner } from "~/lib/hooks/useBanner"
 import { api } from "@knowingly/backend/convex/_generated/api"
 import { useParams } from "next/navigation"
 import { Button } from "@knowingly/ui/button"
-import { IconImageInPicture, IconMoodSmile, IconPhotoPlus, IconPlaceholder, IconX } from "@tabler/icons-react"
 import { IconPicker } from "~/components/icon-picker"
+import { Icons } from "~/components/icons"
 
 interface ToolbarProps {
   initialData: Doc<"pages"> 
@@ -69,7 +69,7 @@ export const PageToolbar = ({ initialData, preview }: ToolbarProps) => {
         </div>
       )}
       {!!initialData.icon && preview && (
-        <p className="text-6xl pt-6">{initialData.icon}</p>
+        <p className="text-7xl pt-6 absolute -top-14 left-4">{initialData.icon}</p>
       )}
       <div className="opacity-0 group-hover:opacity-100 flex items-center gap-x-1 py-4">
         {!initialData.icon && !preview && (
@@ -79,7 +79,7 @@ export const PageToolbar = ({ initialData, preview }: ToolbarProps) => {
             className="text-muted-foreground text-xs flex items-center gap-x-1 absolute top-0 left-0"
             variant="outline"
           >
-            <IconMoodSmile className="h-4 w-4 mr-2" />
+            <Icons.moodSmile className="h-4 w-4 mr-2" />
             Add Icon
           </Button>
           </IconPicker>
@@ -90,13 +90,13 @@ export const PageToolbar = ({ initialData, preview }: ToolbarProps) => {
             className="text-muted-foreground text-xs flex items-center gap-x-1 absolute top-0 left-32"
             variant="outline"
           >
-            <IconPhotoPlus className="h-4 w-4 mr-2" />
+            <Icons.photoPlus className="h-4 w-4 mr-2" />
             Add banner
           </Button>
         )}
       </div>
         
-        <input type="text" value={name}  onChange={(e ) => setName(e.currentTarget.value)} className="text-4xl mt-4 dark:text-white text-black  font-bold w-full bg-transparent border-none focus:ring-0" />
+        <input type="text" disabled={preview} value={name}  onChange={(e ) => setName(e.currentTarget.value)} className="text-4xl mt-4 dark:text-white text-black  font-bold w-full bg-transparent focus:outline-none" />
     </div>
   )
 }

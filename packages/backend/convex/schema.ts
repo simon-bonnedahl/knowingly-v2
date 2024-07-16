@@ -28,7 +28,7 @@ const schema = defineEntSchema({
     .field("customDomain", v.optional(v.string()), { unique: true })
     .edges("members", { ref: true })
     .edges("pages", { ref: true })
-    .edges("customFields", { ref: true })
+    .edges("customFields")
     .deletion("scheduled", { delayMs: 24 * 60 * 60 * 1000 }),
   members: defineEnt({
     role: v.union(
@@ -54,12 +54,13 @@ const schema = defineEntSchema({
     icon: v.optional(v.string()),
     customFields: v.array(
       v.object({
-        field: v.id("customFields"),
+        id: v.id("customFields"),
         value: v.union(
           v.string(),
           v.number(),
           v.boolean(),
-          v.array(v.string())
+          v.array(v.string()),
+          v.null()
         ),
       })
     ),
@@ -80,11 +81,15 @@ const schema = defineEntSchema({
       v.object({
         suggestions: v.optional(v.array(v.string())),
         format: v.optional(v.string()),
+        showAs: v.optional(v.string()), 
       })
     ), //  JSON stringified object (own rules) ex. { "format": any, "suggestions": any,  }
   })
     .field("slug", v.string(), { unique: true })
-    .edge("hub"),
+    .searchIndex("search_name", {
+      searchField: "name",
+    })
+    .edges("hubs"),
 });
 
 export default schema;
