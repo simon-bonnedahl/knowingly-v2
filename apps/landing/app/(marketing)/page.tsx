@@ -1,11 +1,11 @@
-import { Container } from "@knowingly/container";
-import { Hero } from "@knowingly/hero";
-import { Background } from "@knowingly/background";
-import { Features } from "@knowingly/features";
-import { Companies } from "@knowingly/companies";
-import { GridFeatures } from "@knowingly/grid-features";
-import { Testimonials } from "@knowingly/testimonials";
-import { CTA } from "@knowingly/cta";
+import { Container } from "@/components/container";
+import { Hero } from "@/components/hero";
+import { Background } from "@/components/background";
+import { Features } from "@/components/features";
+import { Companies } from "@/components/companies";
+import { GridFeatures } from "@/components/grid-features";
+import { Testimonials } from "@/components/testimonials";
+import { CTA } from "@/components/cta";
 
 export default function Home() {
   return (

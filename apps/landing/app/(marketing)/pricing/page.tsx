@@ -1,10 +1,10 @@
-import { Container } from "@knowingly/container";
-import { Background } from "@knowingly/background";
-import { Heading } from "@knowingly/heading";
-import { Subheading } from "@knowingly/subheading";
-import { Pricing } from "@knowingly/pricing";
+import { Container } from "@/components/container";
+import { Background } from "@/components/background";
+import { Heading } from "@/components/heading";
+import { Subheading } from "@/components/subheading";
+import { Pricing } from "@/components/pricing";
 import { PricingTable } from "./pricing-table";
-import { Companies } from "@knowingly/companies";
+import { Companies } from "@/components/companies";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

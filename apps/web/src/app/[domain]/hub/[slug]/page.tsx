@@ -9,8 +9,11 @@ import { useMemo } from "react";
 import dynamic from "next/dynamic";
 import { Banner } from "~/components/banner";
 import { PageToolbar } from "./toolbar";
-import { Button } from "@knowingly/ui/button";
 import { IconArrowLeft } from "@tabler/icons-react";
+import { CustomFields } from "./custom-fields";
+import { Switch } from "@knowingly/ui/switch";
+import { Label } from "@knowingly/ui/label";
+import { usePreview } from "~/lib/hooks/usePreview";
  
 
 // export async function generateStaticParams() {
@@ -42,7 +45,8 @@ export default  function PageLayout({
 }) {
   const page =  useQuery(api.pages.getPage, { slug: params.slug });
   const updatePage = useMutation(api.pages.update);
-  const {theme} = useTheme();
+  const { preview, togglePreview } = usePreview();
+
   const Editor = useMemo(
     () => dynamic(() => import("~/components/editor/editor"), { ssr: false }),
     []
@@ -68,10 +72,19 @@ export default  function PageLayout({
         <button  className="absolute top-2 left-2 bg-black  z-30 rounded-full p-2 hover:none" onClick={goBack} >
             <IconArrowLeft size={20} className="text-white" />
         </button>
-    <Banner url={page.image} preview={false} />
-    <PageToolbar initialData={page} preview={false} />
+        <div className="absolute top-[21rem] right-2 z-20 flex items-center gap-2">
+        <Label className="font-medium">Toggle preview</Label>
+          <Switch
+            
+            checked={preview}
+            onCheckedChange={togglePreview}
+          />
+      </div>
+    <Banner url={page.image} preview={preview} />
+    <PageToolbar initialData={page} preview={preview} />
+    <CustomFields customFields={page.customFields} preview={preview}/>
     <div className="p-4 w-full">
-    <Editor onChange={onChange} initialContent={page.customContent}  />
+    <Editor onChange={onChange} initialContent={page.customContent} editable={!preview} />
 
     </div>
 

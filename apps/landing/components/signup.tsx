@@ -10,7 +10,7 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from "@knowingly/ui/form";
+} from "@/components/ui/form";
 
 import Link from "next/link";
 import { cn } from "@/lib/utils";

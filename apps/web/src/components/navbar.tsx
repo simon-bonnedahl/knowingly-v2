@@ -4,19 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSelectedLayoutSegments } from "next/navigation";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 
-import {
-  IconBell,
-  IconCalendar,
-  IconCompass,
-  IconDots,
-  IconHeartHandshake,
-  IconHome,
-  IconLogout,
-  IconMessages,
-  IconSparkles,
-  IconUser,
-  IconUserCheck,
-} from "@tabler/icons-react";
+
 import { cn, hexToHSL, truncate } from "~/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@knowingly/ui/avatar";
 import {
@@ -39,6 +27,7 @@ import { Search } from "./search";
 import { Notifications } from "./notifications";
 import { FunctionReturnType } from "convex/server";
 import { env } from "~/env";
+import { Icons } from "./icons";
 
 export default function Navbar({ subdomain }: { subdomain: string }) {
   const segments = useSelectedLayoutSegments();
@@ -59,14 +48,14 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
         name: "Home",
         href: "/",
         isActive: segments.length === 1,
-        icon: <IconHome width={24} className="h-5 w-5" />,
+        icon: <Icons.home className="h-5 w-5" />,
         visible: subdomain !== "admin",
       },
       {
         name: "Discover",
         href: "/discover",
         isActive: segments[1] === "discover",
-        icon: <IconCompass width={24} className="h-5 w-5" />,
+        icon: <Icons.compass  className="h-5 w-5" />,
         visible: subdomain === "app",
       },
       // {
@@ -81,14 +70,14 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
         name: "Meetings",
         href: "/meetings",
         isActive: segments[1] === "meetings",
-        icon: <IconCalendar width={24} className="h-5 w-5" />,
+        icon: <Icons.calendarEvent className="h-5 w-5" />,
         visible: subdomain !== "admin",
       },
       {
         name: "Conversations",
         href: "/conversation",
         isActive: segments[1] === "conversation",
-        icon: <IconMessages width={24} className="h-5 w-5" />,
+        icon: <Icons.messages className="h-5 w-5" />,
         count: 1,
         visible: subdomain !== "admin",
       },
@@ -97,14 +86,14 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
         name: "Profile",
         href: "/profile",
         isActive: segments[1] === "profile",
-        icon: <IconUser width={24} className="h-5 w-5" />,
+        icon: <Icons.userSquareRounded className="h-5 w-5" />,
         visible: subdomain !== "app" && subdomain !== "admin",
       },
       {
-        name: "Admin panel",
+        name: "Admin",
         href: "/admin",
         isActive: segments[1] === "admin",
-        icon: <IconUserCheck width={24} className="h-5 w-5" />,
+        icon: <Icons.userShield className="h-5 w-5" />,
         visible: true,
       }
       // {
@@ -124,7 +113,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
         name: "Notifications",
         href: "/notifications",
         isActive: segments[1] === "notifications",
-        icon: <IconBell width={24} className="h-5 w-5" />,
+        icon: <Icons.bell className="h-5 w-5" />,
         count: 3,
         visible: subdomain !== "admin",
       },
@@ -132,14 +121,14 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
         name: "AI Assistant",
         href: "/assistant",
         isActive: segments[1] === "assistant",
-        icon: <IconSparkles className="h-5 w-5" />,
+        icon: <Icons.sparkles className="h-5 w-5" />,
         visible: true,
       },
       {
         name: "Help / Support",
         href: "/support",
         isActive: segments[1] === "support",
-        icon: <IconHeartHandshake className="h-5 w-5" />,
+        icon: <Icons.heartHandshake className="h-5 w-5" />,
         visible: true,
       },
     ];
@@ -261,7 +250,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="group p-2 outline-none hover:cursor-pointer ">
-                <IconDots className="h-5 w-5 text-foreground" />
+                <Icons.dots className="h-5 w-5 text-foreground" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -296,7 +285,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
                   onClick={() => signOut({ returnTo: window.location.origin })}
                   className="flex gap-2 items-center"
                 >
-                  <IconLogout className="h-4 w-4 text-foreground" />
+                  <Icons.logout className="h-4 w-4 text-foreground" />
                   Logout
                 </DropdownMenuItem>
               </DropdownMenuGroup>
