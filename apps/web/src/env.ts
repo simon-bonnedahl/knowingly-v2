@@ -34,6 +34,7 @@ export const env = createEnv({
     NEXT_PUBLIC_STREAM_API_KEY: z.string(),
     NEXT_PUBLIC_CONVEX_URL: z.string(),
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
+    NEXT_PUBLIC_CONVEX_API_ENDPOINT: z.string(),
   },
   /**
    * Destructure all variables from `process.env` to make sure they aren't tree-shaken away.
@@ -47,6 +48,7 @@ export const env = createEnv({
     NEXT_PUBLIC_ROOT_DOMAIN: process.env.NEXT_PUBLIC_ROOT_DOMAIN,
     NEXT_PUBLIC_STREAM_API_KEY: process.env.NEXT_PUBLIC_STREAM_API_KEY,
     NEXT_PUBLIC_CONVEX_URL : process.env.NEXT_PUBLIC_CONVEX_URL,
+    NEXT_PUBLIC_CONVEX_API_ENDPOINT : process.env.NEXT_PUBLIC_CONVEX_API_ENDPOINT,
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
 
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,

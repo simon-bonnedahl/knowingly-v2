@@ -11,8 +11,8 @@ import { Separator } from "@knowingly/ui/separator";
 import { IconDots, IconPlus, IconSearch } from "@tabler/icons-react";
 import { Button } from "@knowingly/ui/button";
 import { Input } from "@knowingly/ui/input";
-import { Modal } from "~/components/modal";
 import { Slider } from "@knowingly/ui/slider";
+import { Modal, ModalContent, ModalTrigger } from "@knowingly/ui/modal";
 
 export const BlocknoteProfileGallery = createReactBlockSpec(
   {
@@ -130,27 +130,25 @@ const CreateNewPageModal = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <Modal
-      open={open}
-      setOpen={setOpen}
-      trigger={<CreateNewPageButton setOpen={setOpen} />}
-    >
-      <CreateNewPageForm />
-    </Modal>
-  );
-};
-const CreateNewPageButton = ({ setOpen }: { setOpen: any }) => {
-  return (
-    <Button
-      onClick={() => setOpen(true)}
+    <Modal>
+      <ModalTrigger asChild>
+      <Button
       variant="outline"
       className="h-full flex justify-center items-center gap-2 text-sm "
     >
       <IconPlus className="w-5 h-5" />
       New
     </Button>
+      </ModalTrigger>
+      <ModalContent className="min-w-fit">
+        <CreateNewPageForm />
+
+      </ModalContent>
+    </Modal>
+      
   );
 };
+
 
 const CreateNewPageForm = () => {
   const params = useParams();
@@ -172,7 +170,7 @@ const CreateNewPageForm = () => {
         value={name}
         onChange={(e) => setName(e.currentTarget.value)}
       />
-      <Button onClick={onCreate}>Create</Button>
+      <Button variant="ringHover" onClick={onCreate}>Create</Button>
     </div>
   );
 };

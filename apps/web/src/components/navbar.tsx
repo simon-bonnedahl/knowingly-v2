@@ -75,8 +75,8 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
       },
       {
         name: "Conversations",
-        href: "/conversation",
-        isActive: segments[1] === "conversation",
+        href: "/conversations",
+        isActive: segments[1] === "conversations",
         icon: <Icons.messages className="h-5 w-5" />,
         count: 1,
         visible: subdomain !== "admin",
@@ -168,7 +168,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
   return (
     <>
       <div
-        className={`fixed top-0 left-0 z-20 flex h-full flex-col md:w-[30vw] lg:w-[24vw]  xl:w-[18vw] p-4 bg-transparent `}
+        className={`fixed top-0 left-0 z-20 flex h-full flex-col md:w-[30vw] lg:w-[24vw]  xl:w-[18vw] p-4 bg-background `}
       >
         {hubs ? (
           <HubSwitcher

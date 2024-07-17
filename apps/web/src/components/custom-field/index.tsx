@@ -28,7 +28,7 @@ export const CustomField = ({field, onEditValue, onDeleteField, preview=false} :
 
     if(preview) {
         return(
-            <div className="flex items-center ml-6">
+            <div className="flex items-start ml-6">
                 <FieldSettings field={fullField}  onEditValue={onEditValue} onDeleteField={onDeleteField}/>
                 <EditField field={fullField} onEditValue={onEditValue}/>
             </div>
