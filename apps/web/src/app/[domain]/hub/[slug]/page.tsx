@@ -102,15 +102,11 @@ export default function PageLayout({ params }: { params: { slug: string } }) {
       <CustomFields customFields={page.customFields} preview={preview} />
       <Separator className="w-full" />
      
-      {/* <Progress value={progress} /> */}
-
-      {url && <img src={url} alt="uploaded" />}
-
       
       
      
 
-      <div className="w-full p-4">
+      <div className="w-full p-4 pb-96">
        
         <Editor
           onChange={onChange}

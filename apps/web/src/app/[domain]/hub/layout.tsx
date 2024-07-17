@@ -1,5 +1,5 @@
-import { AIChat } from "~/components/ai-chat";
 import { ReactNode } from "react";
+import { AssistantModal } from "@knowingly/ui/assistant/assistant-modal";
 
 
 export default async function HubLayout({
@@ -17,7 +17,7 @@ export default async function HubLayout({
     
        
           <div className="flex flex-col w-full  h-screen overflow-y-scroll relative">
-            <AIChat />
+            <AssistantModal />
           {/* <div className="w-full h-8 top-2 left-2 absolute  z-30 ">
             <Breadcrumb>
             <BreadcrumbList>
