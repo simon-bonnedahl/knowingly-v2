@@ -62,7 +62,6 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
       button: BlocknoteButton,
       profileGallery: BlocknoteProfileGallery,
       globe: BlocknoteGlobe,
-      excalidraw: BlocknoteExcalidraw,
     },
     inlineContentSpecs: {
       ...defaultInlineContentSpecs,
@@ -104,16 +103,16 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
     group: "Text",
     icon: <IconLayersSubtract width={18} />,
   });
-  const insertExcalidraw = (editor: typeof schema.BlockNoteEditor) => ({
-    title: "Excalidraw",
-    onItemClick: () => {
-      insertOrUpdateBlock(editor, {
-        type: "excalidraw",
-      });
-    },
-    group: "Random",
-    icon: <Icons.pencil className="h-5 w-5" />,
-  });
+  // const insertExcalidraw = (editor: typeof schema.BlockNoteEditor) => ({
+  //   title: "Excalidraw",
+  //   onItemClick: () => {
+  //     insertOrUpdateBlock(editor, {
+  //       type: "excalidraw",
+  //     });
+  //   },
+  //   group: "Random",
+  //   icon: <Icons.pencil className="h-5 w-5" />,
+  // });
 
 
 
@@ -175,7 +174,7 @@ const editor = useCreateBlockNote({
         getItems={async (query) =>
           // Gets all default slash menu items and `insertAlert` item.
           filterSuggestionItems(
-            [...getDefaultReactSlashMenuItems(editor), insertProfileGallery(editor), insertGlobe(editor), insertButton(editor), insertExcalidraw(editor)],
+            [...getDefaultReactSlashMenuItems(editor), insertProfileGallery(editor), insertGlobe(editor), insertButton(editor)],
             query
           )
         }

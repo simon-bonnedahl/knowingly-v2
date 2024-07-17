@@ -13,6 +13,12 @@ import { Tag, TagInput } from "@knowingly/ui/tag-input";
 import { cn } from "~/lib/utils";
 import { IconKey, Icons } from "../icons";
 import { RingProgress } from "../ring-progress";
+import { FileUploader } from "../file-uploader";
+import { useUploadFiles } from "@xixixao/uploadstuff/react";
+import { useMutation } from "convex/react";
+import { api } from "@knowingly/backend/convex/_generated/api";
+import { Modal, ModalContent, ModalDescription, ModalHeader, ModalTitle, ModalTrigger } from "@knowingly/ui/modal";
+import { Button } from "@knowingly/ui/button";
 
 export const CustomFieldTypes = {
   text: {
@@ -388,9 +394,36 @@ export const CustomFieldTypes = {
     }: {
       value: any;
       setValue: (value: any) => void;
-    }) => (
-      <Input value={value} onChange={(e) => setValue(e.currentTarget.value)} />
-    ),
+    }) => {
+        const getUploadUrl = useMutation(api.files.generateUploadUrl);
+        const [files, setFiles] = useState<File[]>([])
+        const { startUpload, isUploading } = useUploadFiles(getUploadUrl)
+          return(
+            <Modal>
+      <ModalTrigger asChild>
+        <Button variant="outline">
+          {/* Upload files {files.length > 0 && `(${files.length})`} */}
+        </Button>
+      </ModalTrigger>
+      <ModalContent className="sm:max-w-xl">
+        <ModalHeader>
+          <ModalTitle>Upload files</ModalTitle>
+          <ModalDescription>
+            Drag and drop your files here or click to browse.
+          </ModalDescription>
+        </ModalHeader>
+        <FileUploader
+        maxFiles={4}
+        maxSize={4 * 1024 * 1024}
+        onUpload={startUpload}
+        // value={files} 
+        // onValueChange={setFiles}
+        disabled={isUploading}
+      />
+      </ModalContent>
+    </Modal>
+       )
+    },
     button: ({ value, options }: { value: any; options: any }) => (
       <div>{value}</div>
     ),
