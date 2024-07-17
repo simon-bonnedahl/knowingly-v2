@@ -106,6 +106,19 @@ app.post("/api/clerk", async (c, ctx) => {
   }
 });
 
+app.get("/api/image/:storageId", async (c, ctx) => {
+  const storageId = c.req.param("storageId");
+  const url = await c.env.storage.getUrl(storageId);
+  return new Response(null, {
+    status: 301,
+    headers: {
+      location: url || "",
+    },
+  });
+}
+);
+
+
 
 
 

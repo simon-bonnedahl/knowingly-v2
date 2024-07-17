@@ -1,6 +1,8 @@
 import { url } from "inspector";
+import { useState } from "react";
 import Link from "next/link";
 
+import { Badge } from "@knowingly/ui/badge";
 import { Input } from "@knowingly/ui/input";
 import { Label } from "@knowingly/ui/label";
 import { Progress } from "@knowingly/ui/progress";
@@ -9,10 +11,8 @@ import { Status } from "@knowingly/ui/status";
 import { Tag, TagInput } from "@knowingly/ui/tag-input";
 
 import { cn } from "~/lib/utils";
-import { IconKey } from "../icons";
+import { IconKey, Icons } from "../icons";
 import { RingProgress } from "../ring-progress";
-import { useState } from "react";
-import { Badge } from "@knowingly/ui/badge";
 
 export const CustomFieldTypes = {
   text: {
@@ -138,46 +138,47 @@ export const CustomFieldTypes = {
       </div>
     ),
     valueInput: ({
-        value,
-        setValue,
-      }: {
-        value: string;
-        setValue: (value: any) => void;
-      }) => {
-       
-        const tags: Tag[] =  !!value ? [{ id: value, text: value }] : [];
-        const onSetTags = (newTags: Tag[]) => {
-          setValue(newTags[0]?.text);
-        }
-    const [activeTagIndex, setActiveTagIndex] = useState < number | null > (null);
-  
-        return (
-          <TagInput
-            tags={tags}
-            setTags={(newTags) => onSetTags(newTags as Tag[])}
-            placeholder="Add a tag"
-            styleClasses={{
-              input: "w-full sm:max-w-[350px]",
-            }}
-            activeTagIndex={activeTagIndex}
-            setActiveTagIndex={setActiveTagIndex}
-            variant="primary"
-            size="sm"
-            animation="fadeIn"
-            enableAutocomplete
-            autocompleteOptions={tags}
-            maxTags={1}
-          />
-        );
-      },
-      button: ({ value, options }: { value: any; options: any }) => (
-          <div className="flex gap-2 min-h-5">
-            {value && (
-             <Badge  className="font-normal text-xs rounded-sm px-2"> {value} </Badge>
-            )}
-        </div>
-        
-      ),
+      value,
+      setValue,
+    }: {
+      value: string;
+      setValue: (value: any) => void;
+    }) => {
+      const tags: Tag[] = !!value ? [{ id: value, text: value }] : [];
+      const onSetTags = (newTags: Tag[]) => {
+        setValue(newTags[0]?.text);
+      };
+      const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
+
+      return (
+        <TagInput
+          tags={tags}
+          setTags={(newTags) => onSetTags(newTags as Tag[])}
+          placeholder="Add a tag"
+          styleClasses={{
+            input: "w-full sm:max-w-[350px]",
+          }}
+          activeTagIndex={activeTagIndex}
+          setActiveTagIndex={setActiveTagIndex}
+          variant="primary"
+          size="sm"
+          animation="fadeIn"
+          enableAutocomplete
+          autocompleteOptions={tags}
+          maxTags={1}
+        />
+      );
+    },
+    button: ({ value, options }: { value: any; options: any }) => (
+      <div className="flex min-h-5 gap-2">
+        {value && (
+          <Badge className="rounded-sm px-2 text-xs font-normal">
+            {" "}
+            {value}{" "}
+          </Badge>
+        )}
+      </div>
+    ),
   },
   multiSelect: {
     name: "Multi Select",
@@ -211,8 +212,8 @@ export const CustomFieldTypes = {
       });
       const onSetTags = (newTags: Tag[]) => {
         setValue(newTags.map((tag) => tag.text));
-      }
-  const [activeTagIndex, setActiveTagIndex] = useState < number | null > (null);
+      };
+      const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
 
       return (
         <TagInput
@@ -234,12 +235,14 @@ export const CustomFieldTypes = {
       );
     },
     button: ({ value, options }: { value: any; options: any }) => (
-        <div className="flex gap-2 flex-wrap min-h-5">
-        {value.map((tag : string) => (
-          <Badge key={tag} className="font-normal text-xs rounded-sm px-2"> {tag} </Badge>
+      <div className="flex min-h-5 flex-wrap gap-2">
+        {value.map((tag: string) => (
+          <Badge key={tag} className="rounded-sm px-2 text-xs font-normal">
+            {" "}
+            {tag}{" "}
+          </Badge>
         ))}
       </div>
-      
     ),
   },
   status: {
@@ -391,6 +394,126 @@ export const CustomFieldTypes = {
     button: ({ value, options }: { value: any; options: any }) => (
       <div>{value}</div>
     ),
+  },
+  mediaEmbedding: {
+    name: "Media Embedding",
+    icon: "music" as IconKey,
+    defaultValue: "",
+    renderSettings: ({
+      options,
+      setOptions,
+    }: {
+      options: any;
+      setOptions: (options: any) => void;
+    }) => {
+      const onValueChange = (value: any) => {
+        setOptions((options) => ({ ...options, format: value }));
+      };
+      return (
+        <div>
+          <span className="text-sm text-muted-foreground">Source</span>
+          <div className="grid grid-cols-3 gap-1">
+            <button
+              className={cn(
+                "relative flex h-12 w-full flex-col items-center rounded-md border pt-1 transition-all duration-150 ease-in-out",
+                options?.format !== "soundcloud" &&
+                  options?.format !== "youtube" &&
+                  "border-2 border-primary",
+              )}
+              onClick={() => onValueChange("spotify")}
+            >
+              <Icons.spotify className="h-7 w-7" />
+              <span className="absolute bottom-0 text-xs">Spotify</span>
+            </button>
+            <button
+              className={cn(
+                "relative flex h-12 w-full flex-col items-center rounded-md border  pt-1 transition-all duration-150 ease-in-out",
+                options?.format === "soundcloud" && "border-2 border-primary",
+              )}
+              onClick={() => onValueChange("soundcloud")}
+            >
+              <Icons.soundcloud className="h-7 w-7" />
+              <span className="absolute bottom-0 text-xs">Soundcloud</span>
+            </button>
+            <button
+              className={cn(
+                "relative flex h-12 w-full flex-col items-center rounded-md border transition-all duration-150 ease-in-out",
+                options?.format === "youtube" && "border-2 border-primary",
+              )}
+              onClick={() => onValueChange("youtube")}
+            >
+              <Icons.youtube className="h-7 w-7" />
+
+              <span className="absolute bottom-0 text-xs">Youtube</span>
+            </button>
+          </div>
+        </div>
+      );
+    },
+    valueInput: ({
+      value,
+      setValue,
+    }: {
+      value: any;
+      setValue: (value: any) => void;
+    }) => (
+      <Input value={value} onChange={(e) => setValue(e.currentTarget.value)} />
+    ),
+    button: ({ value, options }: { value: any; options: any }) => {
+      let src = value;
+      const format = options?.format ?? "spotify";
+      switch (format) {
+        case "spotify":
+          src = value.replace("open.spotify.com", "open.spotify.com/embed");
+
+          return (
+            <iframe
+              className="h-20 rounded-md w-full"
+              src={src}
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+            ></iframe>
+          );
+        case "soundcloud":
+          // Transform SoundCloud link to embed format
+          src =
+            value.replace("soundcloud.com", "w.soundcloud.com/player") +
+            "&url=" +
+            encodeURIComponent(value) +
+            "&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true";
+          return (
+            <iframe
+              width="100%"
+              height="166"
+              scrolling="no"
+              frameBorder="no"
+              allow="autoplay"
+              src={src}
+            ></iframe>
+          );
+        case "youtube":
+          src = value.replace("watch?v=", "embed/");
+          return (
+            <iframe
+              
+              className="w-full h-auto rounded-md"
+              src={src}
+              title="YouTube Audio player"
+              allow="accelerometer;  clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            ></iframe>
+          );
+        default:
+          src = value.replace("open.spotify.com", "open.spotify.com/embed");
+          return (
+            <iframe
+              className="h-20 rounded-md"
+              src={src}
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+            ></iframe>
+          );
+      }
+    },
   },
 };
 export type CustomFieldTypeKey = keyof typeof CustomFieldTypes;

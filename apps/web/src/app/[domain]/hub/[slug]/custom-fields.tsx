@@ -84,7 +84,7 @@ export const CustomFields = ({customFields, preview=false}: CustomFieldsProps) =
 
 
   return (
-    <div className="w-full px-24 mt-4">
+    <div className="w-full px-24 py-4">
      
     {!preview ? (
       <>
@@ -96,7 +96,7 @@ export const CustomFields = ({customFields, preview=false}: CustomFieldsProps) =
       
     </Reorder.Group>
       <Button variant="ghost" className="flex w-40 items-center justify-start gap-1 truncate text-muted-foreground hover:text-muted-foreground  ml-6" onClick={onAddField}>
-      <Icons.plus className="w-4 h-4" />
+      <Icons.plus className="w-5 h-5" />
       Add Field
     </Button>
     </>

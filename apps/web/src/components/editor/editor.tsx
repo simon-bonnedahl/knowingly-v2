@@ -19,9 +19,12 @@ import { IconAlertCircle, IconGlobe, IconLayersSubtract, IconUsers } from "@tabl
 import { BlocknoteGlobe } from "./components/globe"
 import { BlocknoteButton } from "./components/button"
 import { BlocknoteMention } from "./components/mention"
-import { useQuery } from "convex/react"
+import { useMutation, useQuery } from "convex/react"
 import { api } from "@knowingly/backend/convex/_generated/api"
 import { useSubdomain } from "~/lib/hooks/useSubdomain"
+import { uploadFile } from "./upload-file"
+import { Icon, Icons } from "../icons"
+import { BlocknoteExcalidraw } from "./components/excalidraw"
 
 
 
@@ -36,6 +39,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
   const subdomain = useSubdomain();
   const members = useQuery(api.hubs.getMembers, { subdomain });
   const pages = useQuery(api.pages.getPagesByHub, { subdomain });
+  const getUploadUrl = useMutation(api.files.generateUploadUrl);
 
 
 
@@ -58,12 +62,14 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
       button: BlocknoteButton,
       profileGallery: BlocknoteProfileGallery,
       globe: BlocknoteGlobe,
+      excalidraw: BlocknoteExcalidraw,
     },
     inlineContentSpecs: {
       ...defaultInlineContentSpecs,
       // Adds the mention tag.
       mention: BlocknoteMention,
     },
+
   });
   // Slash menu item to insert an Alert block
   const insertProfileGallery = (editor: typeof schema.BlockNoteEditor) => ({
@@ -98,6 +104,16 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
     group: "Text",
     icon: <IconLayersSubtract width={18} />,
   });
+  const insertExcalidraw = (editor: typeof schema.BlockNoteEditor) => ({
+    title: "Excalidraw",
+    onItemClick: () => {
+      insertOrUpdateBlock(editor, {
+        type: "excalidraw",
+      });
+    },
+    group: "Random",
+    icon: <Icons.pencil className="h-5 w-5" />,
+  });
 
 
 
@@ -125,7 +141,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
 };
 
 const editor = useCreateBlockNote({
-  
+  uploadFile: async(file) => uploadFile(file, await getUploadUrl()),
   schema,
   initialContent: initialContent
     ? (JSON.parse(initialContent) as PartialBlock[])
@@ -140,6 +156,7 @@ const editor = useCreateBlockNote({
         editor={editor}
         editable={editable}
         onChange={() => onChange(editor.document)}
+      
         className="w-full "
         slashMenu={false} // Disables the default slash menu
         
@@ -158,7 +175,7 @@ const editor = useCreateBlockNote({
         getItems={async (query) =>
           // Gets all default slash menu items and `insertAlert` item.
           filterSuggestionItems(
-            [...getDefaultReactSlashMenuItems(editor), insertProfileGallery(editor), insertGlobe(editor), insertButton(editor)],
+            [...getDefaultReactSlashMenuItems(editor), insertProfileGallery(editor), insertGlobe(editor), insertButton(editor), insertExcalidraw(editor)],
             query
           )
         }

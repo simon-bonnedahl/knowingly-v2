@@ -92,9 +92,9 @@ export function FieldSettings({
 
   if (preview)
     return (
-      <div className="flex w-48 items-center justify-start gap-1 truncate whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium text-muted-foreground ">
+      <div className="flex w-64 items-center justify-start gap-1 truncate whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium text-muted-foreground ">
         <Icon name={icon} className="h-5 w-5 " />
-        <span className=" max-w-28  truncate">{field.name}</span>
+        <span className=" max-w-32 truncate">{field.name}</span>
       </div>
     );
 
@@ -105,11 +105,11 @@ export function FieldSettings({
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="flex w-48 items-center justify-start gap-1 truncate text-muted-foreground hover:text-muted-foreground  focus-visible:ring-0"
+          className="flex w-64 items-center justify-start gap-1 truncate text-muted-foreground hover:text-muted-foreground  focus-visible:ring-0"
           disabled={preview}
         >
           <Icon name={icon} className="h-5 w-5 " />
-          <span className=" max-w-28  truncate">{field.name}</span>
+          <span className=" max-w-32  truncate">{field.name}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
@@ -139,7 +139,8 @@ export function FieldSettings({
                 <DropdownMenuItem
                   key={key}
                   className="flex justify-between hover:cursor-pointer"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault();
                     updateField({
                       slug: field.slug,
                       field: "type",

@@ -8,9 +8,12 @@ import { Doc } from "@knowingly/backend/convex/_generated/dataModel"
 import { useBanner } from "~/lib/hooks/useBanner"
 import { api } from "@knowingly/backend/convex/_generated/api"
 import { useParams } from "next/navigation"
-import { Button } from "@knowingly/ui/button"
+import { Button, buttonVariants } from "@knowingly/ui/button"
 import { IconPicker } from "~/components/icon-picker"
 import { Icons } from "~/components/icons"
+
+import { SendMessage } from "./send-message"
+import { RequestMeeting } from "./request-meeting"
 
 interface ToolbarProps {
   initialData: Doc<"pages"> 
@@ -57,9 +60,9 @@ export const PageToolbar = ({ initialData, preview }: ToolbarProps) => {
 
 
   return (
-    <div className=" w-3/4 group relative">
+    <div className=" py-8 group relative w-full px-24">
       {!!initialData.icon && !preview && (
-        <div className="absolute -top-8 left-4  items-center gap-x-2 group/icon hover:bg-white/10 rounded-xl ">
+        <div className="absolute -top-8 left-24  items-center gap-x-2 group/icon hover:bg-white/10 rounded-xl ">
           <IconPicker onChange={onIconSelect}>
             <p className="text-7xl hover:opacity-75 transition">
               {initialData.icon}
@@ -69,7 +72,7 @@ export const PageToolbar = ({ initialData, preview }: ToolbarProps) => {
         </div>
       )}
       {!!initialData.icon && preview && (
-        <p className="text-7xl pt-6 absolute -top-14 left-4">{initialData.icon}</p>
+        <p className="text-7xl pt-6 absolute -top-14 left-24">{initialData.icon}</p>
       )}
       <div className="opacity-0 group-hover:opacity-100 flex items-center gap-x-1 py-4">
         {!initialData.icon && !preview && (
@@ -95,8 +98,16 @@ export const PageToolbar = ({ initialData, preview }: ToolbarProps) => {
           </Button>
         )}
       </div>
-        
+        <div className="flex w-full items-center justify-between  ">
+
         <input type="text" disabled={preview} value={name}  onChange={(e ) => setName(e.currentTarget.value)} className="text-4xl mt-4 dark:text-white text-black  font-bold w-full bg-transparent focus:outline-none" />
+        <div className="flex gap-2 items-center">
+        <RequestMeeting />
+        <SendMessage />
+        </div>
+        
+        </div>
+
     </div>
   )
 }

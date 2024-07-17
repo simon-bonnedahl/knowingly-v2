@@ -9,16 +9,17 @@ import dynamic from "next/dynamic";
 import { IconArrowLeft } from "@tabler/icons-react";
 // import { BlockNoteView } from "@blocknote/mantine";
 import { useMutation, useQuery } from "convex/react";
-import { useTheme } from "next-themes";
+import { UploadButton, UploadFileResponse } from "@xixixao/uploadstuff/react";
 
 import { Label } from "@knowingly/ui/label";
 import { Switch } from "@knowingly/ui/switch";
-import { Tag, TagInput } from "@knowingly/ui/tag-input";
 
 import { Banner } from "~/components/banner";
 import { usePreview } from "~/lib/hooks/usePreview";
 import { CustomFields } from "./custom-fields";
 import { PageToolbar } from "./toolbar";
+import { Separator } from "@knowingly/ui/separator";
+import { env } from "~/env";
 
 // export async function generateStaticParams() {
 //   const allHubs = await db.hub.findMany({
@@ -44,23 +45,12 @@ import { PageToolbar } from "./toolbar";
 
 export default function PageLayout({ params }: { params: { slug: string } }) {
 
-  const tags = [
-    {
-      "id": "1534545726",
-      "text": "Sports"
-  },
-    {
-      "id": "4063925426",
-      "text": "Programming"
-  },
-    {
-      "id": "699968871",
-      "text": "Travel"
-  }
-];
-
+  const generateUploadUrl = useMutation(api.files.generateUploadUrl);
   const page = useQuery(api.pages.getPage, { slug: params.slug });
   const updatePage = useMutation(api.pages.update);
+  const [url, setUrl] = useState<string | null>(null);
+  const [progress, setProgress] = useState<number>(0);
+
   const { preview, togglePreview } = usePreview();
 
 
@@ -85,6 +75,15 @@ export default function PageLayout({ params }: { params: { slug: string } }) {
   const goBack = () => {
     window.history.back();
   };
+  const onUploadComplete = async (uploaded: UploadFileResponse[]) => {
+    console.log(uploaded);
+    const storageId = uploaded[0]!.response!.storageId!
+    console.log(storageId)
+    const url = `${env.NEXT_PUBLIC_CONVEX_API_ENDPOINT}/api/image/${storageId}`
+    console.log(url)
+    setUrl(url)
+
+  };
 
   return (
     <div className="relative flex w-full flex-col items-center">
@@ -101,6 +100,16 @@ export default function PageLayout({ params }: { params: { slug: string } }) {
       <Banner url={page.image} preview={preview} />
       <PageToolbar initialData={page} preview={preview} />
       <CustomFields customFields={page.customFields} preview={preview} />
+      <Separator className="w-full" />
+     
+      {/* <Progress value={progress} /> */}
+
+      {url && <img src={url} alt="uploaded" />}
+
+      
+      
+     
+
       <div className="w-full p-4">
        
         <Editor
