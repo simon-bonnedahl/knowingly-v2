@@ -8,12 +8,13 @@ import * as React from "react"
 import { useRouter } from "next/navigation"
 
 import { useTheme } from "next-themes"
-import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandShortcut } from "@knowingly/ui/command"
+import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut } from "@knowingly/ui/command"
 import { DialogProps } from "@radix-ui/react-dialog"
 import { useQuery } from "convex/react"
 import { api } from "@knowingly/backend/convex/_generated/api"
 import { useSubdomain } from "~/lib/hooks/useSubdomain"
 import { Icons } from "./icons"
+import { Avatar, AvatarFallback, AvatarImage } from "@knowingly/ui/avatar"
 
 
 
@@ -66,19 +67,26 @@ export function Search() {
           <CommandGroup heading="Profiles">
             {profiles?.map((profile) => (
                 <CommandItem
-                className=" flex items-center gap-2 hover:cursor-pointer "
+                className=" flex items-center gap-1 hover:cursor-pointer "
                   key={profile._id}
                   value={profile.name}
                   onSelect={() => {
                     runCommand(() => router.push(`/${profile.slug}`))
                   }}
                 >   
-                {profile.icon ?  <p className="text-lg">{profile.icon}</p> : <Icons.userSquareRounded className="h-4 w-4"/>}
-                  {profile.name}
+                <Avatar className="mr-2 h-8 w-8 rounded-sm">
+                        <AvatarImage
+                          src={profile.icon!}
+                          alt={profile.name}
+                          className="h-full w-full rounded-full"
+                        />
+                        <AvatarFallback className="bg-transparent border w-full h-full" ><p className="text-xl">{profile?.icon}</p></AvatarFallback>
+                      </Avatar>
+                      {profile.name}
                 </CommandItem>
               ))}
           </CommandGroup>
-          {/* <CommandSeparator /> */}
+          <CommandSeparator />
          
         </CommandList>
       </CommandDialog>

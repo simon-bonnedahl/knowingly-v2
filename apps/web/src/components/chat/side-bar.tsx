@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@knowingly/ui/avatar";
 import { Message } from "./mockupData";
 import { FunctionReturnType } from "convex/server";
 import { api } from "@knowingly/backend/convex/_generated/api";
+import { useSearchParams } from "next/navigation";
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -23,7 +24,9 @@ interface SidebarProps {
 }
 
 export function Sidebar({  isCollapsed, conversations  }: SidebarProps) {
-  console.log(conversations);
+  
+  const searchParams = useSearchParams ();
+  const userId = searchParams.get("userId");
 
 
   return (
@@ -60,8 +63,10 @@ export function Sidebar({  isCollapsed, conversations  }: SidebarProps) {
                   <Link
                     href={`?userId=${conversation.opponent?._id}`}
                     className={cn(
-                      buttonVariants({ size: "icon" }),
+                      buttonVariants({ variant: userId === conversation.opponent?._id ? "ghost" : "ringHover",  size: "icon" }),
                       "h-11 w-11 md:h-16 md:w-16",
+                      userId === conversation.opponent?._id && "border-2 border-primary"
+                      ,
                     )}
                   >
                     <Avatar className="flex justify-center items-center">

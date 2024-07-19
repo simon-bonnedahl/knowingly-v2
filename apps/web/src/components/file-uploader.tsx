@@ -14,6 +14,11 @@ import { ScrollArea } from "@knowingly/ui/scroll-area"
 import { Button } from "@knowingly/ui/button"
 import { useControllableState } from "~/lib/hooks/useControllableState"
 import { Progress } from "@knowingly/ui/progress"
+import { UploadFileResponse } from "@xixixao/uploadstuff"
+import { useMutation } from "convex/react"
+import { api } from "@knowingly/backend/convex/_generated/api"
+import { useUploadFiles } from "@xixixao/uploadstuff/react";
+import { Id } from "@knowingly/backend/convex/_generated/dataModel"
 
 interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -38,7 +43,7 @@ interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
    * @default undefined
    * @example onUpload={(files) => uploadFiles(files)}
    */
-  onUpload?: (files: File[]) => Promise<UploadFileResponse[]>
+  
 
 
   /**
@@ -99,7 +104,6 @@ export function FileUploader(props: FileUploaderProps) {
   const {
     value: valueProp,
     onValueChange,
-    onUpload,
     progresses,
     accept = { "image/*": [] },
     maxSize = 1024 * 1024 * 2,
@@ -114,6 +118,18 @@ export function FileUploader(props: FileUploaderProps) {
     prop: valueProp,
     onChange: onValueChange,
   })
+  const generateUploadUrl = useMutation(api.files.generateUploadUrl);
+  const { startUpload } = useUploadFiles(generateUploadUrl);
+  const addUpload = useMutation(api.users.addUpload);
+  const onUpload = async(files: File[]) => {
+    if(files.length === 0) return;
+    const uploaded = await startUpload(files);
+    if(!uploaded[0]) return;
+    const storageId = (uploaded[0] as any).response.storageId as Id<"_storage">;
+    addUpload({storageId});
+    return storageId;
+
+  }
 
   const onDrop = React.useCallback(
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
@@ -144,7 +160,6 @@ export function FileUploader(props: FileUploaderProps) {
       }
 
       if (
-        onUpload &&
         updatedFiles.length > 0 &&
         updatedFiles.length <= maxFiles
       ) {

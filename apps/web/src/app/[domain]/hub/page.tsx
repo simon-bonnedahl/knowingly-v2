@@ -39,7 +39,7 @@ export default function HubPage() {
   return (
     <div className="flex flex-col w-full items-center relative">
       <div className="absolute top-[21rem] right-2 z-20 flex items-center gap-2">
-        <Label className="font-medium">Toggle preview</Label>
+        <Label className="font-medium">Preview</Label>
           <Switch
             
             checked={preview}

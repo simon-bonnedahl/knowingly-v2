@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 
-import { internalMutation, query } from "./functions";
+import { internalMutation, mutation, query } from "./functions";
 
 export const get = query({
   args: { userId: v.id("users") },
@@ -32,6 +32,7 @@ export const createUser = internalMutation({
       name,
       imageUrl,
       role: "USER",
+      uploads: [],
     });
   },
 });
@@ -45,11 +46,32 @@ export const getMyHubs = query({
       .map(async (member) => {
         return {
           ...(await member.edge("hub")),
-          role: member.role,
+          role: await member.edge("role"),
         };
       });
   },
 });
+export const addUpload = mutation({
+    args: { storageId: v.id("_storage") },
+    handler: async (ctx, args) => {
+        const user = await ctx.userX()
+        const uploads = [...user.uploads, args.storageId]
+        await user.patch({"uploads": uploads})
+        return uploads
+    }
+});
+export const getUploads = query({
+    args: { },
+    handler: async (ctx, args) => {
+        const user = await ctx.userX()
+
+        return await Promise.all(user.uploads.map(async (upload) => {
+            return await ctx.storage.getUrl(upload)
+        }
+        ))
+        }
+
+    });
 
 // export const updateSubscription = internalMutation({
 //   args: { subscriptionId: v.string(), userId: v.string(), endsOn: v.number() },

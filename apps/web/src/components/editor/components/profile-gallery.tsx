@@ -25,7 +25,7 @@ export const BlocknoteProfileGallery = createReactBlockSpec(
         values: [2, 3, 4, 5],
       },
     },
-    content: "inline",
+    content: "none",
   },
   {
     render: (props) => {
@@ -109,7 +109,7 @@ const ProfileGallery = ({ props }: { props: any }) => {
           >
             <MinimalCard>
               <MinimalCardImage src={page.image ?? "/placeholder-profile.jpeg"} alt={page.name} />
-              <MinimalCardTitle>{page.icon} {page.name}</MinimalCardTitle>
+              <MinimalCardTitle> {page.name}</MinimalCardTitle>
               {/* <MinimalCardDescription>
                 {page.description}
               </MinimalCardDescription> */}
