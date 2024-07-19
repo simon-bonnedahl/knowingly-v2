@@ -1,43 +1,38 @@
-import { fileURLToPath } from "url";
-import createJiti from "jiti";
-
-// Import env files to validate at build time. Use jiti so we can load .ts files in here.
-createJiti(fileURLToPath(import.meta.url))("./src/env");
+import {withSentryConfig} from "@sentry/nextjs";
 
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
-
-  /** Enables hot reloading for local packages without a build step */
   transpilePackages: [
     "@knowingly/backend",
     "@knowingly/ui",
     "@knowingly/validators",
     "geist"
   ],
-
-  /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
-
   images: {
     remotePatterns: [
       { hostname: "www.google.com" },
       { hostname: "media.licdn.com" },
+      { hostname: "image.unsplash.com" },
       { hostname: "ofhdkjyiwnkwvjsgfxki.supabase.co" },
-      { hostname: "plus.unsplash.com" },
-      { hostname: "www.notion.so" },
-      { hostname: "cdn.sanity.io" },
-      { hostname: "cdn.pixabay.com" },
-      { hostname: "images.pexels.com" },
-      { hostname: "pbs.twimg.com" },
-      { hostname: "picsum.photos" },
-      { hostname: "lh3.googleusercontent.com" },
       { hostname: "images.unsplash.com" },
-      { hostname: "res.cloudinary.com" },
       { hostname: "files.edgestore.dev" },
+      { hostname: "www.notion.so" },
+    { hostname: "plus.unsplash.com" },
     ],
   },
 };
 
-export default config;
+export default  withSentryConfig(config, {
+  // Sentry configuration options
+  org: "student-lck",
+  project: "knowingly",
+  silent: !process.env.CI,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  widenClientFileUpload: true,
+  hideSourceMaps: true,
+  disableLogger: true,
+  automaticVercelMonitors: true,
+});

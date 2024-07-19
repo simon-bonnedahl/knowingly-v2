@@ -19,11 +19,14 @@ import { Icons } from "../icons";
 export function LeftPanel({
 	showForm,
 	timeZone,
+	
 	setTimeZone,
+	name,
 }: {
 	showForm: boolean | null;
 	timeZone: string;
 	setTimeZone: (timeZone: string) => void;
+	name: string;
 }) {
 	const { locale } = useLocale();
 
@@ -48,7 +51,7 @@ export function LeftPanel({
 				<p className="text-gray-11 text-sm font-semibold">Book a meeting</p>
 			</div>
 			<div className="grid gap-3">
-				<p className="text-gray-12 text-2xl font-bold">Hanna</p>
+				<p className="text-gray-12 text-2xl font-bold">{name}</p>
 				{showForm && (
 					<div className="flex text-gray-12">
 						<CalendarIcon className="size-4 mr-2" />

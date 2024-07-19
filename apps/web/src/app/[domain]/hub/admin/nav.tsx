@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 import { cn } from "~/lib/utils";
 import { useEffect, useRef, useState } from "react";
+import { Icons } from "~/components/icons";
+import { Button } from "@knowingly/ui/button";
 
 export default function HubAdminNav() {
   const segment = useSelectedLayoutSegment();
@@ -16,16 +18,10 @@ export default function HubAdminNav() {
       href: `/admin`,
       segment: null,
     },
-  
     {
-      name: "Users",
-      href: `/admin/users`,
-      segment: "users",
-    },
-    {
-      name: "Meetings",
-      href: `/admin/meetings`,
-      segment: "meetings",
+      name: "Members",
+      href: `/admin/members`,
+      segment: "members",
     },
     {
       name: "Invites",
@@ -37,6 +33,12 @@ export default function HubAdminNav() {
       href: `/admin/requests`,
       segment: "requests",
     },
+    {
+      name: "Meetings",
+      href: `/admin/meetings`,
+      segment: "meetings",
+    },
+    
   ];
 
   useEffect(() => {
@@ -67,13 +69,20 @@ export default function HubAdminNav() {
           {item.name}
         </Link>
       ))}
-      <div
+      {segment !== "settings" && (
+        <div
         className="absolute bottom-0 h-1 bg-primary rounded-full transition-all duration-300 ease-in-out"
         style={{
           width: indicatorStyle.width,
           left: indicatorStyle.left,
         }}
       />
+      )}
+      <Link href="/admin/settings">
+      <Button variant={segment === "settings" ? "outline" : "ringHover"} size="icon" className={cn("rounded-full absolute right-2 top-1 ", segment === "settings" && "border-primary border-2")} >
+        <Icons.settings className="w-5 h-5 text-muted-foreground" />
+      </Button>
+      </Link>
     </div>
   );
 }

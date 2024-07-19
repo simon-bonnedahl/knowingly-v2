@@ -4,21 +4,27 @@ import ChatBottombar from "./chat-bottombar";
 import { AnimatePresence, motion } from "framer-motion";
 import { Avatar, AvatarImage } from "@knowingly/ui/avatar";
 import { cn } from "@knowingly/ui";
+import { FunctionReturnType } from "convex/server";
+import { api } from "@knowingly/backend/convex/_generated/api";
+import { Ent } from "@knowingly/backend/convex/types";
+import { useUser } from "@clerk/nextjs";
+import { useQuery } from "convex/react";
 
 interface ChatListProps {
-  messages?: Message[];
-  selectedUser: UserData;
-  sendMessage: (newMessage: Message) => void;
+  messages?: FunctionReturnType<typeof api.messages.list>;
+  user: FunctionReturnType<typeof api.users.get>;
+  sendMessage: (message: string) => void;
   isMobile: boolean;
 }
 
 export function ChatList({
   messages,
-  selectedUser,
+  user,
   sendMessage,
   isMobile
 }: ChatListProps) {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const me = useQuery(api.users.getMe);
 
   React.useEffect(() => {
     if (messagesContainerRef.current) {
@@ -55,28 +61,28 @@ export function ChatList({
               }}
               className={cn(
                 "flex flex-col gap-2 p-4 whitespace-pre-wrap",
-                message.name !== selectedUser.name ? "items-end" : "items-start"
+                message.senderId !== user?._id ? "items-end" : "items-start"
               )}
             >
               <div className="flex gap-3 items-center">
-                {message.name === selectedUser.name && (
+                {message.senderId === user?._id && (
                   <Avatar className="flex justify-center items-center">
                     <AvatarImage
-                      src={message.avatar}
-                      alt={message.name}
+                      src={user.imageUrl}
+                      alt={user.name}
                       width={6}
                       height={6}
                     />
                   </Avatar>
                 )}
                 <span className=" bg-accent p-3 rounded-md max-w-xs">
-                  {message.message}
+                  {message.body}
                 </span>
-                {message.name !== selectedUser.name && (
+                {message.senderId == me?._id && (
                   <Avatar className="flex justify-center items-center">
                     <AvatarImage
-                      src={message.avatar}
-                      alt={message.name}
+                      src={me?.imageUrl}
+                      alt={me?.name}
                       width={6}
                       height={6}
                     />

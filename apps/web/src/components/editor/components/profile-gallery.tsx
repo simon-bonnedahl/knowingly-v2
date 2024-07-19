@@ -12,7 +12,9 @@ import { IconDots, IconPlus, IconSearch } from "@tabler/icons-react";
 import { Button } from "@knowingly/ui/button";
 import { Input } from "@knowingly/ui/input";
 import { Slider } from "@knowingly/ui/slider";
-import { Modal, ModalContent, ModalTrigger } from "@knowingly/ui/modal";
+import { Modal, ModalContent, ModalTrigger } from "@knowingly/ui/modal"
+import { MinimalCard, MinimalCardDescription, MinimalCardImage, MinimalCardTitle} from "@knowingly/ui/minimal-card"
+
 
 export const BlocknoteProfileGallery = createReactBlockSpec(
   {
@@ -64,7 +66,7 @@ const ProfileGallery = ({ props }: { props: any }) => {
   }, [search]);
 
   return (
-    <div className="flex flex-col gap-2 w-full">
+    <div className="flex flex-col gap-2 w-full z-10" ref={props.contentRef}>
       <div className="w-full  items-center flex   ">
         <div className="flex flex-row gap-2">
           <Label>Columns:</Label>
@@ -76,7 +78,7 @@ const ProfileGallery = ({ props }: { props: any }) => {
             min={2}
             step={1}
             onValueChange={(value) => setColumns(value[0])}
-            className="w-24"
+            className="w-24 hover:cursor-pointer"
           />
         </div>
         <div className="relative ml-auto flex-1 md:grow-0">
@@ -103,21 +105,15 @@ const ProfileGallery = ({ props }: { props: any }) => {
           <Link
             key={page._id}
             href={`/${page.slug}`}
-            className="hover:cursor-pointer rounded-md overflow-clip duration-150 ease-in-out hover:scale-[1.01] transform-gpu shadow-md relative w-fill h-full" // Set height to full
+            className="hover:cursor-pointer"
           >
-            <Image
-              alt={page.name ?? "Card thumbnail"}
-              width={500}
-              height={400}
-              className="w-full h-full object-cover" // Set height to full
-              src={page.image ?? "/placeholder-banner.svg"}
-            />
-            <div className="flex w-full items-center justify-between bg-background px-2 py-1 absolute bottom-0">
-              <h3 className="font-cal my-0 truncate text-xl font-bold tracking-wide ">
-                {page.icon}
-                {page.name}
-              </h3>
-            </div>
+            <MinimalCard>
+              <MinimalCardImage src={page.image ?? "/placeholder-profile.jpeg"} alt={page.name} />
+              <MinimalCardTitle>{page.icon} {page.name}</MinimalCardTitle>
+              {/* <MinimalCardDescription>
+                {page.description}
+              </MinimalCardDescription> */}
+            </MinimalCard>
           </Link>
         ))}
         <CreateNewPageModal />
@@ -127,18 +123,19 @@ const ProfileGallery = ({ props }: { props: any }) => {
 };
 
 const CreateNewPageModal = () => {
-  const [open, setOpen] = useState(false);
 
   return (
     <Modal>
       <ModalTrigger asChild>
-      <Button
-      variant="outline"
-      className="h-full flex justify-center items-center gap-2 text-sm "
+      <button
+
     >
+      <MinimalCard className="h-full flex items-center justify-center">
       <IconPlus className="w-5 h-5" />
-      New
-    </Button>
+      <span>New</span>
+
+      </MinimalCard>
+    </button>
       </ModalTrigger>
       <ModalContent className="min-w-fit">
         <CreateNewPageForm />

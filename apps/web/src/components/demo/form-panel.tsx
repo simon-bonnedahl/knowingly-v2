@@ -10,12 +10,15 @@ import { useRouter } from "next/navigation";
 
 import * as React from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@knowingly/ui/tooltip";
+import { useQuery } from "convex/react";
+import { api } from "@knowingly/backend/convex/_generated/api";
 
 type Guest = {
 	email: string;
 };
 
 export function FormPanel() {
+	const user = useQuery(api.users.getMe);
 	const router = useRouter();
 
 	const [guests, setGuests] = React.useState<Guest[]>([]);
@@ -37,12 +40,12 @@ export function FormPanel() {
 	return (
 		<form className="flex flex-col gap-5 w-[360px]">
 			<div className="flex flex-col space-y-1.5">
-				<Label htmlFor="name">Your name *</Label>
-				<Input id="name" defaultValue="Damián Ricobelli" />
+				<Label htmlFor="name">Your name</Label>
+				<Input id="name" defaultValue={user?.name} disabled={!!user}/>
 			</div>
 			<div className="flex flex-col space-y-1.5">
-				<Label htmlFor="email">Email address *</Label>
-				<Input id="email" type="email" defaultValue="dricobelli@gmail.com" />
+				<Label htmlFor="email">Email address</Label>
+				<Input id="email" type="email" defaultValue={user?.email} disabled={!!user} />
 			</div>
 			{/* <div className="flex flex-col space-y-1.5">
 				<Label htmlFor="phone">Phone number *</Label>
@@ -91,11 +94,6 @@ export function FormPanel() {
 				<UserPlus className="mr-2 size-4" />
 				Add guests
 			</Button>
-			<p className="text-gray-11 text-xs my-4">
-				By proceeding, you agree to our{" "}
-				<span className="text-gray-12">Terms</span> and{" "}
-				<span className="text-gray-12">Privacy Policy</span>.
-			</p>
 			<div className="flex justify-end gap-2">
 				<Button
 					variant="ghost"

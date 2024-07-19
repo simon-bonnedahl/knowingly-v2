@@ -19,6 +19,8 @@ import { useMutation } from "convex/react";
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { Modal, ModalContent, ModalDescription, ModalHeader, ModalTitle, ModalTrigger } from "@knowingly/ui/modal";
 import { Button } from "@knowingly/ui/button";
+import { GaugeCircle } from "@knowingly/ui/gauge-circle";
+
 
 export const CustomFieldTypes = {
   text: {
@@ -88,12 +90,12 @@ export const CustomFieldTypes = {
             </button>
             <button
               className={cn(
-                "relative flex h-12 w-full flex-col items-center rounded-md border transition-all duration-150 ease-in-out",
+                "relative flex h-12 w-full flex-col items-center rounded-md border transition-all duration-150 ease-in-out pt-1",
                 options?.showAs === "ring" && "border-2 border-primary",
               )}
               onClick={() => onValueChange("ring")}
             >
-              <RingProgress value={number} max={100} radius={8} />
+              <GaugeCircle value={number} max={100} min={0}  showNumber={false} className="size-5"/>
               <span className="absolute bottom-0 text-xs">Ring</span>
             </button>
           </div>
@@ -114,13 +116,13 @@ export const CustomFieldTypes = {
     ),
     button: ({ value, options }: { value: any; options: any }) => {
       return (
-        <div className="flex w-full items-center gap-1">
-          {value}
+        <div className="flex w-full items-center gap-1 min-h-5">
+          {options?.showAs === "number" && value}
           {options?.showAs === "bar" && (
             <Progress value={value} max={100} className="h-2 w-16" />
           )}
           {options?.showAs === "ring" && (
-            <RingProgress value={value} max={100} radius={7} />
+            <GaugeCircle value={value} max={100} min={0}  className="size-10"/>
           )}
         </div>
       );
@@ -455,7 +457,7 @@ export const CustomFieldTypes = {
               )}
               onClick={() => onValueChange("spotify")}
             >
-              <Icons.spotify className="h-7 w-7" />
+              <Icons.spotify className="size-6" />
               <span className="absolute bottom-0 text-xs">Spotify</span>
             </button>
             <button
@@ -465,17 +467,17 @@ export const CustomFieldTypes = {
               )}
               onClick={() => onValueChange("soundcloud")}
             >
-              <Icons.soundcloud className="h-7 w-7" />
+              <Icons.soundcloud className="size-6" />
               <span className="absolute bottom-0 text-xs">Soundcloud</span>
             </button>
             <button
               className={cn(
-                "relative flex h-12 w-full flex-col items-center rounded-md border transition-all duration-150 ease-in-out",
+                "relative flex h-12 w-full flex-col items-center rounded-md border transition-all duration-150 ease-in-out pt-1",
                 options?.format === "youtube" && "border-2 border-primary",
               )}
               onClick={() => onValueChange("youtube")}
             >
-              <Icons.youtube className="h-7 w-7" />
+              <Icons.youtube className="size-6" />
 
               <span className="absolute bottom-0 text-xs">Youtube</span>
             </button>
@@ -501,7 +503,7 @@ export const CustomFieldTypes = {
 
           return (
             <iframe
-              className="h-20 rounded-md w-full"
+              className="h-20 rounded-xl w-full "
               src={src}
               allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
               loading="lazy"
@@ -511,15 +513,10 @@ export const CustomFieldTypes = {
           // Transform SoundCloud link to embed format
           src =
             value.replace("soundcloud.com", "w.soundcloud.com/player") +
-            "&url=" +
-            encodeURIComponent(value) +
-            "&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true";
+            "&url=" +encodeURIComponent(value);
           return (
             <iframe
-              width="100%"
-              height="166"
-              scrolling="no"
-              frameBorder="no"
+              className="rounded-xl w-full h-32"
               allow="autoplay"
               src={src}
             ></iframe>
@@ -529,7 +526,7 @@ export const CustomFieldTypes = {
           return (
             <iframe
               
-              className="w-full h-auto rounded-md"
+              className="w-full aspect-video rounded-xl"
               src={src}
               title="YouTube Audio player"
               allow="accelerometer;  clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -539,7 +536,7 @@ export const CustomFieldTypes = {
           src = value.replace("open.spotify.com", "open.spotify.com/embed");
           return (
             <iframe
-              className="h-20 rounded-md"
+              className="h-20 rounded-xl w-full "
               src={src}
               allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
               loading="lazy"

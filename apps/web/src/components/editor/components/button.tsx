@@ -22,7 +22,7 @@ export const BlocknoteButton = createReactBlockSpec(
   {
     render: (props) => {
       return (
-        <Button>
+        <Button  variant={"ringHover"} >
             <span ref={props.contentRef}></span>
         </Button>
       );

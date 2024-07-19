@@ -1,8 +1,10 @@
-import type { Column } from "@tanstack/react-table";
+import type { Option } from "./types"
+import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons"
+import type { Column } from "@tanstack/react-table"
 
-import { cn } from "@knowingly/ui";
-import { Badge } from "@knowingly/ui/badge";
-import { Button } from "@knowingly/ui/button";
+import { cn } from "@knowingly/ui"
+import { Badge } from "@knowingly/ui/badge"
+import { Button } from "@knowingly/ui/button"
 import {
   Command,
   CommandEmpty,
@@ -11,19 +13,18 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "@knowingly/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@knowingly/ui/popover";
-import { Separator } from "@knowingly/ui/separator";
-import { IconCheck, IconCirclePlus } from "@tabler/icons-react";
+} from "@knowingly/ui/command"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@knowingly/ui/popover"
+import { Separator } from "@knowingly/ui/separator"
 
 interface DataTableFacetedFilterProps<TData, TValue> {
-  column?: Column<TData, TValue>;
-  title?: string;
-  options: {
-    label: string;
-    value: string;
-    icon?: React.ComponentType<{ className?: string }>;
-  }[];
+  column?: Column<TData, TValue>
+  title?: string
+  options: Option[]
 }
 
 export function DataTableFacetedFilter<TData, TValue>({
@@ -31,14 +32,13 @@ export function DataTableFacetedFilter<TData, TValue>({
   title,
   options,
 }: DataTableFacetedFilterProps<TData, TValue>) {
-  const facets = column?.getFacetedUniqueValues();
-  const selectedValues = new Set(column?.getFilterValue() as string[]);
+  const selectedValues = new Set(column?.getFilterValue() as string[])
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="h-8 border-dashed">
-          <IconCirclePlus className="mr-2 h-4 w-4" />
+          <PlusCircledIcon className="mr-2 size-4" />
           {title}
           {selectedValues?.size > 0 && (
             <>
@@ -75,50 +75,55 @@ export function DataTableFacetedFilter<TData, TValue>({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0" align="start">
-        <Command className="bg-background">
+      <PopoverContent className="w-[12.5rem] p-0" align="start">
+        <Command>
           <CommandInput placeholder={title} />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>
               {options.map((option) => {
-                const isSelected = selectedValues.has(option.value);
+                const isSelected = selectedValues.has(option.value)
+
                 return (
                   <CommandItem
                     key={option.value}
                     onSelect={() => {
                       if (isSelected) {
-                        selectedValues.delete(option.value);
+                        selectedValues.delete(option.value)
                       } else {
-                        selectedValues.add(option.value);
+                        selectedValues.add(option.value)
                       }
-                      const filterValues = Array.from(selectedValues);
+                      const filterValues = Array.from(selectedValues)
                       column?.setFilterValue(
-                        filterValues.length ? filterValues : undefined,
-                      );
+                        filterValues.length ? filterValues : undefined
+                      )
                     }}
                   >
                     <div
                       className={cn(
-                        "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                        "mr-2 flex size-4 items-center justify-center rounded-sm border border-primary",
                         isSelected
-                          ? "bg-primary text-white"
-                          : "opacity-50 [&_svg]:invisible",
+                          ? "bg-primary text-primary-foreground"
+                          : "opacity-50 [&_svg]:invisible"
                       )}
                     >
-                      <IconCheck className={cn("h-4 w-4")} />
+                      <CheckIcon className="size-4" aria-hidden="true" />
                     </div>
                     {option.icon && (
-                      <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+                      <option.icon
+                        className="mr-2 size-4 text-muted-foreground"
+                        aria-hidden="true"
+                      />
                     )}
                     <span>{option.label}</span>
-                    {facets?.get(option.value) && (
-                      <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
-                        {facets.get(option.value)}
-                      </span>
-                    )}
+                    {option.withCount &&
+                      column?.getFacetedUniqueValues()?.get(option.value) && (
+                        <span className="ml-auto flex size-4 items-center justify-center font-mono text-xs">
+                          {column?.getFacetedUniqueValues().get(option.value)}
+                        </span>
+                      )}
                   </CommandItem>
-                );
+                )
               })}
             </CommandGroup>
             {selectedValues.size > 0 && (
@@ -138,5 +143,5 @@ export function DataTableFacetedFilter<TData, TValue>({
         </Command>
       </PopoverContent>
     </Popover>
-  );
+  )
 }

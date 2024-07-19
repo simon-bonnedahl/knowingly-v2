@@ -1,8 +1,9 @@
-"use client";
+"use client"
 
-import type { Table } from "@tanstack/react-table";
+import { MixerHorizontalIcon } from "@radix-ui/react-icons"
+import type { Table } from "@tanstack/react-table"
 
-import { Button } from "@knowingly/ui/button";
+import { Button } from "@knowingly/ui/button"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -10,11 +11,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@knowingly/ui/dropdown";
-import { IconDots } from "@tabler/icons-react";
+} from "@knowingly/ui/dropdown-menu"
 
 interface DataTableViewOptionsProps<TData> {
-  table: Table<TData>;
+  table: Table<TData>
 }
 
 export function DataTableViewOptions<TData>({
@@ -24,22 +24,23 @@ export function DataTableViewOptions<TData>({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="outline"
+          aria-label="Toggle columns"
+          variant="ringHover"
           size="sm"
-          className="ml-auto hidden h-8 lg:flex"
+          className="ml-auto hidden  lg:flex"
         >
-          <IconDots className="mr-2 h-4 w-4" />
+          <MixerHorizontalIcon className="mr-2 size-4" />
           View
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[150px] bg-background">
+      <DropdownMenuContent align="end" className="w-40">
         <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {table
           .getAllColumns()
           .filter(
             (column) =>
-              typeof column.accessorFn !== "undefined" && column.getCanHide(),
+              typeof column.accessorFn !== "undefined" && column.getCanHide()
           )
           .map((column) => {
             return (
@@ -49,11 +50,11 @@ export function DataTableViewOptions<TData>({
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
-                {column.id}
+                <span className="truncate">{column.id}</span>
               </DropdownMenuCheckboxItem>
-            );
+            )
           })}
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

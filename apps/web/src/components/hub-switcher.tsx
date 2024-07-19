@@ -17,6 +17,7 @@ import { Command, CommandGroup, CommandInput, CommandItem, CommandList, CommandS
 import { FunctionReturnType } from "convex/server"
 import { api } from "@knowingly/backend/convex/_generated/api"
 import { useSubdomain } from "~/lib/hooks/useSubdomain"
+import { Icons } from "./icons"
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 
@@ -49,17 +50,20 @@ export default function HubSwitcher({ className, currentHub, hubs }: HubSwitcher
             role="combobox"
             aria-expanded={open}
             aria-label="Select a Hub"
-            className={cn("justify-between flex", className)}
+            className={cn("justify-between flex gap-2 px-2 group", className)}
           >
-            <Avatar className="mr-2 h-5 w-5 rounded-md">
+            <Avatar className=" h-8 w-8 rounded-md border bg-background group-hover:bg-card p-1 ">
               <AvatarImage
                 src={currentHub?.logo ?? "/logo-small-black.svg"}
                 alt={currentHub?.subdomain}
               />
               <AvatarFallback className="bg-transparent" ><p className="text-xl">{currentHub?.logo}</p></AvatarFallback>
             </Avatar>
-            {currentHub?.name || "Knowingly App" }
-            <IconChevronDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
+            <div className="flex flex-col w-full  items-start gap-0 ">
+              <span className="text-xs  text-muted-foreground">{currentHub ? "Hub" : "Knowingly"}</span>
+              <span className="text-sm font-medium">{currentHub?.name || "App" }</span>
+            </div>
+            <Icons.selector className="ml-auto size-5 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-full p-0 border-none">
@@ -84,7 +88,7 @@ export default function HubSwitcher({ className, currentHub, hubs }: HubSwitcher
                         <AvatarFallback className="bg-transparent" ><p className="text-xl">{hub?.logo}</p></AvatarFallback>
                       </Avatar>
                       {hub.name}
-                      <IconCheck
+                      <Icons.check
                         className={cn(
                           "ml-auto h-4 w-4",
                           currentHub?.subdomain === hub.subdomain
@@ -110,7 +114,7 @@ export default function HubSwitcher({ className, currentHub, hubs }: HubSwitcher
                       />
                       <AvatarFallback>K</AvatarFallback>
                     </Avatar>
-                    Knowingly App
+                    App
                     <IconCheck
                       className={cn(
                         "ml-auto h-4 w-4",
@@ -134,7 +138,7 @@ export default function HubSwitcher({ className, currentHub, hubs }: HubSwitcher
                       />
                       <AvatarFallback>K</AvatarFallback>
                     </Avatar>
-                    Knowingly Admin
+                    Admin
                     <IconCheck
                       className={cn(
                         "ml-auto h-4 w-4",
@@ -157,7 +161,7 @@ export default function HubSwitcher({ className, currentHub, hubs }: HubSwitcher
                     }}
                     className="text-sm hover:cursor-pointer"
                   >
-                    <IconCirclePlus className="mr-2 h-5 w-5" />
+                    <Icons.plus className="mr-2 h-5 w-5" />
                     Create Hub
                   </CommandItem>
                 </DialogTrigger>

@@ -1,6 +1,6 @@
 "use client";
 
-import { BotIcon, ChevronDownIcon, Sparkle, Sparkles, SparklesIcon } from "lucide-react";
+import { Bot, BotIcon, ChevronDownIcon, Sparkle, Sparkles, SparklesIcon } from "lucide-react";
 
 import { type FC, forwardRef } from "react";
 import { AssistantModalPrimitive } from "@assistant-ui/react";
@@ -43,9 +43,9 @@ const FloatingAssistantButton = forwardRef<
       className="size-full rounded-full shadow transition-transform hover:scale-110 active:scale-90"
       ref={ref}
     >
-      <Sparkles
+      <Bot
         data-state={state}
-        className="absolute size-4 transition-all data-[state=closed]:rotate-0 data-[state=open]:rotate-90 data-[state=closed]:scale-100 data-[state=open]:scale-0"
+        className="!text-primary-foreground absolute size-5   transition-all data-[state=closed]:rotate-0 data-[state=open]:rotate-90 data-[state=closed]:scale-100 data-[state=open]:scale-0"
       />
 
       <ChevronDownIcon

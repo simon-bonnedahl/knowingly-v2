@@ -1,22 +1,7 @@
-"use client";
+import * as React from "react"
+import { flexRender, type Table as TanstackTable } from "@tanstack/react-table"
 
-import * as React from "react";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  Row,
-  SortingState,
-  useReactTable,
-  VisibilityState,
-} from "@tanstack/react-table";
-
+import { cn } from "@knowingly/ui"
 import {
   Table,
   TableBody,
@@ -24,91 +9,54 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@knowingly/ui/table";
+} from "@knowingly/ui/table"
+import { DataTablePagination } from "./data-table-pagination"
 
-import { DataTablePagination } from "./data-table-pagination";
-import { DataTableToolbar } from "./data-table-toolbar";
+interface DataTableProps<TData> extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * The table instance returned from useDataTable hook with pagination, sorting, filtering, etc.
+   * @type TanstackTable<TData>
+   */
+  table: TanstackTable<TData>
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  initialData: TData[];
-  searchColumn: string;
-  filters?: Record<string, string[]>;
-  thClassNameMap?: Record<string, string>;
+  /**
+   * The floating bar to render at the bottom of the table on row selection.
+   * @default null
+   * @type React.ReactNode | null
+   * @example floatingBar={<TasksTableFloatingBar table={table} />}
+   */
+  floatingBar?: React.ReactNode | null
 }
 
-export function DataTable<TData, TValue>({
-  columns,
-  initialData,
-  searchColumn,
-  filters,
-  thClassNameMap = {},
-}: DataTableProps<TData, TValue>) {
-  const data = React.useMemo(() => initialData, [initialData]);
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({
-      id: false,
-    });
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const table = useReactTable({
-    data,
-    columns,
-    state: {
-      sorting,
-      columnVisibility,
-      rowSelection,
-      columnFilters,
-    },
-    meta: {
-      deleteRow: (row: Row<TData>) => {
-        data.splice(data.indexOf(row.original), 1);
-      },
-    },
-
-    enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-  });
-
+export function DataTable<TData>({
+  table,
+  floatingBar = null,
+  children,
+  className,
+  ...props
+}: DataTableProps<TData>) {
   return (
-    <div className="space-y-4">
-      <DataTableToolbar
-        table={table}
-        searchColumn={searchColumn}
-        filters={filters}
-      />
+    <div
+      className={cn("w-full space-y-2.5 overflow-auto", className)}
+      {...props}
+    >
+      {children}
       <div className="rounded-md border">
-        <Table className="table-fixed overflow-auto">
+        <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead
-                      key={header.id}
-                      colSpan={header.colSpan}
-                      className={thClassNameMap[header.column.id] ?? ""}
-                    >
+                    <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext(),
+                            header.getContext()
                           )}
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
@@ -124,7 +72,7 @@ export function DataTable<TData, TValue>({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}
@@ -133,7 +81,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={table.getAllColumns().length}
                   className="h-24 text-center"
                 >
                   No results.
@@ -143,7 +91,10 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <div className="flex flex-col gap-2.5">
+        <DataTablePagination table={table} />
+        {table.getFilteredSelectedRowModel().rows.length > 0 && floatingBar}
+      </div>
     </div>
-  );
+  )
 }

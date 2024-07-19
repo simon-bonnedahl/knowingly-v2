@@ -11,7 +11,7 @@ import { VisitorsChart } from "~/components/charts/visitors-chart";
 
 
 
-export default function AdminDashboard() {
+export default function AdminDashboardPage() {
     
     return (
       <div className="flex max-w-screen-xl flex-col space-y-12  py-2">

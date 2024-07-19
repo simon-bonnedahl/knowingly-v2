@@ -17,7 +17,7 @@ import { Textarea } from "@knowingly/ui/textarea";
 import { Message, loggedInUserData } from "./mockupData";
 import { EmojiPicker } from "./emoji-picker";
 interface ChatBottombarProps {
-  sendMessage: (newMessage: Message) => void;
+  sendMessage: (message: string) => void;
   isMobile: boolean;
 }
 
@@ -34,31 +34,18 @@ export default function ChatBottombar({
   };
 
   const handleThumbsUp = () => {
-    const newMessage: Message = {
-      id: message.length + 1,
-      name: loggedInUserData.name,
-      avatar: loggedInUserData.avatar,
-      message: "👍",
-    };
-    sendMessage(newMessage);
+
+    sendMessage("👍");
     setMessage("");
   };
 
   const handleSend = () => {
-    if (message.trim()) {
-      const newMessage: Message = {
-        id: message.length + 1,
-        name: loggedInUserData.name,
-        avatar: loggedInUserData.avatar,
-        message: message.trim(),
-      };
-      sendMessage(newMessage);
+      sendMessage(message);
       setMessage("");
 
       if (inputRef.current) {
         inputRef.current.focus();
       }
-    }
   };
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {

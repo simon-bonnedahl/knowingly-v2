@@ -2,47 +2,54 @@ import { v } from "convex/values";
 
 import { internalMutation, query } from "./functions";
 
+export const get = query({
+  args: { userId: v.id("users") },
+  handler: async (ctx, args) => {
+    return await ctx.table("users").get(args.userId);
+  },
+});
 
 export const getMe = query({
-    args: {},
-    handler: async (ctx) => {
-
-        const user = await ctx.user()
-        return user
-    },
-    });
-
-
+  args: {},
+  handler: async (ctx) => {
+    const user = await ctx.user();
+    return user;
+  },
+});
 
 export const createUser = internalMutation({
-  args: { email: v.string(), tokenIdentifier: v.string(), name: v.string(), imageUrl: v.string()},
+  args: {
+    email: v.string(),
+    tokenIdentifier: v.string(),
+    name: v.string(),
+    imageUrl: v.string(),
+  },
   handler: async (ctx, args) => {
     const { tokenIdentifier, email, name, imageUrl } = args;
     const user = await ctx.table("users").insert({
-        tokenIdentifier,
-        email,
-        name,
-        imageUrl,
-        role: "USER",
-        });
+      tokenIdentifier,
+      email,
+      name,
+      imageUrl,
+      role: "USER",
+    });
   },
 });
 
 export const getMyHubs = query({
-    args: {},
-    handler: async (ctx) => {
-        
-        return await ctx.table("members").filter(q => q.eq(q.field("userId"), ctx.userId)).map(async (member) => {
-            return {
-                ... await member.edge("hub"),
-                role: member.role
-            }
-        }
-    )
-    },
-    });
-
-
+  args: {},
+  handler: async (ctx) => {
+    return await ctx
+      .table("members")
+      .filter((q) => q.eq(q.field("userId"), ctx.userId))
+      .map(async (member) => {
+        return {
+          ...(await member.edge("hub")),
+          role: member.role,
+        };
+      });
+  },
+});
 
 // export const updateSubscription = internalMutation({
 //   args: { subscriptionId: v.string(), userId: v.string(), endsOn: v.number() },
@@ -79,4 +86,3 @@ export const getMyHubs = query({
 //     });
 //   },
 // });
-

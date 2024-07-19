@@ -105,6 +105,7 @@ export function FieldSettings({
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
+          size={"sm"}
           className="flex w-64 items-center justify-start gap-1 truncate text-muted-foreground hover:text-muted-foreground  focus-visible:ring-0"
           disabled={preview}
         >

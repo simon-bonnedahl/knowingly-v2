@@ -66,7 +66,7 @@ export function Search() {
           <CommandGroup heading="Profiles">
             {profiles?.map((profile) => (
                 <CommandItem
-                className="!bg-transparent flex items-center gap-2"
+                className=" flex items-center gap-2 hover:cursor-pointer "
                   key={profile._id}
                   value={profile.name}
                   onSelect={() => {
