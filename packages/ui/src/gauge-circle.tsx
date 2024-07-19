@@ -4,8 +4,9 @@ interface Props {
    max: number
    value: number
    min: number
-   gaugePrimaryColor: string
-   gaugeSecondaryColor: string
+   // gaugePrimaryColor: string
+   // gaugeSecondaryColor: string
+   showNumber?: boolean
    className?: string
 }
 
@@ -13,8 +14,9 @@ export function GaugeCircle({
    max = 100,
    min = 0,
    value = 0,
-   gaugePrimaryColor,
-   gaugeSecondaryColor,
+   // gaugePrimaryColor,
+   // gaugeSecondaryColor,
+   showNumber = true,
    className,
 }: Props) {
    const circumference = 2 * Math.PI * 45
@@ -54,10 +56,9 @@ export function GaugeCircle({
                   strokeDashoffset="0"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className=" opacity-100"
+                  className=" opacity-100 stroke-background"
                   style={
                      {
-                        'stroke': gaugeSecondaryColor,
                         '--stroke-percent': 90 - currentPercent,
                         '--offset-factor-secondary': 'calc(1 - var(--offset-factor))',
                         'strokeDasharray':
@@ -79,10 +80,9 @@ export function GaugeCircle({
                strokeDashoffset="0"
                strokeLinecap="round"
                strokeLinejoin="round"
-               className="opacity-100"
+               className="opacity-100  stroke-primary"
                style={
                   {
-                     'stroke': gaugePrimaryColor,
                      '--stroke-percent': currentPercent,
                      'strokeDasharray':
                 'calc(var(--stroke-percent) * var(--percent-to-px)) var(--circumference)',
@@ -97,12 +97,15 @@ export function GaugeCircle({
                }
             />
          </svg>
-         <span
+         {showNumber && (
+            <span
             data-current-value={currentPercent}
-            className="animate-in fade-in absolute inset-0 m-auto size-fit delay-[var(--delay)] duration-[var(--transition-length)] ease-linear"
+            className="animate-in fade-in absolute inset-0 m-auto size-fit text-sm  delay-[var(--delay)] duration-[var(--transition-length)] ease-linear"
          >
             {currentPercent}
          </span>
+         )}
+         
       </div>
    )
 }

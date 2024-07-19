@@ -23,7 +23,7 @@
     "@knowingly/prettier-config": "workspace:*",
     "@turbo/gen": "^2.0.3",
     "prettier": "^3.3.1",
-    "turbo": "^2.0.3",
+    "turbo": "^2.0.7",
     "typescript": "^5.4.5"
   },
   "prettier": "@knowingly/prettier-config"

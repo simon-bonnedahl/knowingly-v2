@@ -1,10 +1,15 @@
 import { v } from "convex/values";
 import { mutation, query } from "./functions";
 export const getHub = query({
-    args: {subdomain : v.string() },
+    args: {subdomain : v.optional(v.string()), id: v.optional(v.id("hubs"))},
     handler: async (ctx, args) => {
-      const hub = ctx.table("hubs").get("subdomain", args.subdomain);
-      return hub;
+      if (!args.id && !args.subdomain) throw new Error("id or subdomain is required");
+      if(args.id)
+        return await ctx.table("hubs").get(args.id);
+      if(args.subdomain)
+      return await  ctx.table("hubs").get("subdomain", args.subdomain);
+
+
     },
   });
 export const getHubs = query({
@@ -36,7 +41,7 @@ export const getMyRole = query({
     args: {subdomain: v.string()},
     handler: async (ctx, args) => {
       const {subdomain} = args;
-      return (await ctx.table("hubs").get("subdomain", subdomain).edge("members").filter(q => q.eq(q.field("userId"), ctx.userId)).first())?.role
+      return (await ctx.table("hubs").get("subdomain", subdomain).edge("members").filter(q => q.eq(q.field("userId"), ctx.userId)).first())?.edge("role")
     },
   });
 
@@ -48,6 +53,29 @@ export const getMembers = query({
         return {
           ...member,
           user: await ctx.table("users").get(member.userId),
+          role: await ctx.table("roles").get(member.roleId),
+        }
+      });
+    },
+  });
+
+export const getRoles = query({
+    args: {subdomain: v.string()},
+    handler: async (ctx, args) => {
+      const {subdomain} = args;
+      return ctx.table("hubs").get("subdomain", subdomain).edge("roles");
+    },
+  });
+
+export const getInvites = query({
+    args: {subdomain: v.string()},
+    handler: async (ctx, args) => {
+      const {subdomain} = args;
+      return ctx.table("hubs").get("subdomain", subdomain).edge("hubInvites").map(async(invite) => {
+        return {
+          ...invite,
+          user: invite.user ? await ctx.table("users").get(invite.user) : null,
+          role: await ctx.table("roles").get(invite.roleId),
         }
       });
     },

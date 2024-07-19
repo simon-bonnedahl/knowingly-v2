@@ -28,11 +28,11 @@ export function IconPicker({ icon, setIcon }: IconPickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="px-2" size="icon"  >
-            <Icon name={icon} className="w-5 h-5" />
+        <Button variant="outline"  className="w-9 h-9 px-2" >
+            <Icon name={icon} className="w-5 h-5 " />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-fit">
+      <PopoverContent className="w-fit max-h-64 overflow-y-scroll">
       <Input
         value={search}
         onChange={(e) => setSearch(e.target.value)}
@@ -40,6 +40,9 @@ export function IconPicker({ icon, setIcon }: IconPickerProps) {
         className="mb-4"
       />
       <div className="flex   overflow-y-auto  flex-wrap w-64">
+        {Object.entries(filteredIcons).length === 0 && (
+          <p className="text-muted-foreground text-sm font-medium">No icons found</p>
+        )}
         {Object.entries(filteredIcons).map(([key, Icon]) => (
           <button
             className="flex justify-center items-center p-2 hover:scale-110 transform transition-all duration-200 "

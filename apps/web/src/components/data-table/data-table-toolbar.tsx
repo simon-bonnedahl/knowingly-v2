@@ -1,72 +1,99 @@
-"use client";
+"use client"
 
-import type { Table } from "@tanstack/react-table";
+import * as React from "react"
+import type { DataTableFilterField } from "./types"
+import { Cross2Icon } from "@radix-ui/react-icons"
+import type { Table } from "@tanstack/react-table"
 
+import { cn } from "@knowingly/ui"
+import { Button } from "@knowingly/ui/button"
+import { Input } from "@knowingly/ui/input"
+import { DataTableFacetedFilter } from "./data-table-faceted-filter"
+import { DataTableViewOptions } from "./data-table-view-options"
 
-import { DataTableFacetedFilter } from "./data-table-faceted-filter";
-import { DataTableViewOptions } from "./data-table-view-options";
-import { IconSearch, IconX } from "@tabler/icons-react";
-import { Input } from "@knowingly/ui/input";
-import { capitalizeFirstLetter } from "~/lib/utils";
-import { Button } from "@knowingly/ui/button";
-
-interface DataTableToolbarProps<TData> {
-  table: Table<TData>;
-  searchColumn: string;
-  filters?: Record<string, string[]>;
+interface DataTableToolbarProps<TData>
+  extends React.HTMLAttributes<HTMLDivElement> {
+  table: Table<TData>
+  filterFields?: DataTableFilterField<TData>[]
 }
 
 export function DataTableToolbar<TData>({
   table,
-  searchColumn,
-  filters,
+  filterFields = [],
+  children,
+  className,
+  ...props
 }: DataTableToolbarProps<TData>) {
-  const isFiltered = table.getState().columnFilters.length > 0;
+  const isFiltered = table.getState().columnFilters.length > 0
+
+  // Memoize computation of searchableColumns and filterableColumns
+  const { searchableColumns, filterableColumns } = React.useMemo(() => {
+    return {
+      searchableColumns: filterFields.filter((field) => !field.options),
+      filterableColumns: filterFields.filter((field) => field.options),
+    }
+  }, [filterFields])
 
   return (
-    <div className="flex items-center justify-between">
+    <div
+      className={cn(
+        "flex w-full items-center justify-between space-x-2 overflow-auto p-1",
+        className
+      )}
+      {...props}
+    >
       <div className="flex flex-1 items-center space-x-2">
-        <div className="relative">
-          <IconSearch className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search"
-            className="w-64 pl-8 md:w-96"
-            value={
-              (table.getColumn(searchColumn)?.getFilterValue() as string) ?? ""
-            }
-            onChange={(event) =>
-              table.getColumn(searchColumn)?.setFilterValue(event.target.value)
-            }
-          />
-        </div>
-        {filters &&
-          Object.entries(filters).map(([key, values]) => (
-            <div key={key}>
-              {table.getColumn(key) && (
-                <DataTableFacetedFilter
-                  column={table.getColumn(key)}
-                  title={capitalizeFirstLetter(key)}
-                  options={values.map((value) => ({
-                    label: capitalizeFirstLetter(value),
-                    value,
-                  }))}
+        {searchableColumns.length > 0 &&
+          searchableColumns.map(
+            (column) =>
+              table.getColumn(column.value ? String(column.value) : "") && (
+                <Input
+                  key={String(column.value)}
+                  placeholder={column.placeholder}
+                  value={
+                    (table
+                      .getColumn(String(column.value))
+                      ?.getFilterValue() as string) ?? ""
+                  }
+                  onChange={(event) =>
+                    table
+                      .getColumn(String(column.value))
+                      ?.setFilterValue(event.target.value)
+                  }
+                  className="h-8 w-40 lg:w-64"
                 />
-              )}
-            </div>
-          ))}
-
+              )
+          )}
+        {filterableColumns.length > 0 &&
+          filterableColumns.map(
+            (column) =>
+              table.getColumn(column.value ? String(column.value) : "") && (
+                <DataTableFacetedFilter
+                  key={String(column.value)}
+                  column={table.getColumn(
+                    column.value ? String(column.value) : ""
+                  )}
+                  title={column.label}
+                  options={column.options ?? []}
+                />
+              )
+          )}
         {isFiltered && (
           <Button
+            aria-label="Reset filters"
             variant="ghost"
-            onClick={() => table.resetColumnFilters()}
             className="h-8 px-2 lg:px-3"
+            onClick={() => table.resetColumnFilters()}
           >
             Reset
-            <IconX className="ml-2 h-4 w-4" />
+            <Cross2Icon className="ml-2 size-4" aria-hidden="true" />
           </Button>
         )}
       </div>
-      <DataTableViewOptions table={table} />
+      <div className="flex items-center gap-2">
+        {children}
+        <DataTableViewOptions table={table} />
+      </div>
     </div>
-  );
+  )
 }

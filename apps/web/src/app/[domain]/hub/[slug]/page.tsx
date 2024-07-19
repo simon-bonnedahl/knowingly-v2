@@ -20,6 +20,8 @@ import { CustomFields } from "./custom-fields";
 import { PageToolbar } from "./toolbar";
 import { Separator } from "@knowingly/ui/separator";
 import { env } from "~/env";
+import { RequestMeeting } from "./request-meeting";
+import { SendMessage } from "./send-message";
 
 // export async function generateStaticParams() {
 //   const allHubs = await db.hub.findMany({
@@ -47,9 +49,9 @@ export default function PageLayout({ params }: { params: { slug: string } }) {
 
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
   const page = useQuery(api.pages.getPage, { slug: params.slug });
+  const creator = useQuery(api.pages.getCreator, { slug: params.slug });
   const updatePage = useMutation(api.pages.update);
   const [url, setUrl] = useState<string | null>(null);
-  const [progress, setProgress] = useState<number>(0);
 
   const { preview, togglePreview } = usePreview();
 
@@ -94,11 +96,19 @@ export default function PageLayout({ params }: { params: { slug: string } }) {
         <IconArrowLeft size={20} className="text-white" />
       </button>
       <div className="absolute right-2 top-[21rem] z-20 flex items-center gap-2">
-        <Label className="font-medium">Toggle preview</Label>
+        <Label className="font-medium">Preview</Label>
         <Switch checked={preview} onCheckedChange={togglePreview} />
       </div>
       <Banner url={page.image} preview={preview} />
-      <PageToolbar initialData={page} preview={preview} />
+      <PageToolbar initialData={page} preview={preview}>
+        {creator && (
+          <>
+           <RequestMeeting creator={creator}/>
+           <SendMessage creator={creator} />
+           </>
+          )}
+
+      </PageToolbar>
       <CustomFields customFields={page.customFields} preview={preview} />
       <Separator className="w-full" />
      

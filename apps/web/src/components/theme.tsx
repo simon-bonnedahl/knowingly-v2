@@ -14,7 +14,7 @@ import {
 import { IconMoon, IconSun } from "@tabler/icons-react";
 
 const ThemeProvider = ({ children, ...props }: ThemeProviderProps) => {
-  return <NextThemeProvider {...props}>{children}</NextThemeProvider>;
+  return <NextThemeProvider  {...props}>{children}</NextThemeProvider>;
 };
 
 const ThemeToggle = () => {

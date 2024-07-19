@@ -16,7 +16,7 @@ export const createPage = mutation({
       const pageExists = await ctx.table("pages").get("slug", slug);
       if(pageExists) slug = `${slug}-${uuid()}`;
 
-      const member = await ctx.table("users").get(ctx.userId).edge("members").filter(q => q.eq(q.field("hubId"), hub._id)).unique();
+      const member = await ctx.table("users").get(ctx.userId).edge("memberships").filter(q => q.eq(q.field("hubId"), hub._id)).unique();
     
       if(!member) throw new Error("Unauthorized");
 
@@ -74,5 +74,13 @@ export const getPagesByHub = query({
 
       }).get();
       return customField;
+    },
+  });
+
+  export const getCreator = query({
+    args: {slug: v.string()},
+    handler: async (ctx, args) => {
+      const user = await ctx.table("pages").get("slug", args.slug).edge("member").edge("user");
+      return user;
     },
   });

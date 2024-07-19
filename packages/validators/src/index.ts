@@ -1,8 +1,9 @@
 import { z } from "zod";
 
-export const unused = z.string().describe(
-  `This lib is currently not used as we use drizzle-zod for simple schemas
-   But as your application grows and you need other validators to share
-   with back and frontend, you can put them in here
-  `,
-);
+export const inviteMemberSchema = z.object({
+  email: z.string().email(),
+  roleId: z.string(),
+  message: z.string().optional(),
+});
+
+export type InviteMemberSchema = z.infer<typeof inviteMemberSchema>;

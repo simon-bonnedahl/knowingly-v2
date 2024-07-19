@@ -13,7 +13,7 @@ export const capitalize = (s: string) => {
 };
 
 export const capitalizeFirstLetter = (s: string) => {
-  return s.charAt(0).toUpperCase() + s.slice(1);
+  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
 }
 
 export const truncate = (str: string, num: number) => {
@@ -88,4 +88,15 @@ export function formatBytes(
   return `${(bytes / Math.pow(1024, i)).toFixed(decimals)} ${
     sizeType === "accurate" ? accurateSizes[i] ?? "Bytest" : sizes[i] ?? "Bytes"
   }`
+}
+export function formatDate(
+  date: Date | string | number,
+  opts: Intl.DateTimeFormatOptions = {}
+) {
+  return new Intl.DateTimeFormat("en-US", {
+    month: opts.month ?? "long",
+    day: opts.day ?? "numeric",
+    year: opts.year ?? "numeric",
+    ...opts,
+  }).format(new Date(date))
 }

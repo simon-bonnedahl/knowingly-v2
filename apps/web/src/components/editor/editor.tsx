@@ -15,7 +15,7 @@ import "@blocknote/core/fonts/inter.css";
 
 import "@blocknote/mantine/style.css";
 import { BlocknoteProfileGallery } from "./components/profile-gallery"
-import { IconAlertCircle, IconGlobe, IconLayersSubtract, IconUsers } from "@tabler/icons-react"
+import {  IconGlobe, IconLayersSubtract, IconUsers } from "@tabler/icons-react"
 import { BlocknoteGlobe } from "./components/globe"
 import { BlocknoteButton } from "./components/button"
 import { BlocknoteMention } from "./components/mention"
@@ -23,8 +23,7 @@ import { useMutation, useQuery } from "convex/react"
 import { api } from "@knowingly/backend/convex/_generated/api"
 import { useSubdomain } from "~/lib/hooks/useSubdomain"
 import { uploadFile } from "./upload-file"
-import { Icon, Icons } from "../icons"
-import { BlocknoteExcalidraw } from "./components/excalidraw"
+import { BlocknoteAlert } from "./components/alert"
 
 
 
@@ -59,6 +58,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
   const schema = BlockNoteSchema.create({
     blockSpecs: {
       ...defaultBlockSpecs,
+      alert: BlocknoteAlert,
       button: BlocknoteButton,
       profileGallery: BlocknoteProfileGallery,
       globe: BlocknoteGlobe,
@@ -70,7 +70,6 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
     },
 
   });
-  // Slash menu item to insert an Alert block
   const insertProfileGallery = (editor: typeof schema.BlockNoteEditor) => ({
     title: "Profile Gallery",
     onItemClick: () => {
@@ -92,7 +91,16 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
     group: "Random",
     icon: <IconGlobe width={18} />,
   });
-
+  const insertAlert = (editor: typeof schema.BlockNoteEditor) => ({
+    title: "Alert",
+    onItemClick: () => {
+      insertOrUpdateBlock(editor, {
+        type: "alert",
+      });
+    },
+    group: "Text",
+    icon: <IconLayersSubtract width={18} />,
+  });
   const insertButton = (editor: typeof schema.BlockNoteEditor) => ({
     title: "Button",
     onItemClick: () => {
@@ -142,10 +150,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
 const editor = useCreateBlockNote({
   uploadFile: async(file) => uploadFile(file, await getUploadUrl()),
   schema,
-  initialContent: initialContent
-    ? (JSON.parse(initialContent) as PartialBlock[])
-    : undefined,
-  
+  initialContent: JSON.parse(initialContent ?? "[]"),
 
 })
  
@@ -174,7 +179,7 @@ const editor = useCreateBlockNote({
         getItems={async (query) =>
           // Gets all default slash menu items and `insertAlert` item.
           filterSuggestionItems(
-            [...getDefaultReactSlashMenuItems(editor), insertProfileGallery(editor), insertGlobe(editor), insertButton(editor)],
+            [...getDefaultReactSlashMenuItems(editor), insertProfileGallery(editor), insertGlobe(editor), insertAlert(editor), insertButton(editor)],
             query
           )
         }

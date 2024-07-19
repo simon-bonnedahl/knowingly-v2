@@ -1,5 +1,4 @@
-import { defineEntSchema, defineEnt, getEntDefinitions } from "convex-ents";
-
+import { defineEnt, defineEntSchema, getEntDefinitions } from "convex-ents";
 import { v } from "convex/values";
 
 const schema = defineEntSchema({
@@ -10,7 +9,10 @@ const schema = defineEntSchema({
   })
     .field("email", v.string(), { unique: true })
     .field("tokenIdentifier", v.string(), { unique: true })
-    .edges("members", { ref: true, deletion: "soft" })
+    .edges("memberships", { to: "members", ref: true })
+    .edges("sentMessages", { to: "messages", ref: "senderId" })
+    .edges("receivedMessages", { to: "messages", ref: "receiverId" })
+    .edges("notifications", { ref: true })
     .deletion("soft"),
   hubs: defineEnt({
     name: v.string(),
@@ -23,24 +25,63 @@ const schema = defineEntSchema({
     subscriptionId: v.optional(v.string()),
     endsOn: v.optional(v.number()),
     credits: v.number(),
+    features: v.optional(
+      v.object({
+        customRoles: v.boolean(),
+        customBranding: v.boolean(),
+      }),
+    ),
   })
     .field("subdomain", v.string(), { unique: true })
     .field("customDomain", v.optional(v.string()), { unique: true })
     .edges("members", { ref: true })
+    .edges("hubInvites", { ref: true })
+    .edges("roles")
     .edges("pages", { ref: true })
     .edges("customFields")
     .deletion("scheduled", { delayMs: 24 * 60 * 60 * 1000 }),
-  members: defineEnt({
-    role: v.union(
-      v.literal("OWNER"),
-      v.literal("ADMIN"),
-      v.literal("PROVIDER"),
-      v.literal("SEEKER")
-    ),
-    status: v.union(v.literal("ACTIVE"), v.literal("PENDING")),
+
+  roles: defineEnt({
+    name: v.string(),
+    isDefault: v.boolean(),
+    isLocked: v.boolean(),
+    icon: v.optional(v.string()),
+    permissions: v.object({
+      canCreatePage: v.boolean(),
+      canEditPage: v.boolean(),
+      canDeletePage: v.boolean(),
+      canCreateCustomField: v.boolean(),
+      canEditCustomField: v.boolean(),
+      canDeleteCustomField: v.boolean(),
+      canInviteMember: v.boolean(),
+      canRemoveMember: v.boolean(),
+      canSeeAdminPanel: v.boolean(),
+      canEditHub: v.boolean(),
+      canDeleteHub: v.boolean(),
+    }),
   })
+    .edges("hubs")
+    .edges("members", { ref: true })
+    .edges("hubInvites", { ref: true }),
+  hubInvites: defineEnt({
+    user: v.optional(v.id("users")),
+    message: v.optional(v.string()),
+    status: v.union(
+      v.literal("PENDING"),
+      v.literal("ACCEPTED"),
+      v.literal("DECLINED"),
+      v.literal("EXPIRED"),
+    ),
+    expiresAt: v.number(),
+  })
+  .field("email", v.string(), {unique: true})
+    .edge("role")
+    .edge("hub"),
+
+  members: defineEnt({})
     .edge("user")
     .edge("hub")
+    .edge("role")
     .edges("pages", { ref: true })
     .deletion("soft"),
   pages: defineEnt({
@@ -48,20 +89,17 @@ const schema = defineEntSchema({
     type: v.union(
       v.literal("PROFILE"),
       v.literal("EVENT"),
-      v.literal("CUSTOM")
+      v.literal("CUSTOM"),
     ),
     image: v.optional(v.string()),
     icon: v.optional(v.string()),
     customFields: v.array(
       v.object({
         id: v.id("customFields"),
-        value: v.optional(v.union(
-          v.string(),
-          v.number(),
-          v.boolean(),
-          v.array(v.string()),
-        )),
-      })
+        value: v.optional(
+          v.union(v.string(), v.number(), v.boolean(), v.array(v.string())),
+        ),
+      }),
     ),
     customContent: v.optional(v.string()), // JSON stringified object (blockquote json structure for markdown)
     isPublic: v.boolean(),
@@ -80,8 +118,8 @@ const schema = defineEntSchema({
       v.object({
         suggestions: v.optional(v.array(v.string())),
         format: v.optional(v.string()),
-        showAs: v.optional(v.string()), 
-      })
+        showAs: v.optional(v.string()),
+      }),
     ), //  JSON stringified object (own rules) ex. { "format": any, "suggestions": any,  }
   })
     .field("slug", v.string(), { unique: true })
@@ -89,6 +127,20 @@ const schema = defineEntSchema({
       searchField: "slug",
     })
     .edges("hubs"),
+  messages: defineEnt({
+    body: v.string(),
+    readBy : v.array(v.id("users")),
+    notification: v.optional(v.id("notifications")),
+  })
+    .edge("sender", { to: "users", field: "senderId" })
+    .edge("receiver", { to: "users", field: "receiverId" }),
+  notifications: defineEnt({
+    read: v.boolean(),
+    title: v.string(),
+    body: v.string(),
+    actionPath: v.string(),
+    icon: v.optional(v.string()),
+  }).edge("user"),
 });
 
 export default schema;

@@ -18,9 +18,10 @@ import { RequestMeeting } from "./request-meeting"
 interface ToolbarProps {
   initialData: Doc<"pages"> 
   preview?: boolean
+  children?: React.ReactNode
 }
 
-export const PageToolbar = ({ initialData, preview }: ToolbarProps) => {
+export const PageToolbar = ({ initialData, preview, children}: ToolbarProps) => {
   const [name, setName] = useState(initialData.name)
   const params = useParams()
   const subdomain = decodeURIComponent(params.domain as string).split(".")[0]
@@ -60,7 +61,7 @@ export const PageToolbar = ({ initialData, preview }: ToolbarProps) => {
 
 
   return (
-    <div className=" py-8 group relative w-full px-24">
+    <div className=" py-4 group relative w-full px-24">
       {!!initialData.icon && !preview && (
         <div className="absolute -top-8 left-24  items-center gap-x-2 group/icon hover:bg-white/10 rounded-xl ">
           <IconPicker onChange={onIconSelect}>
@@ -98,12 +99,11 @@ export const PageToolbar = ({ initialData, preview }: ToolbarProps) => {
           </Button>
         )}
       </div>
-        <div className="flex w-full items-center justify-between  ">
+        <div className="flex w-full items-end justify-between ">
 
         <input type="text" disabled={preview} value={name}  onChange={(e ) => setName(e.currentTarget.value)} className="text-4xl mt-4 dark:text-white text-black  font-bold w-full bg-transparent focus:outline-none" />
         <div className="flex gap-2 items-center">
-        <RequestMeeting />
-        <SendMessage />
+        {children}
         </div>
         
         </div>

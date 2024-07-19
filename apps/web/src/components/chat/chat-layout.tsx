@@ -11,6 +11,11 @@ import { Chat } from ".";
 import { cn } from "@knowingly/ui";
 import { userData } from "./mockupData";
 import { Sidebar } from "./side-bar";
+import { FunctionReturnType } from "convex/server";
+import { api } from "@knowingly/backend/convex/_generated/api";
+import { useSearchParams } from "next/navigation";
+import { Id } from "@knowingly/backend/convex/_generated/dataModel";
+import { useQuery } from "convex/react";
 
 interface ChatLayoutProps {
   defaultLayout: number[] | undefined;
@@ -24,8 +29,11 @@ export function ChatLayout({
   navCollapsedSize,
 }: ChatLayoutProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
-  const [selectedUser, setSelectedUser] = React.useState(userData[0]);
   const [isMobile, setIsMobile] = useState(false);
+ const searchParams = useSearchParams();
+  const userId = searchParams.get("userId") as Id<"users">;
+  const conversations = useQuery(api.messages.getConversations)
+
 
   useEffect(() => {
     const checkScreenWidth = () => {
@@ -78,22 +86,17 @@ export function ChatLayout({
       >
         <Sidebar
           isCollapsed={isCollapsed || isMobile}
-          links={userData.map((user) => ({
-            name: user.name,
-            messages: user.messages ?? [],
-            avatar: user.avatar,
-            variant: selectedUser.name === user.name ? "grey" : "ghost",
-          }))}
-          isMobile={isMobile}
+          conversations={conversations}
         />
       </ResizablePanel>
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
-        <Chat
-          messages={selectedUser.messages}
-          selectedUser={selectedUser}
+        {userId && (
+          <Chat
+          userId={userId}
           isMobile={isMobile}
         />
+        )}
       </ResizablePanel>
     </ResizablePanelGroup>
   );
