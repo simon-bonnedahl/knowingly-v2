@@ -6,6 +6,7 @@ const schema = defineEntSchema({
     name: v.string(),
     imageUrl: v.optional(v.string()),
     role: v.union(v.literal("USER"), v.literal("SUPERUSER")),
+    uploads : v.array(v.id("_storage")),
   })
     .field("email", v.string(), { unique: true })
     .field("tokenIdentifier", v.string(), { unique: true })

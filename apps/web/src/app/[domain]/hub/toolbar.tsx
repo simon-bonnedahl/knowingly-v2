@@ -1,95 +1,103 @@
-"use client"
+"use client";
 
-import React, {  useEffect, useRef, useState } from "react"
-import { useMutation } from "convex/react"
+import React, { useEffect, useRef, useState } from "react";
+import { useParams } from "next/navigation";
+import { IconImageInPicture, IconMoodSmile, IconX } from "@tabler/icons-react";
+import { useMutation } from "convex/react";
 
+import { api } from "@knowingly/backend/convex/_generated/api";
+import { Doc } from "@knowingly/backend/convex/_generated/dataModel";
+import { Avatar, AvatarFallback, AvatarImage } from "@knowingly/ui/avatar";
+import { Button } from "@knowingly/ui/button";
 
-import { IconPicker } from "../../../components/icon-picker"
-import { Doc } from "@knowingly/backend/convex/_generated/dataModel"
-import { useBanner } from "~/lib/hooks/useBanner"
-import { api } from "@knowingly/backend/convex/_generated/api"
-import { useParams } from "next/navigation"
-import { Button } from "@knowingly/ui/button"
-import { IconImageInPicture, IconMoodSmile, IconX } from "@tabler/icons-react"
-import { useSubdomain } from "~/lib/hooks/useSubdomain"
+import { useBanner } from "~/lib/hooks/useBanner";
+import { useSubdomain } from "~/lib/hooks/useSubdomain";
+import { IconPicker } from "../../../components/icon-picker";
 
 interface ToolbarProps {
-  initialData: Doc<"hubs"> 
-  preview?: boolean
+  initialData: Doc<"hubs">;
+  preview?: boolean;
 }
 
 export const HubToolbar = ({ initialData, preview }: ToolbarProps) => {
-  const [name, setName] = useState(initialData.name)
-  const [description, setDescription] = useState(initialData.description)
-  const subdomain = useSubdomain()
+  const [name, setName] = useState(initialData.name);
+  const [description, setDescription] = useState(initialData.description);
+  const subdomain = useSubdomain();
 
-  const updateHub = useMutation(api.hubs.update)
+  const updateHub = useMutation(api.hubs.update);
 
-  const banner = useBanner()
-
- 
-  
-
+  const banner = useBanner();
 
   const onIconSelect = (icon: string) => {
     updateHub({
       subdomain,
       field: "logo",
       value: icon,
-    })
-  }
+    });
+  };
 
   const onRemoveIcon = () => {
     updateHub({
       subdomain,
       field: "logo",
       value: "",
-    })
-  }
+    });
+  };
 
   useEffect(() => {
     updateHub({
       subdomain,
       field: "name",
       value: name,
-    })
-  }, [name])
+    });
+  }, [name]);
 
   useEffect(() => {
     updateHub({
       subdomain,
       field: "description",
       value: description,
-    })
-  }, [description])
+    });
+  }, [description]);
 
   return (
-    <div className=" w-3/4 group relative">
-        <div className="absolute -top-8 left-4  items-center gap-x-2 group/icon hover:bg-white/10 rounded-xl ">
-
-      {!!initialData.logo && !preview && (
+    <div className=" group relative w-3/4">
+      <div className="group/icon absolute -top-8  left-4 items-center gap-x-2 rounded-xl hover:bg-white/10 ">
+        {!!initialData.logo && !preview && (
           <IconPicker onChange={onIconSelect}>
-            <p className="text-7xl hover:opacity-75 transition">
-              {initialData.logo}
-            </p>
+            <Avatar className="transition hover:opacity-75 w-full h-full">
+              <AvatarImage src={initialData.logo} className="size-[4.5rem] object-cover" />
+              <AvatarFallback className="bg-transparent">
+                <p className="text-7xl ">
+                  {initialData.logo}
+                </p>
+              </AvatarFallback>
+            </Avatar>
           </IconPicker>
-          
-      )}
-     
+        )}
+      </div>
+      {!!initialData.logo && preview && (
+        <div className="absolute -top-14 left-4 pt-6 text-7xl">
+          <Avatar className="transition hover:opacity-75 w-full h-full">
+              <AvatarImage src={initialData.logo} className="size-[4.5rem] object-cover" />
+              <AvatarFallback className="bg-transparent">
+                <p className="text-7xl ">
+                  {initialData.logo}
+                </p>
+              </AvatarFallback>
+            </Avatar>
         </div>
-        {!!initialData.logo && preview && (
-        <p className="text-7xl pt-6 absolute -top-14 left-4">{initialData.logo}</p>
       )}
 
-      <div className="opacity-0 group-hover:opacity-100 flex items-center gap-x-1 py-4">
+      <div className="flex items-center gap-x-1 py-4 opacity-0 group-hover:opacity-100">
         {!initialData.logo && !preview && (
           <IconPicker asChild onChange={onIconSelect}>
             <Button
-              className="text-muted-foreground text-xs"
+              className="text-xs text-muted-foreground"
               variant="outline"
               size="sm"
             >
-              <IconMoodSmile className="h-4 w-4 mr-2" />
+              <IconMoodSmile className="mr-2 h-4 w-4" />
               Add icon
             </Button>
           </IconPicker>
@@ -97,18 +105,31 @@ export const HubToolbar = ({ initialData, preview }: ToolbarProps) => {
         {!initialData.banner && !preview && (
           <Button
             onClick={banner.onOpen}
-            className="text-muted-foreground text-xs"
+            className="text-xs text-muted-foreground"
             variant="outline"
             size="sm"
           >
-            <IconImageInPicture className="h-4 w-4 mr-2" />
-            Add cover 
+            <IconImageInPicture className="mr-2 h-4 w-4" />
+            Add cover
           </Button>
         )}
       </div>
-        
-        <input type="text" disabled={preview} value={name}  onChange={(e ) => setName(e.currentTarget.value)} className="text-4xl mt-4 dark:text-white text-black  font-bold w-full bg-transparent border-none focus:ring-0" />
-        <input type="text" disabled={preview} value={description}  onChange={(e ) => setDescription(e.currentTarget.value)} className="text-md  dark:text-white text-black  font-bold w-full bg-transparent border-none focus:ring-0" />
+      <input
+        type="text"
+        placeholder="Hub name..."
+        disabled={preview}
+        value={name}
+        onChange={(e) => setName(e.currentTarget.value)}
+        className="mt-4 w-full bg-transparent text-4xl  font-bold text-black focus:outline-none dark:text-white"
+      />
+      <input
+        type="text"
+        placeholder="Description..."
+        disabled={preview}
+        value={description}
+        onChange={(e) => setDescription(e.currentTarget.value)}
+        className="text-md  w-full bg-transparent  font-bold text-black focus:outline-none dark:text-white"
+      />
     </div>
-  )
-}
+  );
+};

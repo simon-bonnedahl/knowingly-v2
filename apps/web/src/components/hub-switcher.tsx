@@ -55,6 +55,7 @@ export default function HubSwitcher({ className, currentHub, hubs }: HubSwitcher
             <Avatar className=" h-8 w-8 rounded-md border bg-background group-hover:bg-card p-1 ">
               <AvatarImage
                 src={currentHub?.logo ?? "/logo-small-black.svg"}
+                className="h-full w-full rounded-full"
                 alt={currentHub?.subdomain}
               />
               <AvatarFallback className="bg-transparent" ><p className="text-xl">{currentHub?.logo}</p></AvatarFallback>
@@ -80,10 +81,11 @@ export default function HubSwitcher({ className, currentHub, hubs }: HubSwitcher
                       }}
                       className="text-sm hover:cursor-pointer hover:text-card-foreground text-foreground"
                     >
-                      <Avatar className="mr-2 h-5 w-5 rounded-md">
+                      <Avatar className="mr-2 h-5 w-5">
                         <AvatarImage
                           src={hub.logo!}
                           alt={hub.name}
+                          className="h-full w-full rounded-full"
                         />
                         <AvatarFallback className="bg-transparent" ><p className="text-xl">{hub?.logo}</p></AvatarFallback>
                       </Avatar>
@@ -111,6 +113,7 @@ export default function HubSwitcher({ className, currentHub, hubs }: HubSwitcher
                       <AvatarImage
                         src="/logo-small-black.svg"
                         alt="Knowingly"
+                        
                       />
                       <AvatarFallback>K</AvatarFallback>
                     </Avatar>
