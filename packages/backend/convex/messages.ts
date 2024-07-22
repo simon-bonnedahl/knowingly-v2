@@ -4,14 +4,13 @@ import { mutation, query } from "./functions";
 export const list = query({
     args: {userId: v.id("users")},
     handler: async (ctx, args) => {
-        const user = await ctx.userX()
+        const user = await ctx.user()
+        if(!user) return []
         const sentMessages = await user.edge("sentMessages").filter(q => q.eq(q.field("receiverId"), args.userId))
         const receivedMessages = await user.edge("receivedMessages").filter(q => q.eq(q.field("senderId"), args.userId))
 
         const messages = [...sentMessages, ...receivedMessages].sort((a, b) => a._creationTime - b._creationTime)
         return messages
-
-
     },
 
     });
@@ -56,13 +55,15 @@ export const getUnreadCount = query({
     },
     });
 export const markAllAsRead = mutation({
-    args: {receiverId: v.id("users")},
+    args: {userId: v.id("users")},
     handler: async (ctx, args) => {
         const user = await ctx.userX()
-        const messages = await user.edge("receivedMessages").filter(q => q.and(q.eq(q.field("readBy"), [args.receiverId]) ,q.eq(q.field("receiverId"), args.receiverId))).map(async (message) => {
-            return await ctx.table("messages").getX(message._id).patch({readBy: [args.receiverId]})
+        const messages = await user.edge("receivedMessages").filter(q => q.and(q.eq(q.field("readBy"), [args.userId]) ,q.eq(q.field("senderId"), args.userId))).map(async (message) => {
+            return await ctx.table("messages").getX(message._id).patch({readBy: [...message.readBy, user._id]})
         }
         )
+        console.log(messages)
+
     }
     });
 

@@ -75,10 +75,10 @@ export function ChatList({
                     />
                   </Avatar>
                 )}
-                <span className=" bg-accent p-3 rounded-md max-w-xs">
+                <span className={cn("p-3 rounded-md max-w-xs", message.senderId === me?._id ? "bg-primary text-primary-foreground" : "bg-accent" )}>
                   {message.body}
                 </span>
-                {message.senderId == me?._id && (
+                {message.senderId === me?._id && (
                   <Avatar className="flex justify-center items-center">
                     <AvatarImage
                       src={me?.imageUrl}

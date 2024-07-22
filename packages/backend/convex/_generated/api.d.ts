@@ -14,6 +14,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as calls from "../calls.js";
 import type * as clerk from "../clerk.js";
 import type * as customFields from "../customFields.js";
 import type * as files from "../files.js";
@@ -26,6 +27,7 @@ import type * as members from "../members.js";
 import type * as messages from "../messages.js";
 import type * as notifications from "../notifications.js";
 import type * as pages from "../pages.js";
+import type * as roles from "../roles.js";
 import type * as rules from "../rules.js";
 import type * as stripe from "../stripe.js";
 import type * as types from "../types.js";
@@ -41,6 +43,7 @@ import type * as utils from "../utils.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  calls: typeof calls;
   clerk: typeof clerk;
   customFields: typeof customFields;
   files: typeof files;
@@ -53,6 +56,7 @@ declare const fullApi: ApiFromModules<{
   messages: typeof messages;
   notifications: typeof notifications;
   pages: typeof pages;
+  roles: typeof roles;
   rules: typeof rules;
   stripe: typeof stripe;
   types: typeof types;

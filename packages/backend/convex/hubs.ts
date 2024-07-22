@@ -37,6 +37,14 @@ export const update = mutation({
     },
   });
 
+export const deleteHub = mutation({
+    args: {subdomain: v.string()},
+    handler: async (ctx, args) => {
+      const {subdomain} = args;
+      return await ctx.table("hubs").getX("subdomain", subdomain).delete();
+    },
+  });
+
 export const getMyRole = query({
     args: {subdomain: v.string()},
     handler: async (ctx, args) => {
@@ -63,7 +71,9 @@ export const getRoles = query({
     args: {subdomain: v.string()},
     handler: async (ctx, args) => {
       const {subdomain} = args;
-      return ctx.table("hubs").get("subdomain", subdomain).edge("roles");
+      const roles = await  ctx.table("hubs").get("subdomain", subdomain).edge("roles")
+      //sort by created at
+      return roles?.sort ((a, b) => a._creationTime - b._creationTime)
     },
   });
 

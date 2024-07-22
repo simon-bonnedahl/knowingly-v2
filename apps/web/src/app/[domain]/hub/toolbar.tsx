@@ -13,6 +13,7 @@ import { Button } from "@knowingly/ui/button";
 import { useBanner } from "~/lib/hooks/useBanner";
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { IconPicker } from "../../../components/icon-picker";
+import { isUrl } from "~/lib/utils";
 
 interface ToolbarProps {
   initialData: Doc<"hubs">;
@@ -66,12 +67,16 @@ export const HubToolbar = ({ initialData, preview }: ToolbarProps) => {
         {!!initialData.logo && !preview && (
           <IconPicker onChange={onIconSelect}>
             <Avatar className="transition hover:opacity-75 w-full h-full">
-              <AvatarImage src={initialData.logo} className="size-[4.5rem] object-cover" />
+            {isUrl(initialData.logo) ? (
+                <AvatarImage
+                  src={initialData.logo}
+                  className="size-[4.5rem] rounded-full object-cover"
+                />
+            ) : (
               <AvatarFallback className="bg-transparent">
-                <p className="text-7xl ">
-                  {initialData.logo}
-                </p>
+                <p className="text-7xl ">{initialData.logo}</p>
               </AvatarFallback>
+            )}
             </Avatar>
           </IconPicker>
         )}
@@ -79,12 +84,18 @@ export const HubToolbar = ({ initialData, preview }: ToolbarProps) => {
       {!!initialData.logo && preview && (
         <div className="absolute -top-14 left-4 pt-6 text-7xl">
           <Avatar className="transition hover:opacity-75 w-full h-full">
-              <AvatarImage src={initialData.logo} className="size-[4.5rem] object-cover" />
+          <Avatar className="h-full w-full rounded-sm transition hover:opacity-75">
+            {isUrl(initialData.logo) ? (
+                <AvatarImage
+                  src={initialData.logo}
+                  className="size-[4.5rem] rounded-full object-cover"
+                />
+            ) : (
               <AvatarFallback className="bg-transparent">
-                <p className="text-7xl ">
-                  {initialData.logo}
-                </p>
+                <p className="text-7xl ">{initialData.logo}</p>
               </AvatarFallback>
+            )}
+          </Avatar>
             </Avatar>
         </div>
       )}

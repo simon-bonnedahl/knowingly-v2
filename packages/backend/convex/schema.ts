@@ -14,6 +14,8 @@ const schema = defineEntSchema({
     .edges("sentMessages", { to: "messages", ref: "senderId" })
     .edges("receivedMessages", { to: "messages", ref: "receiverId" })
     .edges("notifications", { ref: true })
+    .edges("meetings")
+    .edges("meetingInvites", { ref: true })
     .deletion("soft"),
   hubs: defineEnt({
     name: v.string(),
@@ -90,6 +92,7 @@ const schema = defineEntSchema({
     type: v.union(
       v.literal("PROFILE"),
       v.literal("EVENT"),
+      v.literal("TEMPLATE"),
       v.literal("CUSTOM"),
     ),
     image: v.optional(v.string()),
@@ -131,7 +134,8 @@ const schema = defineEntSchema({
   messages: defineEnt({
     body: v.string(),
     readBy : v.array(v.id("users")),
-    notification: v.optional(v.id("notifications")),
+    meetingInvite: v.optional(v.id("meetingInvites")),
+    hubInvite: v.optional(v.id("hubInvites")),
   })
     .edge("sender", { to: "users", field: "senderId" })
     .edge("receiver", { to: "users", field: "receiverId" }),
@@ -142,6 +146,23 @@ const schema = defineEntSchema({
     actionPath: v.string(),
     icon: v.optional(v.string()),
   }).edge("user"),
+  meetings: defineEnt({
+    title: v.string(),
+    description: v.optional(v.string()),
+    notes: v.optional(v.string()),
+    startsAt: v.number(),
+    endsAt: v.number(),
+    isPublic: v.boolean(),
+  })
+    .edges("participants", { to: "users" })
+    .edges("meetingInvites", { ref: true }),
+  meetingInvites: defineEnt({
+    status: v.union(v.literal("PENDING"), v.literal("ACCEPTED"), v.literal("DECLINED")),
+    expiresAt: v.number(),
+  })
+    .edge("meeting")
+    .edge("user"),
+
 });
 
 export default schema;

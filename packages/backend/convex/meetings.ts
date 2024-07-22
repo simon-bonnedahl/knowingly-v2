@@ -1,32 +1,55 @@
-"use node";
-import { action } from "./_generated/server";
-import { StreamClient } from "@stream-io/node-sdk";
+import { v } from "convex/values";
 
-export const generateMeetingToken = action({
-    args: {},
-    handler: async (ctx, args) => {
+import { mutation, query } from "./functions";
 
-        const user = await ctx.auth.getUserIdentity();
-
-        if (!user) throw new Error("User is not authenticated");
-        if (!process.env.NEXT_PUBLIC_STREAM_API_KEY) throw new Error("Stream API key secret is missing");
-        if (!process.env.STREAM_SECRET_KEY) throw new Error("Stream API secret is missing");
-
-        const streamClient = new StreamClient(process.env.NEXT_PUBLIC_STREAM_API_KEY, process.env.STREAM_SECRET_KEY);
-
-        const expirationTime = Math.floor(Date.now() / 1000) + 3600;
-        const issuedAt = Math.floor(Date.now() / 1000) - 60;
-
-        const token = streamClient.createToken(
-            user.subject,
-            expirationTime,
-            issuedAt,
-        );
-
-
-        return token;
-     
-      
+export const create = mutation({
+  args: {
+    title: v.string(),
+    description: v.optional(v.string()),
+    startsAt: v.number(),
+    length: v.number(),
+    isPublic: v.boolean(),
+    notes: v.optional(v.string()),
+    userId: v.id("users"),
+  },
+  handler: async (ctx, args) => {
+    const { title, description, startsAt, length, isPublic, notes, userId } =
+      args;
+    const meeting = await ctx
+      .table("meetings")
+      .insert({
+        title,
+        description,
+        startsAt,
+        endsAt: startsAt + length,
+        isPublic,
+        notes,
+      })
+      .get();
+    const meetingInvite = await ctx
+      .table("meetingInvites")
+      .insert({
+        status: "ACCEPTED",
+        expiresAt: startsAt,
+        meetingId: meeting._id,
+        userId,
+      });
+    const notification = await ctx
+      .table("notifications")
+      .insert({
+        title: `Meeting ${title} created`,
+        read: false,
+        body: `You have been invited to a meeting ${title}`,
+        actionPath: `/meetings/${meeting._id}`,
+        userId,
+      })
+  return meeting;
     },
-  });
+});
 
+export const get = query({
+    args: { meetingId: v.id("meetings") },
+    handler: async (ctx, args) => {
+        return await ctx.table("meetings").get(args.meetingId);
+    },
+    });
