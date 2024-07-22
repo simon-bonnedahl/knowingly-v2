@@ -34,11 +34,20 @@ export default function HubAdminNav() {
       segment: "requests",
     },
     {
+      name: "Templates",
+      href: `/admin/templates`,
+      segment: "templates",
+    },
+    {
       name: "Meetings",
       href: `/admin/meetings`,
       segment: "meetings",
     },
-    
+    {
+      name: "Roles",
+      href: `/admin/roles`,
+      segment: "roles",
+    },
   ];
 
   useEffect(() => {

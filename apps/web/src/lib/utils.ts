@@ -100,3 +100,15 @@ export function formatDate(
     ...opts,
   }).format(new Date(date))
 }
+
+
+export function isUrl (url: string) {
+  console.log(url)
+  try {
+    new URL(url);
+    console.log('true')
+    return true;
+  } catch (e) {
+    return false;
+  }
+}

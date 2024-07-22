@@ -12,7 +12,7 @@ export default authMiddleware({
     const url = req.nextUrl;
 
 
-  const sharedPages = ["meetings", "conversations", "settings"] 
+  const sharedPages = ["meetings", "conversations", "settings"]
 
   let hostname = req.headers.get("host")!.replace(".knowingly.local:3000", `.${env.NEXT_PUBLIC_ROOT_DOMAIN}`)
   const subdomain = hostname.split(".")[0]

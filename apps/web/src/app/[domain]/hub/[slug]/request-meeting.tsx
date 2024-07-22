@@ -11,7 +11,6 @@ import {
     ModalTitle,
     ModalTrigger,
   } from "@knowingly/ui/modal"
-import { Demo } from "~/components/demo"
 import { Icons } from "~/components/icons"
 
 
@@ -25,10 +24,10 @@ import type { DateValue } from "@react-aria/calendar";
 import { useLocale } from "@react-aria/i18n";
 import { useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
-import { LeftPanel } from "~/components/demo/left-panel"
-import { Calendar } from "~/components/calendar"
-import { RightPanel } from "~/components/demo/right-panel"
-import { FormPanel } from "~/components/demo/form-panel"
+import { LeftPanel } from "~/components/request-meeting/left-panel"
+import { Calendar } from "~/components/request-meeting/calendar"
+import { RightPanel } from "~/components/request-meeting/right-panel"
+import { FormPanel } from "~/components/request-meeting/form-panel"
 
 export const RequestMeeting = ({creator} : {creator : Ent<"users">}) => {
 
@@ -121,7 +120,7 @@ export const RequestMeeting = ({creator} : {creator : Ent<"users">}) => {
 						/>
 					</>
 				) : (
-					<FormPanel />
+					<FormPanel creator={creator} date={date.toDate(timeZone)} />
 				)}
 			</div>
 		</div>

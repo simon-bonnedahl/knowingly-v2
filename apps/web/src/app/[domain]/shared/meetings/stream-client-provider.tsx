@@ -15,7 +15,8 @@ interface ClientProviderProps {
 import { useUser } from "@clerk/nextjs";
 import { env } from "~/env";
 import { api } from "@knowingly/backend/convex/_generated/api";
-import { useAction } from "convex/react";
+import { useAction, useQuery } from "convex/react";
+import { Id } from "@knowingly/backend/convex/_generated/dataModel";
 
 export default function StreamClientProvider({ children }: ClientProviderProps) {
   const videoClient = useInitializeVideoClient();
@@ -32,51 +33,50 @@ export default function StreamClientProvider({ children }: ClientProviderProps) 
 }
 
 function useInitializeVideoClient() {
-    const {user, isSignedIn} = useUser();
-    const tokenProvider = useAction(api.meetings.generateMeetingToken)
-  const [videoClient, setVideoClient] = useState<StreamVideoClient | null>(
-    null,
-  );
+  const getToken = useAction(api.calls.generateToken);
+  const user  = useQuery( api.users.getMe);
+  const [videoClient, setVideoClient] = useState<StreamVideoClient | null>(null);
 
   useEffect(() => {
-    if (!isSignedIn) return;
-
-    let streamUser: User;
-
-    if (user) {
-      streamUser = {
-        id: user.id,
-        name: user.fullName || user.firstName || user.id,
-        image: user.imageUrl,
-      };
-    } else {
-      const id = uuid();
-      streamUser = {
-        id,
-        type: "guest",
-        name: `Guest ${id}`,
-      };
-    }
-
+    if (!user) return;
     const apiKey = env.NEXT_PUBLIC_STREAM_API_KEY;
 
     if (!apiKey) {
-      throw new Error("Stream API key not set");
+      console.error("Stream API key not set");
+      return;
     }
 
-    const client = new StreamVideoClient({
-      apiKey,
-      user: streamUser,
-      tokenProvider,
-    });
+    async function createClient() {
+      try {
+        const token = await getToken();
+        if (!token) {
+          console.error("Failed to get token");
+          return;
+        }
 
-    setVideoClient(client);
+        const client = new StreamVideoClient({
+          apiKey,
+          user: {
+            id: user!._id,
+            name: user!.name,
+            image: user!.imageUrl,
+          } as User,
+          token,
+        });
+
+        setVideoClient(client);
+      } catch (error) {
+        console.error("Error creating StreamVideoClient:", error);
+      }
+    }
+
+    createClient();
 
     return () => {
-      client.disconnectUser();
+      videoClient?.disconnectUser();
       setVideoClient(null);
     };
-  }, [user, isSignedIn]);
+  }, [user]);
 
   return videoClient;
 }

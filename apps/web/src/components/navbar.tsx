@@ -168,7 +168,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
   const setPrimaryColor = (color: string | undefined, theme: "dark" | "light") => {
     if (!color || !document) return;
     const colorHSL = hexToHSL(color);
-    const adjustedColor = theme === "dark" ? adjustLightness(colorHSL, 40) : colorHSL;
+    const adjustedColor = theme === "dark" ? adjustLightness(colorHSL, 30) : colorHSL;
     document.documentElement.style.setProperty('--primary', adjustedColor);
     const shades = generateShades(colorHSL, 5);
     if(theme === "dark") shades.reverse();
@@ -214,7 +214,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
                 {icon}
                 <span className="text-sm font-normal">{name}</span>
                 {!!count && count > 0 && (
-                  <span className=" rounded-full border border-gray-500 bg-primary px-2 text-xs font-normal text-white  ">
+                  <span className=" rounded-full border border-gray-500 bg-primary px-2 text-xs font-normal text-primary-foreground  ">
                     {count}
                   </span>
                 )}
@@ -235,7 +235,6 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
               >
                 {icon}
                 <span className="text-sm font-normal">{name}</span>
-              
               </Link>
             ))}
           </div>

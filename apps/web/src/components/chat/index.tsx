@@ -15,6 +15,8 @@ interface ChatProps {
 export function Chat({ isMobile, userId }: ChatProps) {
   const user = useQuery(api.users.get, { userId });
   const send = useMutation(api.messages.send);
+  const messages = useQuery(api.messages.list, {userId});
+  const markAsRead = useMutation(api.messages.markAllAsRead);
 
   const sendMessage = (message: string) => {
     if (!message) return;
@@ -22,7 +24,11 @@ export function Chat({ isMobile, userId }: ChatProps) {
   }
 
 
-  const messages = useQuery(api.messages.list, {userId});
+
+
+  React.useEffect(() => {
+    markAsRead({userId});
+  }, [userId]);
 
 
   return (
