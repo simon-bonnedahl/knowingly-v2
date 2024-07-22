@@ -5,23 +5,31 @@ import { Label } from "@knowingly/ui/label";
 import { Textarea } from "@knowingly/ui/textarea";
 
 import { UserPlus, X } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import * as React from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@knowingly/ui/tooltip";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@knowingly/backend/convex/_generated/api";
+import { Ent } from "@knowingly/backend/convex/types";
 
 type Guest = {
 	email: string;
 };
 
-export function FormPanel() {
+type FormPanelProps = {
+	creator: Ent<"users">;
+};
+
+
+export function FormPanel({ creator }: FormPanelProps) {
 	const user = useQuery(api.users.getMe);
 	const router = useRouter();
 
 	const [guests, setGuests] = React.useState<Guest[]>([]);
+	const searchParams = useSearchParams();
+	const slotParam = searchParams.get("slot");
+	const createMeeting = useMutation(api.meetings.create);
 
 	const addGuest = () => {
 		setGuests([...guests, { email: "" }]);
@@ -37,8 +45,29 @@ export function FormPanel() {
 
 	const hasGuests = guests.length > 0;
 
+	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		const data = {
+			notes: (e.currentTarget.elements.namedItem("notes") as HTMLInputElement).value,
+			guests: guests.map((guest) => guest.email),
+		};
+	
+
+
+		await createMeeting({
+			title: "Meeting",
+			length: 30 * 60 * 1000, // 30 minutes
+			userId: creator._id,
+			isPublic: false,
+			notes: data.notes,
+			startsAt: new Date(slotParam as string).getTime(),
+		});
+	}
+
+
 	return (
-		<form className="flex flex-col gap-5 w-[360px]">
+		<form className="flex flex-col gap-5 w-[360px]" onSubmit={onSubmit}>
 			<div className="flex flex-col space-y-1.5">
 				<Label htmlFor="name">Your name</Label>
 				<Input id="name" defaultValue={user?.name} disabled={!!user}/>
@@ -103,10 +132,8 @@ export function FormPanel() {
 				>
 					Back
 				</Button>
-				<Button asChild type="button">
-					<Link href="https://github.com/damianricobelli/shadcn-cal-com">
+				<Button  type="submit" >
 						Continue
-					</Link>
 				</Button>
 			</div>
 		</form>

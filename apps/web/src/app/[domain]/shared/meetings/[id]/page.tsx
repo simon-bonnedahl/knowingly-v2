@@ -7,6 +7,7 @@ import {
   StreamTheme,
   VideoPreview,
   useCallStateHooks,
+  useStreamVideoClient,
 } from "@stream-io/video-react-sdk";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -17,6 +18,10 @@ import useStreamCall from "~/lib/hooks/useStreamCall";
 import { Button } from "@knowingly/ui/button";
 import FlexibleCallLayout from "./flexible-call-layout";
 import PermissionPrompt from "./permission-prompt";
+import { useQuery } from "convex/react";
+import { api } from "@knowingly/backend/convex/_generated/api";
+import { Id } from "@knowingly/backend/convex/_generated/dataModel";
+import { toast } from "sonner";
 
 
 
@@ -24,34 +29,46 @@ const MeetingPage = () => {
   const { user, isSignedIn } = useUser();
   const { id } = useParams();
 
-  const { call, callLoading } = useLoadCall(id as string);
+  const meeting = useQuery(api.meetings.get, { meetingId: id as Id<"meetings"> });
+  const client = useStreamVideoClient();
 
-  if (!isSignedIn || callLoading) {
-    return (
-      <div className="flex h-screen w-full justify-center items-center">
-       <div className="w-36 h-36">
-        <div className="animate-spin rounded-full h-36 w-36 border-t-2 border-b-4 border-foreground"></div>
-      </div>
-      </div>
-    )
-    ;
-  }
 
-  if (!call) {
-    return <p className="text-center font-bold">Call not found</p>;
-  }
+    if (!client || !meeting) return;
+      const call = client.call("default", id as string);
+      if (!call) throw new Error("Failed to create meeting");
 
-  const notAllowedToJoin =
-    call.type === "private-meeting" &&
-    (!isSignedIn|| !call.state.members.find((m: any) => m.user.id === user.id));
+      call.getOrCreate({
+        data: {
+          starts_at: new Date(meeting.startsAt).toISOString(),
+          custom: {
+            title: meeting.title,
+            description: meeting.description,
+          },
+        },
+      });
 
-  if (notAllowedToJoin) {
-    return (
-      <p className="text-center font-bold">
-        You are not allowed to view this meeting
-      </p>
-    );
-  }
+  // if (!isSignedIn) {
+  //   return (
+  //     <div className="flex h-screen w-full justify-center items-center">
+  //      <div className="w-36 h-36">
+  //       <div className="animate-spin rounded-full h-36 w-36 border-t-2 border-b-4 border-foreground"></div>
+  //     </div>
+  //     </div>
+  //   )
+  //   ;
+  // }
+
+  // const notAllowedToJoin =
+  //   call.type === "private-meeting" &&
+  //   (!isSignedIn|| !call.state.members.find((m: any) => m.user.id === user.id));
+
+  // if (notAllowedToJoin) {
+  //   return (
+  //     <p className="text-center font-bold">
+  //       You are not allowed to view this meeting
+  //     </p>
+  //   );
+  // }
 
   return (
     <StreamCall call={call}>
