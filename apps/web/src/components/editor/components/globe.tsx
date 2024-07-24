@@ -9,7 +9,7 @@ import countries from "./globe.json";
 import { defaultProps } from "@blocknote/core";
 import { Slider } from "@knowingly/ui/slider";
 import { usePreview } from "~/lib/hooks/usePreview";
-import ColorPicker from "~/components/color-picker";
+import { ColorPicker } from "~/components/color-picker";
 
 export const BlocknoteGlobe = createReactBlockSpec(
   {
@@ -104,7 +104,7 @@ const GlobeDemo = ({props} : {props : any}) => {
             onValueChange={(value) => setSize(value[0])}
             className="w-[300px]"
           />
-          <ColorPicker color={color} setColor={setColor} />
+          <ColorPicker value={color} onChange={setColor} />
         </div>
       )}
       <div

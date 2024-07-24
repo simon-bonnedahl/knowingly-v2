@@ -2,45 +2,30 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Call, useStreamVideoClient } from "@stream-io/video-react-sdk";
 import { toast } from "sonner";
-import { v4 as uuid } from "uuid";
 
 import { Button } from "@knowingly/ui/button";
-import { useToast } from "@knowingly/ui/use-toast";
+import { Icons } from "~/components/icons";
+import { useMutation } from "convex/react";
+import { api } from "@knowingly/backend/convex/_generated/api";
 
 export const InstantMeeting = () => {
   const router = useRouter();
 
-  const [callDetail, setCallDetail] = useState<Call>();
-  const client = useStreamVideoClient();
+  const createInstantMeeting = useMutation(api.meetings.createInstant);
 
-  const createMeeting = async () => {
-    if (!client) return;
-    try {
-      const call = client.call("default", uuid());
-      if (!call) throw new Error("Failed to create meeting");
-      const startsAt = new Date(Date.now()).toISOString();
-      const description = "Instant Meeting";
-      await call.getOrCreate({
-        data: {
-          starts_at: startsAt,
-          custom: {
-            description,
-          },
-        },
+  const onCreate = async() => {
+    createInstantMeeting()
+      .then((res) => {
+        toast.success("Meeting created");
+        router.push(`/meetings/${res._id}`);
+      })
+      .catch((err) => {
+        toast.error(err.message);
       });
-      console.log(call);
-      setCallDetail(call);
-      router.push(`/meetings/${call.id}`);
-      toast.success("Meeting created");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to create meeting");
-    }
-  };
+    };
 
-  if (!client) return null;
-
-  return <Button onClick={createMeeting}>Instant Meeting</Button>;
+  return <Button size={"sm"} variant={"ringHover"} onClick={onCreate} className="h-full">
+    <Icons.plus className="mr-2 size-4" />
+    Instant Meeting</Button>;
 };

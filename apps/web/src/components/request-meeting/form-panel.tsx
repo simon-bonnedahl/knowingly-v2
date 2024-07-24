@@ -12,6 +12,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@knowingly/ui/tooltip";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { Ent } from "@knowingly/backend/convex/types";
+import { LoadingDots } from "../loaders";
 
 type Guest = {
 	email: string;
@@ -27,6 +28,7 @@ export function FormPanel({ creator }: FormPanelProps) {
 	const router = useRouter();
 
 	const [guests, setGuests] = React.useState<Guest[]>([]);
+	const [loading, setLoading] = React.useState(false);
 	const searchParams = useSearchParams();
 	const slotParam = searchParams.get("slot");
 	const createMeeting = useMutation(api.meetings.create);
@@ -54,15 +56,17 @@ export function FormPanel({ creator }: FormPanelProps) {
 		};
 	
 
-
+		setLoading(true);
 		await createMeeting({
-			title: "Meeting",
+			title: "Meeting with " + creator.name,
 			length: 30 * 60 * 1000, // 30 minutes
 			userId: creator._id,
 			isPublic: false,
 			notes: data.notes,
 			startsAt: new Date(slotParam as string).getTime(),
 		});
+		setLoading(false);
+		router.push("/meetings");
 	}
 
 
@@ -132,8 +136,8 @@ export function FormPanel({ creator }: FormPanelProps) {
 				>
 					Back
 				</Button>
-				<Button  type="submit" >
-						Continue
+				<Button  type="submit" disabled={loading} >
+					{loading ? <LoadingDots color="#fff"/> : "Request"}
 				</Button>
 			</div>
 		</form>

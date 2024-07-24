@@ -1,12 +1,3 @@
-import {
-  FileImage,
-  Mic,
-  Paperclip,
-  PlusCircle,
-  SendHorizontal,
-  Smile,
-  ThumbsUp,
-} from "lucide-react";
 import Link from "next/link";
 import React, { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -14,14 +5,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@knowingly/ui/popover";
 import { cn } from "@knowingly/ui";
 import { buttonVariants } from "@knowingly/ui/button";
 import { Textarea } from "@knowingly/ui/textarea";
-import { Message, loggedInUserData } from "./mockupData";
 import { EmojiPicker } from "./emoji-picker";
+import { Icons } from "../icons";
 interface ChatBottombarProps {
   sendMessage: (message: string) => void;
   isMobile: boolean;
 }
 
-export const BottombarIcons = [{ icon: FileImage }, { icon: Paperclip }];
 
 export default function ChatBottombar({
   sendMessage, isMobile,
@@ -62,7 +52,7 @@ export default function ChatBottombar({
 
   return (
     <div className="p-2 pb-4 flex justify-between w-full items-center gap-2">
-      <div className="flex">
+      <div className="flex gap-1">
           <Popover>
             <PopoverTrigger asChild>
             <Link
@@ -73,7 +63,7 @@ export default function ChatBottombar({
             "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
           )}
         >
-          <PlusCircle size={20} className="text-muted-foreground" />
+          <Icons.circlePlus className="text-muted-foreground size-5" />
         </Link>
             </PopoverTrigger>
             <PopoverContent 
@@ -89,21 +79,8 @@ export default function ChatBottombar({
                 "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
               )}
               >
-                <Mic size={20} className="text-muted-foreground" />
+                <Icons.microphone className="text-muted-foreground size-5" />
               </Link>
-               {BottombarIcons.map((icon, index) => (
-                 <Link
-                   key={index}
-                   href="#"
-                   className={cn(
-                     buttonVariants({ variant: "ghost", size: "icon" }),
-                     "h-9 w-9",
-                     "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
-                   )}
-                 >
-                   <icon.icon size={20} className="text-muted-foreground" />
-                 </Link>
-               ))}
              </div>
              ) : (
               <Link 
@@ -114,16 +91,14 @@ export default function ChatBottombar({
                 "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
               )}
               >
-                <Mic size={20} className="text-muted-foreground" />
+                <Icons.microphone  className="text-muted-foreground size-5" />
               </Link>
              )}
             </PopoverContent>
           </Popover>
         {!message.trim() && !isMobile && (
-          <div className="flex">
-            {BottombarIcons.map((icon, index) => (
+          <div className="flex gap-1">
               <Link
-                key={index}
                 href="#"
                 className={cn(
                   buttonVariants({ variant: "ghost", size: "icon" }),
@@ -131,9 +106,18 @@ export default function ChatBottombar({
                   "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
                 )}
               >
-                <icon.icon size={20} className="text-muted-foreground" />
+                <Icons.filePlus  className="text-muted-foreground size-5" />
               </Link>
-            ))}
+              <Link
+                href="#"
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "icon" }),
+                  "h-9 w-9",
+                  "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
+                )}
+              >
+                <Icons.paperclip  className="text-muted-foreground size-5" />
+              </Link>
           </div>
         )}
       </div>
@@ -184,7 +168,7 @@ export default function ChatBottombar({
             )}
             onClick={handleSend}
           >
-            <SendHorizontal size={20} className="text-muted-foreground" />
+            <Icons.send  className="text-muted-foreground size-5" />
           </Link>
         ) : (
           <Link
@@ -196,7 +180,7 @@ export default function ChatBottombar({
             )}
             onClick={handleThumbsUp}
           >
-            <ThumbsUp size={20} className="text-muted-foreground" />
+            <Icons.thumbUp  className="text-muted-foreground size-5" />
           </Link>
         )}
       </AnimatePresence>

@@ -31,3 +31,20 @@ export const list = query({
         return notifications;
     },
 });
+
+export const latest = query({
+    args: {},
+    handler: async (ctx, args) => {
+        const user = await ctx.user();
+        return await user?.edge("notifications").order("desc").first();
+    },
+});
+
+export const getUnreadCount = query({
+    args: {},
+    handler: async (ctx, args) => {
+        const user = await ctx.user();
+        const notifications = await user?.edge("notifications");
+        return notifications?.filter((notification) => !notification.read).length;
+    },
+});

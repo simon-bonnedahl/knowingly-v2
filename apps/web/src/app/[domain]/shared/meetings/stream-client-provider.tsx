@@ -5,14 +5,11 @@ import {
   StreamVideoClient,
   User,
 } from "@stream-io/video-react-sdk";
-import { Loader2 } from "lucide-react";
-import {v4 as uuid} from "uuid";
 import { useEffect, useState } from "react";
 
 interface ClientProviderProps {
   children: React.ReactNode;
 }
-import { useUser } from "@clerk/nextjs";
 import { env } from "~/env";
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { useAction, useQuery } from "convex/react";
@@ -23,9 +20,11 @@ export default function StreamClientProvider({ children }: ClientProviderProps) 
 
   if (!videoClient) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <Loader2 className="mx-auto animate-spin" />
-      </div>
+      <div className="flex h-screen w-full justify-center items-center">
+        <div className="w-36 h-36">
+         <div className="animate-spin rounded-full h-36 w-36 border-t-2 border-b-4 border-foreground"></div>
+       </div>
+       </div>
     );
   }
 

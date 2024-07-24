@@ -23,6 +23,7 @@ interface ToolbarProps {
 export const HubToolbar = ({ initialData, preview }: ToolbarProps) => {
   const [name, setName] = useState(initialData.name);
   const [description, setDescription] = useState(initialData.description);
+  const [logo , setLogo] = useState(initialData.logo)
   const subdomain = useSubdomain();
 
   const updateHub = useMutation(api.hubs.update);
@@ -30,11 +31,12 @@ export const HubToolbar = ({ initialData, preview }: ToolbarProps) => {
   const banner = useBanner();
 
   const onIconSelect = (icon: string) => {
-    updateHub({
-      subdomain,
-      field: "logo",
-      value: icon,
-    });
+    setLogo(icon);
+    // updateHub({
+    //   subdomain,
+    //   field: "logo",
+    //   value: icon,
+    // });
   };
 
   const onRemoveIcon = () => {
@@ -64,44 +66,44 @@ export const HubToolbar = ({ initialData, preview }: ToolbarProps) => {
   return (
     <div className=" group relative w-3/4">
       <div className="group/icon absolute -top-8  left-4 items-center gap-x-2 rounded-xl hover:bg-white/10 ">
-        {!!initialData.logo && !preview && (
+
+        {!!logo && !preview && (
           <IconPicker onChange={onIconSelect}>
             <Avatar className="transition hover:opacity-75 w-full h-full">
-            {isUrl(initialData.logo) ? (
+            {isUrl(logo) ? (
                 <AvatarImage
-                  src={initialData.logo}
+                  src={logo}
                   className="size-[4.5rem] rounded-full object-cover"
                 />
             ) : (
-              <AvatarFallback className="bg-transparent">
-                <p className="text-7xl ">{initialData.logo}</p>
-              </AvatarFallback>
+              <div className="bg-transparent">
+                <p className="text-7xl ">{logo}</p>
+              </div>
             )}
             </Avatar>
           </IconPicker>
         )}
+
       </div>
-      {!!initialData.logo && preview && (
+      {!!logo && preview && (
         <div className="absolute -top-14 left-4 pt-6 text-7xl">
           <Avatar className="transition hover:opacity-75 w-full h-full">
-          <Avatar className="h-full w-full rounded-sm transition hover:opacity-75">
-            {isUrl(initialData.logo) ? (
+            {isUrl(logo) ? (
                 <AvatarImage
-                  src={initialData.logo}
+                  src={logo}
                   className="size-[4.5rem] rounded-full object-cover"
                 />
             ) : (
-              <AvatarFallback className="bg-transparent">
-                <p className="text-7xl ">{initialData.logo}</p>
-              </AvatarFallback>
+              <div className="bg-transparent">
+                <p className="text-7xl ">{logo}</p>
+              </div>
             )}
-          </Avatar>
             </Avatar>
         </div>
       )}
 
       <div className="flex items-center gap-x-1 py-4 opacity-0 group-hover:opacity-100">
-        {!initialData.logo && !preview && (
+        {!logo && !preview && (
           <IconPicker asChild onChange={onIconSelect}>
             <Button
               className="text-xs text-muted-foreground"

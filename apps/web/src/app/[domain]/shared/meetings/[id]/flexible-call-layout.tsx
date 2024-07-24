@@ -38,7 +38,7 @@ interface CallLayoutButtonsProps {
 
 function CallLayoutButtons({ layout, setLayout }: CallLayoutButtonsProps) {
   return (
-    <div className="mx-auto w-fit space-x-6">
+    <div className="mx-auto w-full space-x-6">
       <button onClick={() => setLayout("speaker-vert")}>
         <BetweenVerticalEnd
           className={layout !== "speaker-vert" ? "text-gray-400" : ""}

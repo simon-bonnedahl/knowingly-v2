@@ -63,7 +63,10 @@ export const addUpload = mutation({
 export const getUploads = query({
     args: { },
     handler: async (ctx, args) => {
-        const user = await ctx.userX()
+        const user = await ctx.user()
+        if (!user) {
+            return []
+        }
 
         return await Promise.all(user.uploads.map(async (upload) => {
             return await ctx.storage.getUrl(upload)
