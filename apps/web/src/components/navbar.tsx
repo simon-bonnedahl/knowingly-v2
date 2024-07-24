@@ -186,7 +186,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
   return (
     <>
       <div
-        className={`fixed left-0 top-0 z-20 flex h-full flex-col bg-background p-4  md:w-[30vw] lg:w-[24vw] xl:w-[18vw] `}
+        className={`fixed left-0 top-0 z-0 flex h-full flex-col bg-background p-4  md:w-[30vw] lg:w-[24vw] xl:w-[18vw] `}
       >
         {hubs ? (
           <HubSwitcher

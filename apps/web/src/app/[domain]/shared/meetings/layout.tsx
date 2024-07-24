@@ -7,9 +7,7 @@ export const metadata: Metadata = {
 };
 const MeetingLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
   return (
-    <main>
       <StreamClientProvider>{children}</StreamClientProvider>
-    </main>
   );
 };
 

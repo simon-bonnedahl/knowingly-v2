@@ -23,11 +23,12 @@ import {
 } from "@knowingly/ui/dropdown-menu"
 import { DataTableColumnHeader } from "~/components/data-table/data-table-column-header"
 import { Icon, IconKey } from "~/components/icons"
-import { capitalizeFirstLetter, formatDate } from "~/lib/utils"
+import { capitalizeFirstLetter } from "~/lib/utils"
 import { useSubdomain } from "~/lib/hooks/useSubdomain"
 import { useMutation, useQuery } from "convex/react"
 import { api } from "@knowingly/backend/convex/_generated/api"
 import { Id } from "@knowingly/backend/convex/_generated/dataModel"
+import { formatDate } from "~/lib/dateUtils"
 
 export interface DataTableInvite {
     id: string

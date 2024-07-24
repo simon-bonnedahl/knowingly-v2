@@ -9,12 +9,13 @@ import {
   SheetTrigger,
 } from "@knowingly/ui/sheet";
 
-import { cn, formatDate } from "~/lib/utils";
+import { cn } from "~/lib/utils";
 import { useQuery } from "convex/react";
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { Ent } from "@knowingly/backend/convex/types";
 import Link from "next/link";
 import { Avatar, AvatarImage } from "@knowingly/ui/avatar";
+import { formatDate } from "~/lib/dateUtils";
 
 
 export const Notifications = () => {

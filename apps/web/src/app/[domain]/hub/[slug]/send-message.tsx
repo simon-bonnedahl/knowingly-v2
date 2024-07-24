@@ -63,7 +63,7 @@ export const SendMessage = ({creator} : {creator : Ent<"users">}) => {
           />
         </ModalBody>
         <ModalFooter>
-          <Button size={"sm"} onClick={onSendMessage} disabled={!message}>
+          <Button size={"sm"} onClick={onSendMessage} disabled={!message || loading}>
             {loading ? <LoadingDots color="#fff"/> : "Send"}
           </Button>
         </ModalFooter>

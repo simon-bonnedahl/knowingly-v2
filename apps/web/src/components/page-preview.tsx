@@ -48,6 +48,7 @@ export const PagePreview = ({
   imageSrc = "",
 }: PagePreviewProps) => {
  
+  const page = useQuery(api.pages.getPage, {slug: url.replace("/", "")})
 
   const [isOpen, setOpen] = React.useState(false);
 
@@ -70,8 +71,6 @@ export const PagePreview = ({
     const offsetFromCenter = (eventOffsetX - targetRect.width / 2) / 2; // Reduce the effect to make it subtle
     x.set(offsetFromCenter);
   };
-
-  const page = useQuery(api.pages.getPage, {slug: url.replace("/", "")})
   if(!page) return null
 
 
@@ -92,7 +91,7 @@ export const PagePreview = ({
       >
         <HoverCardPrimitive.Trigger
           onMouseMove={handleMouseMove}
-          className={cn("text-black dark:text-white", className)}
+          className={cn("", className)}
           href={url}
         >
           {children}
@@ -126,15 +125,14 @@ export const PagePreview = ({
               >
                 <Link
                   href={url}
-                  className="block  bg-white  shadow rounded-xl hover:border-neutral-200 dark:hover:border-neutral-800"
-                  style={{ fontSize: 0 }}
+                  className="flex flex-col shadow rounded-xl"
                 >
                   <div className="z-20 w-56">
              
 
-
                     <Image src={page.image ?? ""} width={300} height={125} className="w-full h-16 rounded-t-xl object-cover" alt="hej" />
-                    <div className="p-2 text-black border border-black w-full">
+                    <div className="p-2 text-foreground w-full">
+                      <h3 className="text-lg font-semibold ">{page.name}</h3>
                      
                     </div>
                       

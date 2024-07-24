@@ -35,9 +35,9 @@ export const IconPicker = ({
   const { theme } = useTheme();
   const uploads = useQuery(api.users.getUploads);
   return (
-    <Popover>
+    <Popover >
       <PopoverTrigger asChild={asChild}>{children}</PopoverTrigger>
-      <PopoverContent className="w-[354px] border-none p-0 shadow-none ">
+      <PopoverContent className="w-fit max-w-[370px] p-2 border  shadow-none z-50 ">
         <Tabs>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="emoji">Emoji</TabsTrigger>
@@ -45,24 +45,20 @@ export const IconPicker = ({
           </TabsList>
           <TabsContent value="emoji">
             <Picker
-              className="w-full"
               data={data}
               onEmojiSelect={(emoji) => onChange(emoji.native)}
               theme={theme}
             />
           </TabsContent>
-          <TabsContent value="logo">
-            <div className="flex h-fit w-full flex-col gap-2 rounded-xl border border-muted py-4 shadow-sm">
-              <div className="px-4">
+          <TabsContent value="logo" className="flex flex-col gap-2">
                 <FileUploader />
-              </div>
 
               <Separator horizontal decorative />
 
               {uploads ? (
-                <div className="grid w-full grid-cols-4 px-4 gap-1">
+                <div className="grid w-full grid-cols-6 gap-1">
                   {uploads.map((upload) => (
-                    <Button variant={"ringHover"} className="w-fit h-fit p-0" onClick={() => onChange(upload as string)}>
+                    <Button variant={"ringHover"} className="w-fit h-fit p-0" onClick={() => onChange(upload as string)} key={upload}>
                     <Image src={upload ?? ""} alt={upload ?? ""}  width={100} height={100} className="w-full rounded-md object-cover aspect-square" />
                     </Button>
                   ))}
@@ -70,7 +66,6 @@ export const IconPicker = ({
               ) : (
                 <LoadingDots />
               )}
-            </div>
           </TabsContent>
         </Tabs>
       </PopoverContent>

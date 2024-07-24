@@ -1,14 +1,18 @@
 import { ReactNode, Suspense } from "react";
 import { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
-import { env } from "~/env";
-import Link from "next/link";
 import Image from "next/image";
-import Navbar from "../../components/navbar";
-import { preloadQuery, fetchQuery } from "convex/nextjs";
+import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
+import { auth, getAuth } from "@clerk/nextjs/server";
+import { fetchQuery, preloadQuery } from "convex/nextjs";
+
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { Button } from "@knowingly/ui/button";
-import { auth, getAuth } from "@clerk/nextjs/server";
+
+import { env } from "~/env";
+import Navbar from "../../components/navbar";
+import { AIAssistantProvider } from "./AIAssistantProvider";
+import { DynamicIslandDemo } from "./dynamic-island-demo";
 
 export async function generateMetadata({
   params,
@@ -18,7 +22,7 @@ export async function generateMetadata({
   const domain = decodeURIComponent(params.domain);
   const subdomain = domain.split(".")[0];
 
-  if(subdomain === "app") {
+  if (subdomain === "app") {
     return {
       title: "App | Knowingly",
       description: "The app of Knowingly",
@@ -29,7 +33,6 @@ export async function generateMetadata({
       },
       icons: ["/logo-small-black.svg"],
       metadataBase: new URL(`${env.NEXT_PUBLIC_PROTOCOL}://${domain}`),
-   
     };
   }
 
@@ -38,9 +41,10 @@ export async function generateMetadata({
   if (!hub) return null;
 
   const urlPattern = /^(http|https):\/\/([\w-]+(\.[\w-]+)+)(\/[\w-./?%&=]*)?$/;
-  const icon = urlPattern.test(hub.logo as string) ? hub.logo  as string : "/logo-small-black.svg";
-  
-  
+  const icon = urlPattern.test(hub.logo as string)
+    ? (hub.logo as string)
+    : "/logo-small-black.svg";
+
   return {
     title: hub.name + " | Knowingly",
     description: hub.description,
@@ -68,11 +72,9 @@ export default async function Layout({
   params: { domain: string };
   children: ReactNode;
 }) {
-  
   // const {userId} = auth()
   const domain = decodeURIComponent(params.domain);
   const subdomain = domain.split(".")[0];
-
 
   // if(!userId ) {
   //   return(
@@ -85,20 +87,21 @@ export default async function Layout({
   //   )
   // }
 
-  if(true) {
+  if (true) {
     return (
       <>
-        <Navbar subdomain={subdomain}  />
-        <div className="fixed top-4 right-0 md:w-[70vw] lg:w-[76vw] xl:w-[82vw] min-h-screen bg-card rounded-tl-3xl overflow-hidden shadow-xl  flex justify-center">
-          {children}
-        </div>
+        <AIAssistantProvider>
+          <Navbar subdomain={subdomain} />
+          <DynamicIslandDemo />
+          <div className="fixed right-0 top-4 flex min-h-screen justify-center overflow-hidden rounded-tl-3xl bg-card shadow-2xl border md:w-[70vw]  lg:w-[76vw] xl:w-[82vw]">
+            {children}
+          </div>
+        </AIAssistantProvider>
       </>
     );
   }
   const hub = await fetchQuery(api.hubs.getHub, { subdomain });
-  if(!hub) return notFound();
-  
-
+  if (!hub) return notFound();
 
   if (
     params.domain.endsWith(`.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) &&
@@ -108,54 +111,50 @@ export default async function Layout({
     return redirect(`${env.NEXT_PUBLIC_PROTOCOL}://${hub?.customDomain}`);
   }
 
-  if(userId)  
+  if (userId)
     return (
       <>
-        <Navbar subdomain={subdomain}  />
-        <div className="fixed top-16 right-0 md:w-[70vw] lg:w-[76vw] xl:w-[82vw] min-h-screen bg-card rounded-tl-3xl shadow-xl   flex justify-center border border-background ">
+        <Navbar subdomain={subdomain} />
+        <div className="fixed right-0 top-16 flex min-h-screen justify-center rounded-tl-3xl border border-background bg-card   shadow-xl md:w-[70vw] lg:w-[76vw] xl:w-[82vw] ">
           {children}
         </div>
       </>
-    //    <div className="flex justify-between ">
-    //    <Navbar subdomain={subdomain} session={session} />
-    //    <div className="mt-4 w-full min-h-screen bg-card rounded-tl-3xl shadow-xl flex justify-center border border-background overflow-hidden">
-    //      {children}
-    //    </div>
-    //  </div>
+      //    <div className="flex justify-between ">
+      //    <Navbar subdomain={subdomain} session={session} />
+      //    <div className="mt-4 w-full min-h-screen bg-card rounded-tl-3xl shadow-xl flex justify-center border border-background overflow-hidden">
+      //      {children}
+      //    </div>
+      //  </div>
     );
 
   return (
-    
-        <div className="mt-16 min-h-screen bg-background ">
-          <div className="fixed top-0 z-30 flex w-full justify-center border-b border-white/50 bg-background shadow-md transition-all">
-            <div className="mx-5 flex h-16 w-full max-w-screen-xl items-center justify-between">
-              <Link
-                href="/"
-                className="font-display flex items-center text-2xl"
-              >
-                <Image
-                  src="/logo-black.svg"
-                  alt="Knowingly logo"
-                  width={125}
-                  height={75}
-                  className="dark:hidden  md:scale-110"
-                />
+    <div className="mt-16 min-h-screen bg-background ">
+      <div className="fixed top-0 z-30 flex w-full justify-center border-b border-white/50 bg-background shadow-md transition-all">
+        <div className="mx-5 flex h-16 w-full max-w-screen-xl items-center justify-between">
+          <Link href="/" className="font-display flex items-center text-2xl">
+            <Image
+              src="/logo-black.svg"
+              alt="Knowingly logo"
+              width={125}
+              height={75}
+              className="dark:hidden  md:scale-110"
+            />
 
-                <Image
-                  src="/logo-fullwhite.svg"
-                  alt="Knowingly logo"
-                  width={125}
-                  height={75}
-                  className="hidden dark:block xl:scale-125 "
-                />
-              </Link>
-{/* 
+            <Image
+              src="/logo-fullwhite.svg"
+              alt="Knowingly logo"
+              width={125}
+              height={75}
+              className="hidden dark:block xl:scale-125 "
+            />
+          </Link>
+          {/* 
               <SignInButton >
                   Log in
               </SignInButton> */}
-            </div>
-          </div>
-          {children}
         </div>
+      </div>
+      {children}
+    </div>
   );
 }

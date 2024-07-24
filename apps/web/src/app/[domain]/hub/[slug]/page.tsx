@@ -22,6 +22,8 @@ import { Separator } from "@knowingly/ui/separator";
 import { env } from "~/env";
 import { RequestMeeting } from "./request-meeting";
 import { SendMessage } from "./send-message";
+import { Button } from "@knowingly/ui/button";
+import { Icons } from "~/components/icons";
 
 // export async function generateStaticParams() {
 //   const allHubs = await db.hub.findMany({
@@ -89,12 +91,14 @@ export default function PageLayout({ params }: { params: { slug: string } }) {
 
   return (
     <div className="relative flex w-full flex-col items-center">
-      <button
-        className="hover:none absolute left-2 top-2  z-30 rounded-full bg-black p-2"
+      <Button
+        variant={"ringHover"}
+
+        className="hover:none absolute left-2 top-2  z-30 rounded-full w-10 h-10 p-1"
         onClick={goBack}
       >
-        <IconArrowLeft size={20} className="text-white" />
-      </button>
+        <Icons.chevronLeft className="size-5" />
+      </Button>
       <div className="absolute right-2 top-[21rem] z-20 flex items-center gap-2">
         <Label className="font-medium">Preview</Label>
         <Switch checked={preview} onCheckedChange={togglePreview} />

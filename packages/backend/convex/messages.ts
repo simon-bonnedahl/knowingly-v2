@@ -83,3 +83,18 @@ export const getConversations = query({
         
     },
     });
+export const latest = query({
+    args: {},
+    handler: async (ctx, args) => {
+        const user = await ctx.user()
+        if(!user) return null
+        const message = await user.edge("receivedMessages").order("desc").first()
+        if(!message) return null
+
+        return {
+            ...message,
+            sender : await message.edge("sender"),
+        }
+
+    },
+    });

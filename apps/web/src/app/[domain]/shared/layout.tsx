@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 
-
 export default async function SharedLayout({
   params,
   children,
@@ -8,16 +7,9 @@ export default async function SharedLayout({
   params: { domain: string };
   children: ReactNode;
 }) {
-  
-
-
-
   return (
-    
-       
-          <div className="flex flex-col w-full  h-screen overflow-y-scroll relative">
-            
-          {children}
-        </div>
+    <div className="relative flex h-screen  w-full flex-col overflow-y-scroll">
+      {children}
+    </div>
   );
 }

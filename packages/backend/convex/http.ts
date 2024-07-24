@@ -24,7 +24,6 @@ app.post("/api/chat", async (c) => {
     role: "system",
     content: "You can be a helpful assistant that can provide information based on context from pages on the site." +
     " Pages available are: " + JSON.stringify(pages) + 
-    " You are a master at structuring and replying in markdown so please do that."+
     " You can use /slug to link to a page. But if you do it, do it on a separate line and mask the link with the page name" + 
     "You can also provide any image you see fits" + 
     "Feel free to use plenty of emojis and gifs to make the conversation more engaging." +

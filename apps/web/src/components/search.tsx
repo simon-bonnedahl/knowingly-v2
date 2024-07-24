@@ -1,30 +1,33 @@
-"use client"
+"use client";
 
-import { cn } from "~/lib/utils"
+import * as React from "react";
+import { useRouter } from "next/navigation";
+import { DialogProps } from "@radix-ui/react-dialog";
+import { useQuery } from "convex/react";
+import { useTheme } from "next-themes";
 
+import { api } from "@knowingly/backend/convex/_generated/api";
+import { Avatar, AvatarFallback, AvatarImage } from "@knowingly/ui/avatar";
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@knowingly/ui/command";
 
-
-import * as React from "react"
-import { useRouter } from "next/navigation"
-
-import { useTheme } from "next-themes"
-import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut } from "@knowingly/ui/command"
-import { DialogProps } from "@radix-ui/react-dialog"
-import { useQuery } from "convex/react"
-import { api } from "@knowingly/backend/convex/_generated/api"
-import { useSubdomain } from "~/lib/hooks/useSubdomain"
-import { Icons } from "./icons"
-import { Avatar, AvatarFallback, AvatarImage } from "@knowingly/ui/avatar"
-
-
-
-
+import { useSubdomain } from "~/lib/hooks/useSubdomain";
+import { cn, isUrl } from "~/lib/utils";
+import { Icons } from "./icons";
 
 export function Search() {
-  const router = useRouter()
-  const [open, setOpen] = React.useState(false)
-  const subdomain = useSubdomain()
-  const profiles = useQuery(api.pages.getPagesByHub, { subdomain })
+  const router = useRouter();
+  const [open, setOpen] = React.useState(false);
+  const subdomain = useSubdomain();
+  const profiles = useQuery(api.pages.getPagesByHub, { subdomain });
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -35,61 +38,72 @@ export function Search() {
           e.target instanceof HTMLTextAreaElement ||
           e.target instanceof HTMLSelectElement
         ) {
-          return
+          return;
         }
 
-        e.preventDefault()
-        setOpen((open) => !open)
+        e.preventDefault();
+        setOpen((open) => !open);
       }
-    }
+    };
 
-    document.addEventListener("keydown", down)
-    return () => document.removeEventListener("keydown", down)
-  }, [])
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
 
   const runCommand = React.useCallback((command: () => unknown) => {
-    setOpen(false)
-    command()
-  }, [])
+    setOpen(false);
+    command();
+  }, []);
 
   return (
     <>
-       <button  className={cn("flex items-center rounded-md py-2 px-4 gap-3  transition-all duration-150 ease-in-out text-foreground hover:bg-card bg-transparent text-sm font-normal",
-        )} onClick={() => setOpen(true)}>
-        <Icons.search className="w-4 h-4"/>
-            Search
+      <button
+        className={cn(
+          "flex items-center gap-3 rounded-md bg-transparent px-4  py-2 text-sm font-normal text-foreground transition-all duration-150 ease-in-out hover:bg-card",
+        )}
+        onClick={() => setOpen(true)}
+      >
+        <Icons.search className="h-4 w-4" />
+        Search
         <CommandShortcut>⌘K</CommandShortcut>
-        </button>
+      </button>
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Type a command or search..."  className="focus:ring-0 border-none"/>
+        <CommandInput
+          placeholder="Type a command or search..."
+          className="border-none focus:ring-0"
+        />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Profiles">
             {profiles?.map((profile) => (
-                <CommandItem
+              <CommandItem
                 className=" flex items-center gap-1 hover:cursor-pointer "
-                  key={profile._id}
-                  value={profile.name}
-                  onSelect={() => {
-                    runCommand(() => router.push(`/${profile.slug}`))
-                  }}
-                >   
+                key={profile._id}
+                value={profile.name}
+                onSelect={() => {
+                  runCommand(() => router.push(`/${profile.slug}`));
+                }}
+              >
                 <Avatar className="mr-2 h-8 w-8 rounded-sm">
-                        <AvatarImage
-                          src={profile.icon!}
-                          alt={profile.name}
-                          className="h-full w-full rounded-full"
-                        />
-                        <AvatarFallback className="bg-transparent border w-full h-full" ><p className="text-xl">{profile?.icon}</p></AvatarFallback>
-                      </Avatar>
-                      {profile.name}
-                </CommandItem>
-              ))}
+                  {isUrl(profile?.icon) ? (
+                    <AvatarImage
+                      src={profile.icon!}
+                      alt={profile.name}
+                      className="h-full w-full rounded-full"
+                    />
+                  ) : (
+                    <AvatarFallback className="h-full w-full border bg-transparent">
+                      <p className="text-xl">{profile?.icon}</p>
+                    </AvatarFallback>
+                  )}
+                </Avatar>
+                {profile.name}
+              </CommandItem>
+            ))}
           </CommandGroup>
           <CommandSeparator />
-         
         </CommandList>
       </CommandDialog>
     </>
-  )
+  );
 }
