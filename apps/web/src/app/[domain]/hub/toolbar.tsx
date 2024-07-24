@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "next/navigation";
-import { IconImageInPicture, IconMoodSmile, IconX } from "@tabler/icons-react";
+import React, { useEffect, useState } from "react";
+import { IconImageInPicture, IconMoodSmile } from "@tabler/icons-react";
 import { useMutation } from "convex/react";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { Doc } from "@knowingly/backend/convex/_generated/dataModel";
-import { Avatar, AvatarFallback, AvatarImage } from "@knowingly/ui/avatar";
+import { Avatar , AvatarImage } from "@knowingly/ui/avatar";
 import { Button } from "@knowingly/ui/button";
 
 import { useBanner } from "~/lib/hooks/useBanner";
@@ -32,23 +31,17 @@ export const HubToolbar = ({ initialData, preview }: ToolbarProps) => {
 
   const onIconSelect = (icon: string) => {
     setLogo(icon);
-    // updateHub({
-    //   subdomain,
-    //   field: "logo",
-    //   value: icon,
-    // });
-  };
-
-  const onRemoveIcon = () => {
-    updateHub({
+    void updateHub({
       subdomain,
       field: "logo",
-      value: "",
+      value: icon,
     });
   };
 
+
+
   useEffect(() => {
-    updateHub({
+    void updateHub({
       subdomain,
       field: "name",
       value: name,
@@ -56,7 +49,7 @@ export const HubToolbar = ({ initialData, preview }: ToolbarProps) => {
   }, [name]);
 
   useEffect(() => {
-    updateHub({
+    void updateHub({
       subdomain,
       field: "description",
       value: description,

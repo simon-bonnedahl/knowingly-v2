@@ -51,10 +51,10 @@ app.post("/api/stripe", async (c) => {
   // Extract the `messages` from the body of the request
   const signature = c.req.header("stripe-signature") as string;
 
-//   const result = await ctx.runAction(internal.stripe.fulfill, {
-//     payload: await request.text(),
-//     signature,
-//   });
+  const result = await c.env.runAction(internal.stripe.fulfill, {
+    payload: await c.req.text(),
+    signature,
+  });
 
 //   if (result.success) {
 //     return new Response(null, {
@@ -73,7 +73,9 @@ app.post("/api/stripe", async (c) => {
 
 app.post("/api/clerk", async (c, ctx) => {
   // Extract the `messages` from the body of the request
+  console.log("Webhook received", c);
   const payload = await c.req.text();
+  console.log(payload);
   try {
     const result = await c.env.runAction(internal.clerk.fulfill, {
       payload,

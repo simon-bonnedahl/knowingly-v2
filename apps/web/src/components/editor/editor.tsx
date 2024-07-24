@@ -1,7 +1,7 @@
 "use client"
 
 import { useTheme } from "next-themes"
-import {  BlockNoteSchema, PartialBlock, defaultInlineContentSpecs, defaultStyleSchema } from "@blocknote/core"
+import {  BlockNoteSchema, defaultInlineContentSpecs, defaultStyleSchema } from "@blocknote/core"
 import {  DefaultReactSuggestionItem, SuggestionMenuController, getDefaultReactSlashMenuItems, useCreateBlockNote } from "@blocknote/react"
 import { BlockNoteView, Theme} from "@blocknote/mantine"
 import "@blocknote/core/style.css"
@@ -139,6 +139,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
           props: {
             user: page.name,
             href: `/${page.slug}`,
+            image: page.image ?? "",
           },
         },
         " ", // add a space after the mention
@@ -170,14 +171,12 @@ const editor = useCreateBlockNote({
         <SuggestionMenuController
         triggerCharacter={"@"}
         getItems={async (query) =>
-          // Gets all default slash menu items and `insertAlert` item.
           filterSuggestionItems(getMentionMenuItems(editor), query)
         }
       />
         <SuggestionMenuController
         triggerCharacter={"/"}
         getItems={async (query) =>
-          // Gets all default slash menu items and `insertAlert` item.
           filterSuggestionItems(
             [...getDefaultReactSlashMenuItems(editor), insertProfileGallery(editor), insertGlobe(editor), insertAlert(editor), insertButton(editor)],
             query

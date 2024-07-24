@@ -1,23 +1,19 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import {  useState } from "react"
 import { Popover, PopoverContent, PopoverTrigger } from "@knowingly/ui/popover"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@knowingly/ui/dialog"
 import { Button } from "@knowingly/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@knowingly/ui/avatar"
 import {  cn } from "~/lib/utils"
-import { Label } from "@knowingly/ui/label"
-import { Input } from "@knowingly/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@knowingly/ui/select"
-import { useTheme } from "next-themes"
 import { useRouter } from "next/navigation"
 import { env } from "~/env"
-import { IconCheck, IconChevronDown, IconCirclePlus } from "@tabler/icons-react"
 import { Command, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "@knowingly/ui/command"
-import { FunctionReturnType } from "convex/server"
+import type { FunctionReturnType } from "convex/server"
 import { api } from "@knowingly/backend/convex/_generated/api"
 import { useSubdomain } from "~/lib/hooks/useSubdomain"
 import { Icons } from "./icons"
+import { useQuery } from "convex/react"
+import { CreateHubModal } from "./modals/create-hub-modal"
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 
@@ -30,11 +26,10 @@ interface HubSwitcherProps extends PopoverTriggerProps {
 
 export default function HubSwitcher({ className, currentHub, hubs }: HubSwitcherProps) {
 
-  const {theme} = useTheme()
+  const user = useQuery (api.users.getMe)
   const router = useRouter()
 
   const [open, setOpen] = useState(false)
-  const [showNewHubDialog, setShowNewHubDialog] = useState(false)
   const subdomain = useSubdomain()
 
 
@@ -42,7 +37,6 @@ export default function HubSwitcher({ className, currentHub, hubs }: HubSwitcher
 
 
   return (
-    <Dialog open={showNewHubDialog} onOpenChange={setShowNewHubDialog}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -72,7 +66,7 @@ export default function HubSwitcher({ className, currentHub, hubs }: HubSwitcher
             <CommandList className="py-2 !border-none"> 
               <CommandInput placeholder="Search Hub..." className="border-none focus:ring-0 " />
                 <CommandGroup key="hubs" heading="Hubs">
-                  {hubs && hubs.map((hub : any) => (
+                  {hubs?.map((hub) => (
                     <CommandItem
                       key={hub.subdomain}
                       onSelect={() => {
@@ -83,7 +77,7 @@ export default function HubSwitcher({ className, currentHub, hubs }: HubSwitcher
                     >
                       <Avatar className="mr-2 h-5 w-5">
                         <AvatarImage
-                          src={hub.logo!}
+                          src={hub.logo}
                           alt={hub.name}
                           className="h-full w-full rounded-full"
                         />
@@ -118,7 +112,7 @@ export default function HubSwitcher({ className, currentHub, hubs }: HubSwitcher
                       <AvatarFallback>K</AvatarFallback>
                     </Avatar>
                     App
-                    <IconCheck
+                    <Icons.check
                       className={cn(
                         "ml-auto h-4 w-4",
                         subdomain === "app"
@@ -127,96 +121,94 @@ export default function HubSwitcher({ className, currentHub, hubs }: HubSwitcher
                       )}
                     />
                   </CommandItem>
-                  <CommandItem
-                    onSelect={() => {
-                      router.push(`${env.NEXT_PUBLIC_PROTOCOL}://admin.${env.NEXT_PUBLIC_ROOT_DOMAIN}`)
-                      setOpen(false)
-                    }}
-                    className="text-sm hover:cursor-pointer hover:text-card-foreground text-foreground"
-                  >
-                    <Avatar className="mr-2 h-5 w-5 rounded-md">
-                      <AvatarImage
-                        src="/logo-small-black.svg"
-                        alt="Knowingly"
-                      />
-                      <AvatarFallback>K</AvatarFallback>
-                    </Avatar>
-                    Admin
-                    <IconCheck
-                      className={cn(
-                        "ml-auto h-4 w-4",
-                        subdomain === "admin"
-                          ? "opacity-100"
-                          : "opacity-0"
-                      )}
-                    />
-                  </CommandItem>
+                  {user?.role === "SUPERUSER" && (
+                     <CommandItem
+                     onSelect={() => {
+                       router.push(`${env.NEXT_PUBLIC_PROTOCOL}://admin.${env.NEXT_PUBLIC_ROOT_DOMAIN}`)
+                       setOpen(false)
+                     }}
+                     className="text-sm hover:cursor-pointer hover:text-card-foreground text-foreground"
+                   >
+                     <Avatar className="mr-2 h-5 w-5 rounded-md">
+                       <AvatarImage
+                         src="/logo-small-black.svg"
+                         alt="Knowingly"
+                       />
+                       <AvatarFallback>K</AvatarFallback>
+                     </Avatar>
+                     Admin
+                     <Icons.check
+                       className={cn(
+                         "ml-auto h-4 w-4",
+                         subdomain === "admin"
+                           ? "opacity-100"
+                           : "opacity-0"
+                       )}
+                     />
+                   </CommandItem>
+                  )}
                 </CommandGroup>
             </CommandList>
             <CommandSeparator />
             <CommandList>
               <CommandGroup>
-                <DialogTrigger asChild>
                   <CommandItem
-                    onSelect={() => {
-                      setOpen(false)
-                      setShowNewHubDialog(true)
-                    }}
                     className="text-sm hover:cursor-pointer"
                   >
-                    <Icons.plus className="mr-2 h-5 w-5" />
-                    Create Hub
+                    <>
+                    <CreateHubModal/>
+                    </>
                   </CommandItem>
-                </DialogTrigger>
               </CommandGroup>
             </CommandList>
           </Command>
         </PopoverContent>
       </Popover>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Create Hub</DialogTitle>
-          <DialogDescription>
-            Add a new hub to manage products and customers.
-          </DialogDescription>
-        </DialogHeader>
-        <div>
-          <div className="space-y-4 py-2 pb-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Hub name</Label>
-              <Input id="name" placeholder="Acme Inc." />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="plan">Subscription plan</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a plan" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="free">
-                    <span className="font-medium">Free</span> -{" "}
-                    <span className="text-muted-foreground">
-                      Trial for two weeks
-                    </span>
-                  </SelectItem>
-                  <SelectItem value="pro">
-                    <span className="font-medium">Pro</span> -{" "}
-                    <span className="text-muted-foreground">
-                      $9/month per user
-                    </span>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => setShowNewHubDialog(false)}>
-            Cancel
-          </Button>
-          <Button type="submit">Continue</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
   )
 }
+
+
+{/* <DialogContent>
+<DialogHeader>
+  <DialogTitle>Create Hub</DialogTitle>
+  <DialogDescription>
+    Add a new hub to manage products and customers.
+  </DialogDescription>
+</DialogHeader>
+<div>
+  <div className="space-y-4 py-2 pb-4">
+    <div className="space-y-2">
+      <Label htmlFor="name">Hub name</Label>
+      <Input id="name" placeholder="Acme Inc." />
+    </div>
+    <div className="space-y-2">
+      <Label htmlFor="plan">Subscription plan</Label>
+      <Select>
+        <SelectTrigger>
+          <SelectValue placeholder="Select a plan" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="free">
+            <span className="font-medium">Free</span> -{" "}
+            <span className="text-muted-foreground">
+              Trial for two weeks
+            </span>
+          </SelectItem>
+          <SelectItem value="pro">
+            <span className="font-medium">Pro</span> -{" "}
+            <span className="text-muted-foreground">
+              $9/month per user
+            </span>
+          </SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+  </div>
+</div>
+<DialogFooter>
+  <Button variant="outline" onClick={() => setShowNewHubDialog(false)}>
+    Cancel
+  </Button>
+  <Button type="submit">Continue</Button>
+</DialogFooter>
+</DialogContent> */}

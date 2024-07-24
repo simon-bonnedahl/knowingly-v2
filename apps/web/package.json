@@ -12,7 +12,9 @@
     "lint": "eslint",
     "start": "pnpm with-env next start",
     "typecheck": "tsc --noEmit",
-    "with-env": "dotenv -e ../../.env --"
+    "with-env": "dotenv -e ../../.env --",
+    "stripe:listen": "stripe listen --forward-to https://confident-terrier-401.convex.site/api/stripe",
+    "stripe:trigger": "stripe trigger payment_intent.succeeded"
   },
   "dependencies": {
     "@assistant-ui/react": "^0.5.2",

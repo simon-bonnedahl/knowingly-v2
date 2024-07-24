@@ -11,7 +11,6 @@ import { InstantMeeting } from "./instant-meetings";
 import { MeetingCard } from "./meeting-card";
 
 export default function MeetingsPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const tab = searchParams.get("tab") || "upcoming";
   const [selectedTab, setSelectedTab] = React.useState(tab);

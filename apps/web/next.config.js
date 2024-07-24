@@ -22,6 +22,7 @@ const config = {
       { hostname: "www.notion.so" },
     { hostname: "plus.unsplash.com" },
     { hostname: "confident-terrier-401.convex.cloud" },
+    { hostname: "confident-terrier-401.convex.site" },
     ],
   },
 };
