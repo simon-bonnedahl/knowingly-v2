@@ -12,7 +12,12 @@ export const BlocknoteMention = createReactInlineContentSpec(
     type: "mention",
     propSchema: {
       user: {
+        type: "string",
         default: "Unknown",
+      },
+      image: {
+        type: "string",
+        default: "",
       },
       href: {
         type: "string",
@@ -23,7 +28,7 @@ export const BlocknoteMention = createReactInlineContentSpec(
   },
   {
     render: (props) => (
-      <PagePreview url={props.inlineContent.props.href}>
+      <PagePreview url={props.inlineContent.props.href} name={props.inlineContent.props.user} image={props.inlineContent.props.image}>
         <Badge variant="outline" className="text-sm">@ {props.inlineContent.props.user}</Badge>
       </PagePreview>
     ),

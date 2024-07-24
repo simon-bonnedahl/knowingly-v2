@@ -15,19 +15,19 @@ const schema = defineEntSchema({
     .edges("receivedMessages", { to: "messages", ref: "receiverId" })
     .edges("notifications", { ref: true })
     .edges("meetings")
-    .edges("meetingInvites", { ref: true })
-    .deletion("soft"),
+    .edges("meetingInvites", { ref: true }),
   hubs: defineEnt({
     name: v.string(),
     description: v.optional(v.string()),
-    logo: v.optional(v.string()),
+    logo: v.optional(v.string()), // Can be URL or emoji
     banner: v.optional(v.string()),
-    brandingColor: v.optional(v.string()),
-    customContent: v.optional(v.string()), // JSON stringified object (blockquote json structure for markdown)
+    brandingColor: v.string(),
+    customContent: v.string(), // JSON stringified object (blockquote json structure for markdown)
     isPublic: v.boolean(),
     subscriptionId: v.optional(v.string()),
     endsOn: v.optional(v.number()),
-    credits: v.number(),
+    credits: v.optional(v.number()),
+    tier : v.union(v.literal("FREE"), v.literal("PRO"), v.literal("ENTERPRISE")),
     features: v.optional(
       v.object({
         customRoles: v.boolean(),
@@ -36,13 +36,12 @@ const schema = defineEntSchema({
     ),
   })
     .field("subdomain", v.string(), { unique: true })
-    .field("customDomain", v.optional(v.string()), { unique: true })
+    .field("customDomain", v.optional(v.string()))
     .edges("members", { ref: true })
     .edges("hubInvites", { ref: true })
     .edges("roles")
     .edges("pages", { ref: true })
-    .edges("customFields")
-    .deletion("scheduled", { delayMs: 24 * 60 * 60 * 1000 }),
+    .edges("customFields"),
 
   roles: defineEnt({
     name: v.string(),
@@ -85,8 +84,7 @@ const schema = defineEntSchema({
     .edge("user")
     .edge("hub")
     .edge("role")
-    .edges("pages", { ref: true })
-    .deletion("soft"),
+    .edges("pages", { ref: true }),
   pages: defineEnt({
     name: v.string(),
     type: v.union(
@@ -96,7 +94,7 @@ const schema = defineEntSchema({
       v.literal("CUSTOM"),
     ),
     image: v.optional(v.string()),
-    icon: v.optional(v.string()),
+    icon: v.optional(v.string()), // Can be URL or emoji
     customFields: v.array(
       v.object({
         id: v.id("customFields"),
@@ -161,7 +159,7 @@ const schema = defineEntSchema({
     expiresAt: v.number(),
   })
     .edge("meeting")
-    .edge("user"),
+    .edge("user")
 
 });
 

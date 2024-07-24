@@ -27,9 +27,9 @@ import { Textarea } from "@knowingly/ui/textarea";
 
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { capitalizeFirstLetter } from "~/lib/utils";
-import { Icon, IconKey, Icons } from "../icons";
+import { Icon, IconKey } from "../icons";
 
-interface CreateTaskFormProps
+interface InviteMemberFormProps
   extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
   children: React.ReactNode;
   form: UseFormReturn<InviteMemberSchema>;
@@ -40,7 +40,7 @@ export function InviteMemberForm({
   form,
   onSubmit,
   children,
-}: CreateTaskFormProps) {
+}: InviteMemberFormProps) {
   const subdomain = useSubdomain();
   const roles = useQuery(api.hubs.getRoles, { subdomain });
   return (

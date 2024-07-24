@@ -7,3 +7,14 @@ export const inviteMemberSchema = z.object({
 });
 
 export type InviteMemberSchema = z.infer<typeof inviteMemberSchema>;
+
+
+export const createHubSchema = z.object({
+  name: z.string(),
+  subdomain: z.string(),
+  isPublic: z.boolean(),
+  description: z.string().optional(),
+  tier: z.enum(["FREE", "PRO", "ENTERPRISE"]),
+});
+
+export type CreateHubSchema = z.infer<typeof createHubSchema>;

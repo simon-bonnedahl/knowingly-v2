@@ -35,7 +35,7 @@ export const Notifications = () => {
           <IconBell className="h-5 w-5" />
           Notifications
           {unRead && unRead.length > 0 && (
-            <span className="rounded-full border border-gray-500 bg-primary px-2 text-xs font-normal text-white">
+            <span className="rounded-full border border-gray-500 bg-primary px-2 text-xs font-normal text-primary-foreground">
               {unRead?.length}
             </span>
           )}

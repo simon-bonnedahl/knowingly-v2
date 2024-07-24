@@ -10,22 +10,26 @@ import { Switch } from "@knowingly/ui/switch";
 import { ColorPicker } from "~/components/color-picker";
 import { useDebounce } from "~/lib/hooks/useDebounce";
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
+import { useRouter } from "next/navigation";
+import { env } from "~/env";
 
 export default function AdminSettingsPage() {
   const subdomain = useSubdomain();
 
-  const hub = useQuery(api.hubs.getHub, { subdomain: subdomain as string });
+  const hub = useQuery(api.hubs.getHub, { subdomain: subdomain });
   const update = useMutation(api.hubs.update);
   const deleteHub = useMutation(api.hubs.deleteHub);
+  const router = useRouter();
 
   const [color, setColor] = React.useState<string | undefined>();
   const [isPublic, setIsPublic] = React.useState<boolean | undefined>();
   const debounceColor = useDebounce(color, 300);
 
-  const onDelete = () => {
-    deleteHub({
-      subdomain: subdomain as string,
+  const onDelete = async() => {
+    await  deleteHub({
+      subdomain: subdomain,
     });
+    router.push(`${env.NEXT_PUBLIC_PROTOCOL}://app.${env.NEXT_PUBLIC_ROOT_DOMAIN}`);
   };
 
   React.useEffect(() => {
@@ -40,16 +44,17 @@ export default function AdminSettingsPage() {
 
   React.useEffect(() => {
     if (!debounceColor) return;
-    update({
-      subdomain: subdomain as string,
+    void update({
+      subdomain: subdomain,
       field: "brandingColor",
       value: debounceColor,
     });
   }, [debounceColor]);
 
   React.useEffect(() => {
-    update({
-      subdomain: subdomain as string,
+    if (isPublic === undefined || isPublic === hub?.isPublic) return;
+    void update({
+      subdomain: subdomain,
       field: "isPublic",
       value: isPublic,
     });

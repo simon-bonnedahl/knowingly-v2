@@ -11,8 +11,8 @@ type Metadata = {
 };
 
 export const pay = action({
-  args: {},
-  handler: async (ctx) => {
+  args: {redirect: v.optional(v.string())},
+  handler: async (ctx, args) => {
     const user = await ctx.auth.getUserIdentity();
 
     if (!user) {
@@ -23,7 +23,8 @@ export const pay = action({
       throw new Error("you must have a verified email to subscribe");
     }
 
-    const domain = process.env.HOSTING_URL ?? "http://localhost:3000";
+    const domain = args.redirect ?? "http://app.knowingly.local:3000";
+    console.log(domain);
     const stripe = new Stripe(process.env.STRIPE_KEY!);
     const session = await stripe.checkout.sessions.create({
       line_items: [{ price: process.env.PRICE_ID!, quantity: 1 }],
@@ -45,7 +46,7 @@ export const fulfill = internalAction({
   handler: async (ctx, args) => {
     const stripe = new Stripe(process.env.STRIPE_KEY!);
 
-    const webhookSecret = process.env.STRIPE_WEBHOOKS_SECRET!;
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
     try {
       const event = stripe.webhooks.constructEvent(
         args.payload,

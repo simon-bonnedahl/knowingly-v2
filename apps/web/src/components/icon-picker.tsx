@@ -39,10 +39,15 @@ export const IconPicker = ({
       <PopoverTrigger asChild={asChild}>{children}</PopoverTrigger>
       <PopoverContent className="w-fit max-w-[370px] p-2 border  shadow-none z-50 ">
         <Tabs>
+          <div className="flex w-full">
+
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="emoji">Emoji</TabsTrigger>
             <TabsTrigger value="logo">Logo</TabsTrigger>
           </TabsList>
+          <Button variant="text" onClick={() => onChange("")}>Clear</Button>
+          </div>
+
           <TabsContent value="emoji">
             <Picker
               data={data}

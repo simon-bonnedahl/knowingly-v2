@@ -2,9 +2,8 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@knowingly/backend/convex/_generated/api";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { createReactBlockSpec } from "@blocknote/react";
 import { Label } from "@knowingly/ui/label";
 import { Separator } from "@knowingly/ui/separator";
@@ -13,7 +12,8 @@ import { Button } from "@knowingly/ui/button";
 import { Input } from "@knowingly/ui/input";
 import { Slider } from "@knowingly/ui/slider";
 import { Modal, ModalContent, ModalTrigger } from "@knowingly/ui/modal"
-import { MinimalCard, MinimalCardDescription, MinimalCardImage, MinimalCardTitle} from "@knowingly/ui/minimal-card"
+import { MinimalCard, MinimalCardImage, MinimalCardTitle} from "@knowingly/ui/minimal-card"
+import { useSubdomain } from "~/lib/hooks/useSubdomain";
 
 
 export const BlocknoteProfileGallery = createReactBlockSpec(
@@ -35,21 +35,18 @@ export const BlocknoteProfileGallery = createReactBlockSpec(
 );
 
 const ProfileGallery = ({ props }: { props: any }) => {
-  const params = useParams();
-  const subdomain = decodeURIComponent(params.domain as string).split(".")[0];
+  const subdomain = useSubdomain();
   const pages = useQuery(api.pages.getPagesByHub, { subdomain });
   const [filteredPages, setFilteredPages] = useState(pages);
-  const router = useRouter();
   const [columns, setColumns] = useState(props.block.props.columns);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    props.editor.updateBlock(props.block, {
+    void props.editor.updateBlock(props.block, {
       type: "profileGallery",
       props: { columns: columns },
-    }),
-      [columns];
-  });
+    })
+  }, [columns]);
 
   useEffect(() => {
     if (pages) {
@@ -148,8 +145,7 @@ const CreateNewPageModal = () => {
 
 
 const CreateNewPageForm = () => {
-  const params = useParams();
-  const subdomain = decodeURIComponent(params.domain as string).split(".")[0];
+  const subdomain = useSubdomain();
   const createPage = useMutation(api.pages.createPage);
   const router = useRouter();
   const [name, setName] = useState("");
