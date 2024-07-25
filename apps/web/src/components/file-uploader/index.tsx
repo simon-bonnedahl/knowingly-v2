@@ -2,11 +2,8 @@
 
 import * as React from "react"
 import Image from "next/image"
-import { Cross2Icon, UploadIcon } from "@radix-ui/react-icons"
-import Dropzone, {
-  type DropzoneProps,
-  type FileRejection,
-} from "react-dropzone"
+import Dropzone from "react-dropzone"
+import type {DropzoneProps, FileRejection} from "react-dropzone";
 import { toast } from "sonner"
 
 import { cn, formatBytes } from "~/lib/utils"
@@ -14,11 +11,11 @@ import { ScrollArea } from "@knowingly/ui/scroll-area"
 import { Button } from "@knowingly/ui/button"
 import { useControllableState } from "~/lib/hooks/useControllableState"
 import { Progress } from "@knowingly/ui/progress"
-import { UploadFileResponse } from "@xixixao/uploadstuff"
 import { useMutation } from "convex/react"
 import { api } from "@knowingly/backend/convex/_generated/api"
 import { useUploadFiles } from "@xixixao/uploadstuff/react";
-import { Id } from "@knowingly/backend/convex/_generated/dataModel"
+import type { Id } from "@knowingly/backend/convex/_generated/dataModel"
+import { Icons } from "@knowingly/icons";
 
 interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -228,7 +225,7 @@ export function FileUploader(props: FileUploaderProps) {
             {isDragActive ? (
               <div className="flex flex-col items-center justify-center gap-4 sm:px-5">
                 <div className="rounded-full border border-dashed p-3">
-                  <UploadIcon
+                  <Icons.upload
                     className="size-7 text-muted-foreground"
                     aria-hidden="true"
                   />
@@ -240,7 +237,7 @@ export function FileUploader(props: FileUploaderProps) {
             ) : (
               <div className="flex flex-col items-center justify-center gap-4 sm:px-5">
                 <div className="rounded-full border border-dashed p-3">
-                  <UploadIcon
+                  <Icons.u
                     className="size-7 text-muted-foreground"
                     aria-hidden="true"
                   />
@@ -320,7 +317,7 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
           className="size-7"
           onClick={onRemove}
         >
-          <Cross2Icon className="size-4 " aria-hidden="true" />
+          <Icons.x className="size-4 " aria-hidden="true" />
           <span className="sr-only">Remove file</span>
         </Button>
       </div>

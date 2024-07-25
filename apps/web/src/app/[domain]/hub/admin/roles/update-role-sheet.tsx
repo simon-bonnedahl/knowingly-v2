@@ -1,27 +1,21 @@
 "use client"
 
 import * as React from "react"
-import { ReloadIcon } from "@radix-ui/react-icons"
-import { toast } from "sonner"
-
-
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
 } from "@knowingly/ui/sheet"
-import { Ent } from "@knowingly/backend/convex/types"
+import type { Ent } from "@knowingly/backend/convex/types"
 import { Switch } from "@knowingly/ui/switch"
 import { useMutation } from "convex/react"
 import { api } from "@knowingly/backend/convex/_generated/api"
 import { Input } from "@knowingly/ui/input"
 import { Label } from "@knowingly/ui/label"
 import { IconPicker } from "~/components/custom-field/icon-picker"
-import { IconKey } from "~/components/icons"
+import type { IconKey } from "~/components/icons"
 
 
 interface UpdateRoleSheetProps
@@ -37,7 +31,7 @@ export function UpdateRoleSheet({ role, ...props }: UpdateRoleSheetProps) {
   const [icon, setIcon] = React.useState(role.icon)
 
   React.useEffect(() => {
-    update({
+    void update({
       roleId: role._id,
       field: "permissions",
       value: permissions,
@@ -46,7 +40,7 @@ export function UpdateRoleSheet({ role, ...props }: UpdateRoleSheetProps) {
   , [permissions])
 
   React.useEffect(() => {
-    update({
+    void update({
       roleId: role._id,
       field: "name",
       value: name,
@@ -55,7 +49,7 @@ export function UpdateRoleSheet({ role, ...props }: UpdateRoleSheetProps) {
   , [name])
 
   React.useEffect(() => {
-    update({
+    void update({
       roleId: role._id,
       field: "icon",
       value: icon,

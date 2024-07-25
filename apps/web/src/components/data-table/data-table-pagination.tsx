@@ -1,10 +1,5 @@
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  DoubleArrowLeftIcon,
-  DoubleArrowRightIcon,
-} from "@radix-ui/react-icons"
-import { type Table } from "@tanstack/react-table"
+
+import type {Table} from "@tanstack/react-table";
 
 import { Button } from "@knowingly/ui/button"
 import {
@@ -14,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@knowingly/ui/select"
+import { Icons } from "@knowingly/icons";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>
@@ -63,7 +59,7 @@ export function DataTablePagination<TData>({
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
           >
-            <DoubleArrowLeftIcon className="size-4" aria-hidden="true" />
+            <Icons.chevronsLeft className="size-4" aria-hidden="true" />
           </Button>
           <Button
             aria-label="Go to previous page"
@@ -73,7 +69,7 @@ export function DataTablePagination<TData>({
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            <ChevronLeftIcon className="size-4" aria-hidden="true" />
+            <Icons.chevronLeft className="size-4" aria-hidden="true" />
           </Button>
           <Button
             aria-label="Go to next page"
@@ -83,7 +79,7 @@ export function DataTablePagination<TData>({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            <ChevronRightIcon className="size-4" aria-hidden="true" />
+            <Icons.chevronRight className="size-4" aria-hidden="true" />
           </Button>
           <Button
             aria-label="Go to last page"
@@ -93,7 +89,7 @@ export function DataTablePagination<TData>({
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
           >
-            <DoubleArrowRightIcon className="size-4" aria-hidden="true" />
+            <Icons.chevronsRight className="size-4" aria-hidden="true" />
           </Button>
         </div>
       </div>
