@@ -1,5 +1,5 @@
-type IconProps = React.HTMLAttributes<SVGElement>;
-const STROKE_WIDTH = 2;
+import { STROKE_WIDTH } from ".";
+import type { IconProps } from ".";
 export const brands = {
   twitter: (props: IconProps) => (
     <svg

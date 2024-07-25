@@ -1,9 +1,9 @@
 import { arrows } from "./arrows";
 import { brands } from "./brands";
 
-type IconProps = React.HTMLAttributes<SVGElement>;
+export type IconProps = React.HTMLAttributes<SVGElement>;
 
-const STROKE_WIDTH = 2;
+export const STROKE_WIDTH = 2;
 
 export const Icons = {
   logo: (props: IconProps) => (
