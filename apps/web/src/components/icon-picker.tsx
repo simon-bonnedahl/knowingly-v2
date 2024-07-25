@@ -2,17 +2,11 @@
 
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-import {
-  UploadButton,
-  UploadDropzone,
-  UploadFileResponse,
-} from "@xixixao/uploadstuff/react";
-import { useMutation, useQuery } from "convex/react";
+import {  useQuery } from "convex/react";
 import { useTheme } from "next-themes";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { Button } from "@knowingly/ui/button";
-import { Card } from "@knowingly/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@knowingly/ui/popover";
 import { Separator } from "@knowingly/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@knowingly/ui/tabs";
@@ -45,7 +39,7 @@ export const IconPicker = ({
             <TabsTrigger value="emoji">Emoji</TabsTrigger>
             <TabsTrigger value="logo">Logo</TabsTrigger>
           </TabsList>
-          <Button variant="text" onClick={() => onChange("")}>Clear</Button>
+          <Button variant="ghost" onClick={() => onChange("")}>Clear</Button>
           </div>
 
           <TabsContent value="emoji">
@@ -58,11 +52,11 @@ export const IconPicker = ({
           <TabsContent value="logo" className="flex flex-col gap-2">
                 <FileUploader />
 
-              <Separator horizontal decorative />
+              <Separator />
 
               {uploads ? (
                 <div className="grid w-full grid-cols-6 gap-1">
-                  {uploads.map((upload) => (
+                  {uploads?.map((upload) => (
                     <Button variant={"ringHover"} className="w-fit h-fit p-0" onClick={() => onChange(upload as string)} key={upload}>
                     <Image src={upload ?? ""} alt={upload ?? ""}  width={100} height={100} className="w-full rounded-md object-cover aspect-square" />
                     </Button>
