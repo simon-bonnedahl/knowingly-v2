@@ -9,7 +9,7 @@ import {
   SheetTrigger,
 } from "@knowingly/ui/sheet";
 
-import { cn } from "~/lib/utils";
+
 import { useQuery } from "convex/react";
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { Ent } from "@knowingly/backend/convex/types";

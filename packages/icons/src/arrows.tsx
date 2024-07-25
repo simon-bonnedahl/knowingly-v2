@@ -1,5 +1,6 @@
+import { STROKE_WIDTH } from ".";
+import type { IconProps } from ".";
 
-type IconProps = React.HTMLAttributes<SVGElement>;
 export const arrows = {
     arrowRight: (props: IconProps) => (
         <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" strokeWidth={STROKE_WIDTH} stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
