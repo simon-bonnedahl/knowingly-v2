@@ -101,3 +101,8 @@ export function isUrl (url: string | undefined) {
     return false;
   }
 }
+
+export function isFile (url: string | undefined){
+  if (!url) return false;
+  return url.startsWith("/");
+}

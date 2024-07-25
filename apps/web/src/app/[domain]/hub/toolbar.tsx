@@ -12,7 +12,7 @@ import { Button } from "@knowingly/ui/button";
 import { useBanner } from "~/lib/hooks/useBanner";
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { IconPicker } from "../../../components/icon-picker";
-import { isUrl } from "~/lib/utils";
+import { isFile, isUrl } from "~/lib/utils";
 
 interface ToolbarProps {
   initialData: Doc<"hubs">;
@@ -63,7 +63,7 @@ export const HubToolbar = ({ initialData, preview }: ToolbarProps) => {
         {!!logo && !preview && (
           <IconPicker onChange={onIconSelect}>
             <Avatar className="transition hover:opacity-75 w-full h-full">
-            {isUrl(logo) ? (
+            {(isUrl(logo) || isFile(logo)) ? (
                 <AvatarImage
                   src={logo}
                   className="size-[4.5rem] rounded-full object-cover"
@@ -81,7 +81,7 @@ export const HubToolbar = ({ initialData, preview }: ToolbarProps) => {
       {!!logo && preview && (
         <div className="absolute -top-14 left-4 pt-6 text-7xl">
           <Avatar className="transition hover:opacity-75 w-full h-full">
-            {isUrl(logo) ? (
+            {(isUrl(logo) || isFile(logo)) ? (
                 <AvatarImage
                   src={logo}
                   className="size-[4.5rem] rounded-full object-cover"
