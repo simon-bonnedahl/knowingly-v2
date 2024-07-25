@@ -1,6 +1,5 @@
 "use client"
 
-import { MixerHorizontalIcon } from "@radix-ui/react-icons"
 import type { Table } from "@tanstack/react-table"
 
 import { Button } from "@knowingly/ui/button"
@@ -12,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@knowingly/ui/dropdown-menu"
+import { Icons } from "@knowingly/icons"
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
@@ -29,7 +29,7 @@ export function DataTableViewOptions<TData>({
           size="sm"
           className="ml-auto hidden  lg:flex"
         >
-          <MixerHorizontalIcon className="mr-2 size-4" />
+          <Icons.adjustmentsHorizontal className="mr-2 size-4" />
           View
         </Button>
       </DropdownMenuTrigger>

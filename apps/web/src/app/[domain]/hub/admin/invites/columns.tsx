@@ -1,11 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { DotsHorizontalIcon } from "@radix-ui/react-icons"
-import { type ColumnDef } from "@tanstack/react-table"
+import type {ColumnDef} from "@tanstack/react-table";
 import { toast } from "sonner"
 
-import { Badge } from "@knowingly/ui/badge"
 import { Button } from "@knowingly/ui/button"
 import { Checkbox } from "@knowingly/ui/checkbox"
 import {
@@ -22,13 +20,15 @@ import {
   DropdownMenuTrigger,
 } from "@knowingly/ui/dropdown-menu"
 import { DataTableColumnHeader } from "~/components/data-table/data-table-column-header"
-import { Icon, IconKey } from "~/components/icons"
+import type { IconKey } from "~/components/icons";
+import { Icon } from "~/components/icons"
 import { capitalizeFirstLetter } from "~/lib/utils"
 import { useSubdomain } from "~/lib/hooks/useSubdomain"
 import { useMutation, useQuery } from "convex/react"
 import { api } from "@knowingly/backend/convex/_generated/api"
-import { Id } from "@knowingly/backend/convex/_generated/dataModel"
+import type { Id } from "@knowingly/backend/convex/_generated/dataModel"
 import { formatDate } from "~/lib/dateUtils"
+import { Icons } from "@knowingly/icons";
 
 export interface DataTableInvite {
     id: string
@@ -152,7 +152,6 @@ export function getColumns(): ColumnDef<DataTableInvite>[]{
     {
       id: "actions",
       cell: function Cell({ row }) {
-        if(row.original.status === "ACCEPTED") return null
         const [isUpdatePending, startUpdateTransition] = React.useTransition()
         const [showDeleteTaskDialog, setShowDeleteTaskDialog] =
           React.useState(false)
@@ -161,6 +160,8 @@ export function getColumns(): ColumnDef<DataTableInvite>[]{
 
         const roles = useQuery(api.hubs.getRoles, { subdomain })
         const updateInvite = useMutation(api.hubInvites.update)
+        if(row.original.status === "ACCEPTED") return null
+
 
         return (
           <>
@@ -177,7 +178,7 @@ export function getColumns(): ColumnDef<DataTableInvite>[]{
                   variant="ghost"
                   className="flex size-8 p-0 data-[state=open]:bg-muted"
                 >
-                  <DotsHorizontalIcon className="size-4" aria-hidden="true" />
+                  <Icons.dots className="size-4" aria-hidden="true" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40">

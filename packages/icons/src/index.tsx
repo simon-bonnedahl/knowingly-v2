@@ -87,6 +87,24 @@ export const Icons = {
       <path d="M4 18l14 0" />
     </svg>
   ),
+  alignCenter: (props: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" strokeWidth={STROKE_WIDTH} stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M4 6l16 0" />
+      <path d="M8 12l8 0" />
+      <path d="M6 18l12 0" />
+    </svg>
+  ),
+  
+  alignRight: (props: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" strokeWidth={STROKE_WIDTH} stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M4 6l16 0" />
+      <path d="M10 12l10 0" />
+      <path d="M6 18l14 0" />
+    </svg>
+  ),
+  
   mapPin: (props: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -1385,7 +1403,83 @@ export const Icons = {
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
     </svg>
+  ),
+  upload: (props: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" strokeWidth={STROKE_WIDTH} stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+      <path d="M7 9l5 -5l5 5" />
+      <path d="M12 4l0 12" />
+    </svg>
+  ),
+  copy: (props: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" strokeWidth={STROKE_WIDTH} stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+      <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+    </svg>
+  ),
+  eye: (props: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" strokeWidth={STROKE_WIDTH} stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+    </svg>
+  ),
+  eyeOff: (props: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" strokeWidth={STROKE_WIDTH} stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" />
+      <path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87" />
+      <path d="M3 3l18 18" />
+    </svg>
+  ),
+  textSize: (props: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" strokeWidth={STROKE_WIDTH} stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M3 7v-2h13v2" />
+      <path d="M10 5v14" />
+      <path d="M12 19h-4" />
+      <path d="M15 13v-1h6v1" />
+      <path d="M18 12v7" />
+      <path d="M17 19h2" />
+    </svg>
+  ),
+  adjustmentsHorizontal: (props: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" strokeWidth={STROKE_WIDTH} stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M14 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+      <path d="M4 6l8 0" />
+      <path d="M16 6l4 0" />
+      <path d="M8 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+      <path d="M4 12l2 0" />
+      <path d="M10 12l10 0" />
+      <path d="M17 18m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+      <path d="M4 18l11 0" />
+      <path d="M19 18l1 0" />
+    </svg>
+  ),
+  adjustmentsAlt: (props: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" strokeWidth={STROKE_WIDTH} stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M4 8h4v4h-4z" />
+      <path d="M6 4l0 4" />
+      <path d="M6 12l0 8" />
+      <path d="M10 14h4v4h-4z" />
+      <path d="M12 4l0 10" />
+      <path d="M12 18l0 2" />
+      <path d="M16 5h4v4h-4z" />
+      <path d="M18 4l0 1" />
+      <path d="M18 9l0 11" />
+    </svg>
   )
+  
+  
+  
+
+  
+  
+  
   
 };
 
