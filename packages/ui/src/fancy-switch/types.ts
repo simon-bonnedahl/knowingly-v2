@@ -1,8 +1,6 @@
 type OptionValue = string | number
 
-export interface OptionObject {
-  [key: string]: OptionValue
-}
+export type OptionObject = Record<string, OptionValue>;
 
 export type OptionType = OptionValue | OptionObject
 

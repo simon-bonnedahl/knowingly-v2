@@ -30,6 +30,7 @@
     "@headlessui/tailwindcss": "^0.2.1",
     "@knowingly/backend": "workspace:*",
     "@knowingly/ui": "workspace:*",
+    "@knowingly/icons": "workspace:*",
     "@knowingly/validators": "workspace:*",
     "@react-aria/button": "3.9.3",
     "@react-aria/calendar": "3.5.6",

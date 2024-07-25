@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { Check, ChevronsUpDown, Edit2 } from "lucide-react";
 
 import { cn } from ".";
 import {
@@ -47,6 +46,7 @@ import {
 import { DialogClose } from "@radix-ui/react-dialog";
 import { Input } from "./input";
 import { Label } from "./label";
+import { Icons } from "@knowingly/icons";
 
 // FIXME: https://twitter.com/lemcii/status/1659649371162419202?s=46&t=gqNnMIjMWXiG2Rbrr5gT6g
 // Removing states would help maybe?
@@ -160,7 +160,7 @@ export function FancyBox() {
               {selectedValues.length > 2 &&
                 `${selectedValues.length} labels selected`}
             </span>
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            <Icons.chevronUp className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[200px] p-0">
@@ -181,7 +181,7 @@ export function FancyBox() {
                       value={framework.value}
                       onSelect={() => toggleFramework(framework)}
                     >
-                      <Check
+                      <Icons.check
                         className={cn(
                           "mr-2 h-4 w-4",
                           isActive ? "opacity-100" : "opacity-0"
@@ -208,7 +208,7 @@ export function FancyBox() {
                   onSelect={() => setOpenDialog(true)}
                 >
                   <div className={cn("mr-2 h-4 w-4")} />
-                  <Edit2 className="mr-2 h-2.5 w-2.5" />
+                  <Icons.pencil className="mr-2 h-2.5 w-2.5" />
                   Edit Labels
                 </CommandItem>
               </CommandGroup>
@@ -351,7 +351,7 @@ const DialogListItem = ({
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 {/* REMINDER: size="xs" */}
-                <Button variant="destructive" size="xs">
+                <Button variant="destructive" size="sm">
                   Delete
                 </Button>
               </AlertDialogTrigger>
@@ -405,7 +405,7 @@ const DialogListItem = ({
               />
             </div>
             {/* REMINDER: size="xs" */}
-            <Button type="submit" disabled={disabled} size="xs">
+            <Button type="submit" disabled={disabled} size="sm">
               Save
             </Button>
           </form>

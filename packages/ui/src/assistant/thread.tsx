@@ -6,11 +6,10 @@ import {
   ThreadPrimitive,
 } from "@assistant-ui/react";
 import type { FC } from "react";
-import { Send, SendHorizontalIcon } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "../avatar";
 import { TooltipIconButton } from "./tooltip-icon-button";
-import { AvatarImage } from "@radix-ui/react-avatar";
+import { Icons } from "@knowingly/icons";
 
 export const Thread: FC = () => {
   return (
@@ -61,7 +60,7 @@ const Composer: FC = () => {
           variant="default"
           className="absolute bottom-0 right-0 m-2   size-7 p-2 transition-opacity"
         >
-          <Send />
+          <Icons.send />
         </TooltipIconButton>
       </ComposerPrimitive.Send>
     </ComposerPrimitive.Root>

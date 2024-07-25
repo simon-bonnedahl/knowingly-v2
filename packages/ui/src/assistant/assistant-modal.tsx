@@ -1,9 +1,10 @@
 "use client";
 
-import { Bot, BotIcon, ChevronDownIcon, Sparkle, Sparkles, SparklesIcon } from "lucide-react";
 
-import { type FC, forwardRef } from "react";
+import {  forwardRef } from "react";
+import type {FC} from "react";
 import { AssistantModalPrimitive } from "@assistant-ui/react";
+import { Icons } from "@knowingly/icons";
 
 import { Thread } from "./thread";
 import { TooltipIconButton } from "./tooltip-icon-button";
@@ -26,7 +27,7 @@ export const AssistantModal: FC = () => {
   );
 };
 
-type FloatingAssistantButtonProps = { "data-state"?: "open" | "closed" };
+interface FloatingAssistantButtonProps { "data-state"?: "open" | "closed" }
 
 const FloatingAssistantButton = forwardRef<
   HTMLButtonElement,
@@ -43,12 +44,12 @@ const FloatingAssistantButton = forwardRef<
       className="size-full rounded-full shadow transition-transform hover:scale-110 active:scale-90"
       ref={ref}
     >
-      <Bot
+      <Icons.messageChatbot
         data-state={state}
         className="!text-primary-foreground absolute size-5   transition-all data-[state=closed]:rotate-0 data-[state=open]:rotate-90 data-[state=closed]:scale-100 data-[state=open]:scale-0"
       />
 
-      <ChevronDownIcon
+      <Icons.chevronDown
         data-state={state}
         className="absolute size-6 transition-all data-[state=closed]:-rotate-90 data-[state=open]:rotate-0 data-[state=closed]:scale-0 data-[state=open]:scale-100"
       />
