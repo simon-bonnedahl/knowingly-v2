@@ -1,8 +1,7 @@
-import type { LucideIcon } from "lucide-react";
 
-type IconType = LucideIcon | React.ComponentType<any> | undefined;
+type IconType =  React.ComponentType<any> | undefined;
 
-type StepItem = {
+interface StepItem {
 	id?: string;
 	label?: string;
 	description?: string;

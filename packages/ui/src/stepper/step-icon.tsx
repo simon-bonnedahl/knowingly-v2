@@ -1,9 +1,9 @@
 import { cn } from "../";
 import { cva } from "class-variance-authority";
-import { CheckIcon, Loader2, X } from "lucide-react";
 import * as React from "react";
 import type { IconType } from "./types";
 import { useStepper } from "./use-stepper";
+import { Icons } from "@knowingly/icons";
 
 interface StepIconProps {
 	isCompletedStep?: boolean;
@@ -57,7 +57,7 @@ const StepIcon = React.forwardRef<HTMLDivElement, StepIconProps>(
 		);
 
 		const Check = React.useMemo(
-			() => (CustomCheckIcon ? CustomCheckIcon : CheckIcon),
+			() => (CustomCheckIcon ? CustomCheckIcon : Icons.check),
 			[CustomCheckIcon],
 		);
 
@@ -66,7 +66,7 @@ const StepIcon = React.forwardRef<HTMLDivElement, StepIconProps>(
 				if (isError && isKeepError) {
 					return (
 						<div key="icon">
-							<X className={cn(iconVariants({ size }))} />
+							<Icons.x className={cn(iconVariants({ size }))} />
 						</div>
 					);
 				}
@@ -87,13 +87,13 @@ const StepIcon = React.forwardRef<HTMLDivElement, StepIconProps>(
 				if (isError) {
 					return (
 						<div key="icon">
-							<X className={cn(iconVariants({ size }))} />
+							<Icons.x className={cn(iconVariants({ size }))} />
 						</div>
 					);
 				}
 				if (isLoading) {
 					return (
-						<Loader2 className={cn(iconVariants({ size }), "animate-spin")} />
+						<Icons.loader className={cn(iconVariants({ size }), "animate-spin")} />
 					);
 				}
 			}

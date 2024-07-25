@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { FancySwitchProps, OptionObject, OptionType } from './types'
+import type { FancySwitchProps, OptionObject, OptionType } from './types'
 
 const FancySwitch = React.forwardRef<HTMLDivElement, FancySwitchProps>(
   (
@@ -125,7 +125,7 @@ const FancySwitch = React.forwardRef<HTMLDivElement, FancySwitchProps>(
       return (currentIndex - 1 + options.length) % options.length
     }
 
-    React.useImperativeHandle(ref, () => containerRef.current as HTMLDivElement)
+    React.useImperativeHandle(ref, () => containerRef.current!)
 
     React.useEffect(() => {
       updateToggle()

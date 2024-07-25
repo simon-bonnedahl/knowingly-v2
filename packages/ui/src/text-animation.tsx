@@ -1,8 +1,10 @@
 "use client"
 
-import { FC, useEffect, useRef } from "react"
-import { HTMLMotionProps, motion, useAnimation, useInView } from "framer-motion"
-import { cn } from "~/lib/utils"
+import type { FC} from "react";
+import { useRef } from "react"
+import type { HTMLMotionProps} from "framer-motion";
+import { motion, useAnimation, useInView } from "framer-motion"
+import { cn } from "."
 
 type AnimationType =
   | "fadeIn"
@@ -26,7 +28,7 @@ const animationVariants = {
   fadeIn: {
     container: {
       hidden: { opacity: 0 },
-      visible: (i: number = 1) => ({
+      visible: (i = 1) => ({
         opacity: 1,
         transition: { staggerChildren: 0.05, delayChildren: i * 0.3 },
       }),
@@ -77,7 +79,7 @@ const animationVariants = {
   calmInUp: {
     container: {
       hidden: {},
-      visible: (i: number = 1) => ({
+      visible: (i = 1) => ({
         transition: { staggerChildren: 0.01, delayChildren: 0.2 * i },
       }),
     },
@@ -102,7 +104,7 @@ const animationVariants = {
   shiftInUp: {
     container: {
       hidden: {},
-      visible: (i: number = 1) => ({
+      visible: (i = 1) => ({
         transition: { staggerChildren: 0.01, delayChildren: 0.2 * i },
       }),
     },
@@ -127,7 +129,7 @@ const animationVariants = {
   whipInUp: {
     container: {
       hidden: {},
-      visible: (i: number = 1) => ({
+      visible: (i = 1) => ({
         transition: { staggerChildren: 0.01, delayChildren: 0.2 * i },
       }),
     },

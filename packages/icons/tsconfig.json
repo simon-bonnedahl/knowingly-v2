@@ -1,0 +1,10 @@
+{
+  "extends": "@knowingly/tsconfig/internal-package.json",
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "ES2022"],
+    "jsx": "preserve",
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
+  },
+  "include": ["*.ts", "src", "../../apps/web/src/components/color-picker.tsx"],
+  "exclude": ["node_modules"]
+}
