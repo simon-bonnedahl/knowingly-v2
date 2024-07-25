@@ -93,7 +93,7 @@ export function SignupForm() {
                             <input
                               id="name"
                               type="name"
-                              placeholder="Manu Arora"
+                              placeholder="Simon Bonnedahl"
                               className="block w-full bg-white dark:bg-neutral-900 px-4 rounded-md border-0 py-1.5  shadow-aceternity text-black placeholder:text-gray-400 focus:ring-2 focus:ring-neutral-400 focus:outline-none sm:text-sm sm:leading-6 dark:text-white"
                               {...field}
                             />

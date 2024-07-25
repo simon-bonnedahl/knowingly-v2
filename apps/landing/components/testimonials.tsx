@@ -29,7 +29,7 @@ interface Testimonial {
 
 const testimonials = [
   {
-    name: "Manu Arora",
+    name: "Simon Bonnedahl",
     quote:
       "What a fantastic AI Every AI is, I just love it. It has completely transformed the way I approach problems and develop solutions.",
     src: "https://i.pravatar.cc/150?img=1",
