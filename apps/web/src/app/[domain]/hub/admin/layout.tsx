@@ -10,9 +10,9 @@ export default async function HubAdminLayout({
   children: ReactNode;
 }) {
   
-  return <div className="flex w-full flex-col">
+  return <div className="flex w-full flex-col h-screen  ">
     <HubAdminNav />
-    <div className="flex w-full flex-col p-4 ">
+    <div className="flex w-full flex-col p-4 h-full ">
 
     {children}
     </div>

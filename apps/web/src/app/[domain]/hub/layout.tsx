@@ -16,7 +16,7 @@ export default async function HubLayout({
   return (
     
        
-          <div className="flex flex-col w-full  h-screen overflow-y-scroll relative">
+          <div className="flex flex-col w-full  overflow-y-scroll relative h-screen ">
             <AssistantModal />
           {/* <div className="w-full h-8 top-2 left-2 absolute  z-30 ">
             <Breadcrumb>

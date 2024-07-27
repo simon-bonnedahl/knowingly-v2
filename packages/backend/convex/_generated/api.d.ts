@@ -17,6 +17,7 @@ import type {
 import type * as calls from "../calls.js";
 import type * as clerk from "../clerk.js";
 import type * as customFields from "../customFields.js";
+import type * as emails from "../emails.js";
 import type * as files from "../files.js";
 import type * as functions from "../functions.js";
 import type * as http from "../http.js";
@@ -46,6 +47,7 @@ declare const fullApi: ApiFromModules<{
   calls: typeof calls;
   clerk: typeof clerk;
   customFields: typeof customFields;
+  emails: typeof emails;
   files: typeof files;
   functions: typeof functions;
   http: typeof http;

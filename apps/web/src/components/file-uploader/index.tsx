@@ -237,7 +237,7 @@ export function FileUploader(props: FileUploaderProps) {
             ) : (
               <div className="flex flex-col items-center justify-center gap-4 sm:px-5">
                 <div className="rounded-full border border-dashed p-3">
-                  <Icons.u
+                  <Icons.upload
                     className="size-7 text-muted-foreground"
                     aria-hidden="true"
                   />

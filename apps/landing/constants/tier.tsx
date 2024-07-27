@@ -37,8 +37,8 @@ export const tiers: Tier[] = [
     name: "Professional",
     id: "tier-professional",
     href: "#",
-    priceMonthly: "$12/mo",
-    priceYearly: "$100/yr",
+    priceMonthly: "$10/mo",
+    priceYearly: "$90/yr",
     description: "Ideal small to mid range organizations.",
     features: [
       "Everything in Starter, plus",

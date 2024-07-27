@@ -41,7 +41,8 @@ const schema = defineEntSchema({
     .edges("hubInvites", { ref: true })
     .edges("roles")
     .edges("pages", { ref: true })
-    .edges("customFields"),
+    .edges("customFields")
+    .edges("emailTemplates", { ref: true }),
 
   roles: defineEnt({
     name: v.string(),
@@ -159,8 +160,14 @@ const schema = defineEntSchema({
     expiresAt: v.number(),
   })
     .edge("meeting")
-    .edge("user")
-
+    .edge("user"),
+  emailTemplates: defineEnt({
+    title: v.string(),
+    content: v.string(), // JSON stringified object 
+    previewText: v.optional(v.string()),
+    from: v.optional(v.string()),
+    replyTo: v.optional(v.string()),
+  }).edge("hub"),
 });
 
 export default schema;
