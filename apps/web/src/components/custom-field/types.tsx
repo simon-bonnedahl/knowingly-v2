@@ -140,9 +140,7 @@ export const CustomFieldTypes = {
       setOptions: (options: any) => void;
     }) => (
       <div className="w-full">
-        <span>Number</span>
-        <span>Bar</span>
-        <span>Circle</span>
+    
       </div>
     ),
     valueInput: ({
@@ -200,9 +198,7 @@ export const CustomFieldTypes = {
       setOptions: (options: any) => void;
     }) => (
       <div className="w-full">
-        <span>Number</span>
-        <span>Bar</span>
-        <span>Circle</span>
+
       </div>
     ),
     valueInput: ({
@@ -265,9 +261,7 @@ export const CustomFieldTypes = {
       setOptions: (options: any) => void;
     }) => (
       <div className="w-full">
-        <span>Numberssss</span>
-        <span>Bar</span>
-        <span>Circle</span>
+
       </div>
     ),
     valueInput: ({
@@ -325,9 +319,7 @@ export const CustomFieldTypes = {
       setOptions: (options: any) => void;
     }) => (
       <div className="w-full">
-        <span>Number</span>
-        <span>Bar</span>
-        <span>Circle</span>
+
       </div>
     ),
     valueInput: ({
@@ -355,9 +347,7 @@ export const CustomFieldTypes = {
       setOptions: (options: any) => void;
     }) => (
       <div className="w-full">
-        <span>Number</span>
-        <span>Bar</span>
-        <span>Circle</span>
+
       </div>
     ),
     valueInput: ({
@@ -385,9 +375,7 @@ export const CustomFieldTypes = {
       setOptions: (options: any) => void;
     }) => (
       <div className="w-full">
-        <span>Number</span>
-        <span>Bar</span>
-        <span>Circle</span>
+
       </div>
     ),
     valueInput: ({
@@ -401,10 +389,12 @@ export const CustomFieldTypes = {
         const [files, setFiles] = useState<File[]>([])
         const { startUpload, isUploading } = useUploadFiles(getUploadUrl)
           return(
+            <div>
+
             <Modal>
       <ModalTrigger asChild>
         <Button variant="outline">
-          {/* Upload files {files.length > 0 && `(${files.length})`} */}
+          Upload files {files.length > 0 && `(${files.length})`}
         </Button>
       </ModalTrigger>
       <ModalContent className="sm:max-w-xl">
@@ -424,6 +414,8 @@ export const CustomFieldTypes = {
       />
       </ModalContent>
     </Modal>
+    </div>
+
        )
     },
     button: ({ value, options }: { value: any; options: any }) => (

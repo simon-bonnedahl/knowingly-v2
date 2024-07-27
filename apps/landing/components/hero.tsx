@@ -88,7 +88,7 @@ export const Hero = () => {
         }}
         className="flex items-center gap-4 justify-center mt-6 relative z-10"
       >
-        <Button>Get started</Button>
+        <Button  as={Link} href="app.simbo.casa">Get started</Button>
         <Button
           variant="simple"
           as={Link}

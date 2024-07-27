@@ -10,6 +10,7 @@
   "dependencies": {
     "@ai-sdk/openai": "^0.0.34",
     "@clerk/clerk-sdk-node": "^5.0.12",
+    "@knowingly/email-renderer": "workspace:*",
     "@stream-io/node-sdk": "^0.3.0",
     "ai": "^3.2.14",
     "convex": "^1.8.0",
@@ -18,6 +19,7 @@
     "convex-test": "^0.0.21",
     "hono": "^4.4.9",
     "openai": "^4.52.1",
+    "resend": "^3.5.0",
     "slugify": "^1.6.6",
     "stripe": "^16.0.0",
     "svix": "^1.24.0",

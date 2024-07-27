@@ -83,10 +83,10 @@ export const MobileNavbar = ({ navItems }: any) => {
             ))}
           </div>
           <div className="flex flex-row w-full items-start gap-2.5  px-8 py-4 ">
-            <Button as={Link} href="/signup">
+            <Button as={Link} href="app.simbo.casa✅">
               Sign Up
             </Button>
-            <Button variant="simple" as={Link} href="/login">
+            <Button variant="simple" as={Link} href="app.simbo.casa">
               Login
             </Button>
           </div>

@@ -70,7 +70,7 @@ export const Companies = () => {
     <div className="relative z-20 py-10 md:py-40">
       <Heading as="h2">Trusted by the best companies</Heading>
       <Subheading className="text-center ">
-        Every AI is the choice of all the fortune 500 companies.
+        Knowingly is the choice of all the fortune 500 companies.
       </Subheading>
 
       <div className="flex gap-10 flex-wrap justify-center md:gap-40 relative h-full w-full mt-20">

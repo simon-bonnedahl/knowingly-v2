@@ -70,22 +70,15 @@ const DynamicAction = () => {
     setSize(size);
   };
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setBlobState("compact")
-  //   }, 10000);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBlobState("compact")
+    }, 10000);
 
-  //   return () => clearInterval(interval);
-  // }
-  // , [blobState]);
+    return () => clearInterval(interval);
+  }
+  , [blobState]);
 
-  //   useScheduledAnimations([
-  //     { size: "compact", delay: 1000 },
-  //     { size: "compactMedium", delay: 1200 },
-  //     { size: "tall", delay: 1600 },
-  //     { size: "long", delay: 1800 },
-  //     { size: "medium", delay: 2200 },
-  //   ])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -160,7 +153,7 @@ const DynamicAction = () => {
         <Button
           variant={"outline"}
           className="w-full"
-          onClick={() => setSize("compact")}
+          onClick={() => setBlobState("compact")}
         >
           Dismiss
         </Button>

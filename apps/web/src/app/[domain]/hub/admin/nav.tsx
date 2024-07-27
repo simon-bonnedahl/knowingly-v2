@@ -48,6 +48,11 @@ export default function HubAdminNav() {
       href: `/admin/roles`,
       segment: "roles",
     },
+    {
+      name: "Emails",
+      href: `/admin/emails`,
+      segment: "emails"
+      },
   ];
 
   useEffect(() => {

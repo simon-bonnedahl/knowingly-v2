@@ -10,8 +10,6 @@
       "./src/*.ts"
     ]
   },
-  "license": "MIT",
-
   "devDependencies": {
     "@knowingly/eslint-config": "workspace:*",
     "@knowingly/prettier-config": "workspace:*",
