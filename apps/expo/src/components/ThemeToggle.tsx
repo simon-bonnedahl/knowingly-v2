@@ -1,7 +1,7 @@
 import { MoonStar, Sun } from 'lucide-react-native';
 import {  useColorScheme } from 'nativewind';
 import { Appearance, Pressable, View } from 'react-native';
-import { cn } from '~/lib/utils';
+import { cn } from '@knowingly/utils';
 
 export function ThemeToggle() {
   const { colorScheme } = useColorScheme();

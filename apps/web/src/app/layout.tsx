@@ -5,7 +5,7 @@ import { GeistSans } from "geist/font/sans";
 
 import { ThemeProvider } from "../components/theme";
 import { TailwindIndicator } from "../components/tailwind-indicator";
-import { cn } from "~/lib/utils";
+import { cn } from "@knowingly/ui";
 import ConvexClientProvider from "./ConvexClientProvider";
 import { Toaster } from "@knowingly/ui/sonner";
 import { AIAssistantProvider } from "./[domain]/AIAssistantProvider";

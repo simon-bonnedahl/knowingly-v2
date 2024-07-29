@@ -10,8 +10,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@knowingly/ui/card"
+import type {
+  ChartConfig} from "@knowingly/ui/chart";
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,

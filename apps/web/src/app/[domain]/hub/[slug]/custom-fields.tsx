@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { useMotionValue, Reorder, useDragControls } from "framer-motion";
+import { Reorder } from "framer-motion";
 
-import { Icon, Icons } from "~/components/icons";
 import { CustomField } from "~/components/custom-field";
 import { useMutation } from "convex/react";
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { useParams } from "next/navigation";
-import { Id } from "@knowingly/backend/convex/_generated/dataModel";
+import type { Id } from "@knowingly/backend/convex/_generated/dataModel";
 import { Button } from "@knowingly/ui/button";
+import { Icons } from "@knowingly/icons";
 
 interface CustomFieldsProps {
   customFields: {
@@ -23,19 +23,19 @@ preview?: boolean;
 
 export const CustomFields = ({customFields, preview=false}: CustomFieldsProps) => {
   const {slug } = useParams();
+  const updateFields = useMutation(api.pages.update)
+  const addField = useMutation(api.pages.addCustomField)
 
   const [fields, setFields] = useState(customFields)
 
 
-  if (!fields) return null;
-  const updateFields = useMutation(api.pages.update)
-  const addField = useMutation(api.pages.addCustomField)
+
 
 
   useEffect(() => {
     const debounce = setTimeout(() => {
       if (!fields) return;
-      updateFields({
+      void updateFields({
         slug: slug as string,
         field: "customFields",
         value: fields,
@@ -80,7 +80,7 @@ export const CustomFields = ({customFields, preview=false}: CustomFieldsProps) =
   }
 
 
-
+  if (!fields) return null;
 
 
   return (

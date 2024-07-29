@@ -3,7 +3,7 @@
 import { useEffect, type RefObject, useRef } from 'react';
 import { MailOpen } from 'lucide-react';
 import { toast } from 'sonner';
-import { isSafari } from '~/lib/utils';
+import { isSafari } from '@knowingly/utils';
 import { Button } from '@knowingly/ui/button';
 import { cn } from '@knowingly/ui';
 import { Icons } from '@knowingly/icons';

@@ -1,10 +1,12 @@
 "use client"
 
-import { useTheme } from "next-themes"
-import {  BlockNoteSchema, defaultInlineContentSpecs, defaultStyleSchema } from "@blocknote/core"
-import {  DefaultReactSuggestionItem, SuggestionMenuController, getDefaultReactSlashMenuItems, useCreateBlockNote } from "@blocknote/react"
-import { BlockNoteView, Theme} from "@blocknote/mantine"
-import "@blocknote/core/style.css"
+import { useTheme } from "next-themes";
+import { BlockNoteSchema, defaultInlineContentSpecs, defaultStyleSchema } from "@blocknote/core";
+import type { DefaultReactSuggestionItem } from "@blocknote/react";
+import { SuggestionMenuController, getDefaultReactSlashMenuItems, useCreateBlockNote } from "@blocknote/react";
+import type { Theme } from "@blocknote/mantine";
+import { BlockNoteView } from "@blocknote/mantine";
+import "@blocknote/core/style.css";
 
 import {
   defaultBlockSpecs,
@@ -14,16 +16,16 @@ import {
 import "@blocknote/core/fonts/inter.css";
 
 import "@blocknote/mantine/style.css";
-import { BlocknoteProfileGallery } from "./components/profile-gallery"
-import {  IconGlobe, IconLayersSubtract, IconUsers } from "@tabler/icons-react"
-import { BlocknoteGlobe } from "./components/globe"
-import { BlocknoteButton } from "./components/button"
-import { BlocknoteMention } from "./components/mention"
-import { useMutation, useQuery } from "convex/react"
-import { api } from "@knowingly/backend/convex/_generated/api"
-import { useSubdomain } from "~/lib/hooks/useSubdomain"
-import { uploadFile } from "./upload-file"
-import { BlocknoteAlert } from "./components/alert"
+import { BlocknoteProfileGallery } from "./components/profile-gallery";
+import { IconGlobe, IconLayersSubtract, IconUsers } from "@tabler/icons-react";
+import { BlocknoteGlobe } from "./components/globe";
+import { BlocknoteButton } from "./components/button";
+import { BlocknoteMention } from "./components/mention";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@knowingly/backend/convex/_generated/api";
+import { useSubdomain } from "~/lib/hooks/useSubdomain";
+import { uploadFile } from "./upload-file";
+import { BlocknoteAlert } from "./components/alert";
 
 
 

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { MoreHorizontal, SquarePen } from "lucide-react";
 import { cn } from "@knowingly/ui";
 import { buttonVariants } from "@knowingly/ui/button";
 import {
@@ -11,10 +10,10 @@ import {
   TooltipProvider,
 } from "@knowingly/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@knowingly/ui/avatar";
-import { Message } from "./mockupData";
-import { FunctionReturnType } from "convex/server";
-import { api } from "@knowingly/backend/convex/_generated/api";
+import type { FunctionReturnType } from "convex/server";
+import type { api } from "@knowingly/backend/convex/_generated/api";
 import { useSearchParams } from "next/navigation";
+import { Icons } from "@knowingly/icons";
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -49,7 +48,7 @@ export function Sidebar({  isCollapsed, conversations  }: SidebarProps) {
                 "h-8 w-8"
               )}
             >
-              <SquarePen size={20} />
+              <Icons.edit />
             </Link>
           </div>
         </div>

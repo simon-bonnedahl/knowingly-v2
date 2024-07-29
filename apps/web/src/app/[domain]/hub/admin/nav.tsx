@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
-import { cn } from "~/lib/utils";
+import { cn } from "@knowingly/ui";
 import { useEffect, useRef, useState } from "react";
-import { Icons } from "~/components/icons";
+import { Icons } from "@knowingly/icons";
 import { Button } from "@knowingly/ui/button";
 
 export default function HubAdminNav() {

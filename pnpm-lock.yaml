@@ -352,6 +352,9 @@ importers:
       '@knowingly/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@knowingly/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@knowingly/validators':
         specifier: workspace:*
         version: link:../../packages/validators
@@ -558,106 +561,6 @@ importers:
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
-
-  packages/core:
-    dependencies:
-      '@radix-ui/react-popover':
-        specifier: ^1.0.7
-        version: 1.1.1(react-dom@18.3.1)(react@18.3.1)
-      '@radix-ui/react-slot':
-        specifier: ^1.0.2
-        version: 1.1.0(@types/react@18.3.3)(react@18.3.1)
-      '@tiptap/core':
-        specifier: ^2.4.0
-        version: 2.5.6(@tiptap/pm@2.5.6)
-      '@tiptap/extension-color':
-        specifier: ^2.4.0
-        version: 2.5.6(@tiptap/core@2.5.6)(@tiptap/extension-text-style@2.5.6)
-      '@tiptap/extension-heading':
-        specifier: ^2.4.0
-        version: 2.5.6(@tiptap/core@2.5.6)
-      '@tiptap/extension-horizontal-rule':
-        specifier: ^2.4.0
-        version: 2.5.6(@tiptap/core@2.5.6)(@tiptap/pm@2.5.6)
-      '@tiptap/extension-image':
-        specifier: ^2.4.0
-        version: 2.5.6(@tiptap/core@2.5.6)
-      '@tiptap/extension-link':
-        specifier: ^2.4.0
-        version: 2.5.6(@tiptap/core@2.5.6)(@tiptap/pm@2.5.6)
-      '@tiptap/extension-list-item':
-        specifier: ^2.4.0
-        version: 2.5.6(@tiptap/core@2.5.6)
-      '@tiptap/extension-mention':
-        specifier: ^2.4.0
-        version: 2.5.6(@tiptap/core@2.5.6)(@tiptap/pm@2.5.6)(@tiptap/suggestion@2.5.6)
-      '@tiptap/extension-paragraph':
-        specifier: ^2.4.0
-        version: 2.5.6(@tiptap/core@2.5.6)
-      '@tiptap/extension-placeholder':
-        specifier: ^2.4.0
-        version: 2.5.6(@tiptap/core@2.5.6)(@tiptap/pm@2.5.6)
-      '@tiptap/extension-text-align':
-        specifier: ^2.4.0
-        version: 2.5.6(@tiptap/core@2.5.6)
-      '@tiptap/extension-text-style':
-        specifier: ^2.4.0
-        version: 2.5.6(@tiptap/core@2.5.6)
-      '@tiptap/extension-underline':
-        specifier: ^2.4.0
-        version: 2.5.6(@tiptap/core@2.5.6)
-      '@tiptap/pm':
-        specifier: ^2.4.0
-        version: 2.5.6
-      '@tiptap/react':
-        specifier: ^2.4.0
-        version: 2.5.6(@tiptap/core@2.5.6)(@tiptap/pm@2.5.6)(react-dom@18.3.1)(react@18.3.1)
-      '@tiptap/starter-kit':
-        specifier: ^2.4.0
-        version: 2.5.6(@tiptap/pm@2.5.6)
-      '@tiptap/suggestion':
-        specifier: ^2.4.0
-        version: 2.5.6(@tiptap/core@2.5.6)(@tiptap/pm@2.5.6)
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
-      lucide-react:
-        specifier: ^0.395.0
-        version: 0.395.0(react@18.3.1)
-      react:
-        specifier: 18.3.1
-        version: 18.3.1
-      react-colorful:
-        specifier: ^5.6.1
-        version: 5.6.1(react-dom@18.3.1)(react@18.3.1)
-      tailwind-merge:
-        specifier: ^2.3.0
-        version: 2.4.0
-      tailwindcss:
-        specifier: ^3.4.4
-        version: 3.4.6
-      tippy.js:
-        specifier: ^6.3.7
-        version: 6.3.7
-    devDependencies:
-      '@knowingly/eslint-config':
-        specifier: workspace:*
-        version: link:../../tooling/eslint
-      '@knowingly/prettier-config':
-        specifier: workspace:*
-        version: link:../../tooling/prettier
-      '@knowingly/tailwind-config':
-        specifier: workspace:*
-        version: link:../../tooling/tailwind
-      '@knowingly/tsconfig':
-        specifier: workspace:*
-        version: link:../../tooling/typescript
-      postcss:
-        specifier: ^8.4.38
-        version: 8.4.40
-      typescript:
-        specifier: ^5.4.5
-        version: 5.5.4
 
   packages/email-editor:
     dependencies:
@@ -1006,6 +909,39 @@ importers:
       zod:
         specifier: ^3.23.8
         version: 3.23.8
+
+  packages/utils:
+    devDependencies:
+      '@knowingly/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint
+      '@knowingly/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/prettier
+      '@knowingly/tailwind-config':
+        specifier: workspace:*
+        version: link:../../tooling/tailwind
+      '@knowingly/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/typescript
+      '@types/react':
+        specifier: ^18.3.3
+        version: 18.3.3
+      eslint:
+        specifier: ^9.4.0
+        version: 9.7.0
+      prettier:
+        specifier: ^3.3.1
+        version: 3.3.3
+      react:
+        specifier: 18.3.1
+        version: 18.3.1
+      tailwindcss:
+        specifier: ^3.4.3
+        version: 3.4.6
+      typescript:
+        specifier: ^5.4.5
+        version: 5.5.4
 
   packages/validators:
     dependencies:

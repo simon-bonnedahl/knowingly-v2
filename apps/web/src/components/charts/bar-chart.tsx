@@ -1,5 +1,6 @@
 "use client";
 
+import { Icons } from "@knowingly/icons";
 import {
   Card,
   CardContent,
@@ -8,13 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@knowingly/ui/card";
+import type {
+  ChartConfig} from "@knowingly/ui/chart";
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@knowingly/ui/chart";
-import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis } from "recharts";
 
 const chartData = [
@@ -89,7 +90,7 @@ export function BarChartInteractive() {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Trending up by 5.2% this month <Icons.trendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
           Showing total visitors for the last 6 months

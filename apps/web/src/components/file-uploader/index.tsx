@@ -6,7 +6,7 @@ import Dropzone from "react-dropzone"
 import type {DropzoneProps, FileRejection} from "react-dropzone";
 import { toast } from "sonner"
 
-import { cn, formatBytes } from "~/lib/utils"
+import { formatBytes } from "@knowingly/utils"
 import { ScrollArea } from "@knowingly/ui/scroll-area"
 import { Button } from "@knowingly/ui/button"
 import { useControllableState } from "~/lib/hooks/useControllableState"
@@ -16,6 +16,7 @@ import { api } from "@knowingly/backend/convex/_generated/api"
 import { useUploadFiles } from "@xixixao/uploadstuff/react";
 import type { Id } from "@knowingly/backend/convex/_generated/dataModel"
 import { Icons } from "@knowingly/icons";
+import { cn } from "@knowingly/ui";
 
 interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -123,7 +124,7 @@ export function FileUploader(props: FileUploaderProps) {
     const uploaded = await startUpload(files);
     if(!uploaded[0]) return;
     const storageId = (uploaded[0] as any).response.storageId as Id<"_storage">;
-    addUpload({storageId});
+    void addUpload({storageId});
     return storageId;
 
   }

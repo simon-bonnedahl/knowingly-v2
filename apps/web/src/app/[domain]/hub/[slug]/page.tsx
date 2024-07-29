@@ -6,10 +6,9 @@ import "@blocknote/core/fonts/inter.css";
 
 import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
-import { IconArrowLeft } from "@tabler/icons-react";
 // import { BlockNoteView } from "@blocknote/mantine";
 import { useMutation, useQuery } from "convex/react";
-import { UploadButton, UploadFileResponse } from "@xixixao/uploadstuff/react";
+import { UploadFileResponse } from "@xixixao/uploadstuff/react";
 
 import { Label } from "@knowingly/ui/label";
 import { Switch } from "@knowingly/ui/switch";
@@ -23,7 +22,8 @@ import { env } from "~/env";
 import { RequestMeeting } from "./request-meeting";
 import { SendMessage } from "./send-message";
 import { Button } from "@knowingly/ui/button";
-import { Icons } from "~/components/icons";
+import { Icons } from "@knowingly/icons";
+import { ImageCropper } from "~/components/file-uploader/image-cropper";
 
 // export async function generateStaticParams() {
 //   const allHubs = await db.hub.findMany({
@@ -115,6 +115,7 @@ export default function PageLayout({ params }: { params: { slug: string } }) {
       </PageToolbar>
       <CustomFields customFields={page.customFields} preview={preview} />
       <Separator className="w-full" />
+      <ImageCropper />
      
       
       

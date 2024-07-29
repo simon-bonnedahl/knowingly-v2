@@ -15,7 +15,7 @@ import { api } from "@knowingly/backend/convex/_generated/api"
 import { Input } from "@knowingly/ui/input"
 import { Label } from "@knowingly/ui/label"
 import { IconPicker } from "~/components/custom-field/icon-picker"
-import type { IconKey } from "~/components/icons"
+import type { IconKey } from "@knowingly/icons"
 
 
 interface UpdateRoleSheetProps

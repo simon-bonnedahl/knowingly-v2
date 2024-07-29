@@ -30,7 +30,7 @@ export const Hero = () => {
         className="flex justify-center"
       >
         <Badge onClick={() => router.push("/blog/top-5-llm-of-all-time")}>
-          We&apos;ve raised $69M seed funding
+          We have a new blog post! Check it out
         </Badge>
       </motion.div>
       <motion.h1
@@ -48,7 +48,7 @@ export const Hero = () => {
         }}
         className="text-2xl md:text-4xl lg:text-8xl font-semibold max-w-6xl mx-auto text-center mt-6 relative z-10"
       >
-        <Balancer>Generate Images, Text and Videos with AI</Balancer>
+        <Balancer>The AI powered hub for your community</Balancer>
       </motion.h1>
       <motion.p
         initial={{
@@ -67,9 +67,8 @@ export const Hero = () => {
         className="text-center mt-6 text-base md:text-xl text-muted dark:text-muted-dark max-w-3xl mx-auto relative z-10"
       >
         <Balancer>
-          Everything AI seamlessly integrated all the modern AI generation tools
-          into one platform so that you can generate content with a single
-          click.
+          Knowingly seamlessly integrated modern AI technologies
+          into one platform for your community to thrive.
         </Balancer>
       </motion.p>
       <motion.div
@@ -88,7 +87,7 @@ export const Hero = () => {
         }}
         className="flex items-center gap-4 justify-center mt-6 relative z-10"
       >
-        <Button  as={Link} href="app.simbo.casa">Get started</Button>
+        <Button  as={Link} href="https://app.simbo.casa">Get started</Button>
         <Button
           variant="simple"
           as={Link}

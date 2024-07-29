@@ -2,36 +2,27 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
 import {
-  CallingState,
-  DeviceSettings,
-  StreamCall,
-  StreamVideoParticipant,
-  useCallStateHooks,
+  CallingState, StreamCall, useCallStateHooks,
   useConnectedUser,
   useStreamVideoClient,
-  VideoPreview,
+  VideoPreview
 } from "@stream-io/video-react-sdk";
 import { useQuery } from "convex/react";
-import { toast } from "sonner";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
-import { Id } from "@knowingly/backend/convex/_generated/dataModel";
+import type { Id } from "@knowingly/backend/convex/_generated/dataModel";
 import { Avatar, AvatarFallback, AvatarImage } from "@knowingly/ui/avatar";
 import { Button } from "@knowingly/ui/button";
-import { Checkbox } from "@knowingly/ui/checkbox";
 
-import { Icons } from "~/components/icons";
 import useStreamCall from "~/lib/hooks/useStreamCall";
 import {
-  AudioInputDeviceSelector,
-  AudioOutputDeviceSelector,
-  VideoInputDeviceSelector,
+  AudioInputDeviceSelector, VideoInputDeviceSelector
 } from "./device-list";
 import FlexibleCallLayout from "./flexible-call-layout";
 import { ParticipantsPreview } from "./participants-preview";
 import PermissionPrompt from "./permission-prompt";
+import { Icons } from "@knowingly/icons";
 
 const MeetingPage = () => {
   const { id } = useParams();
@@ -46,7 +37,7 @@ const MeetingPage = () => {
   const call = client.call("default", id as string);
   if (!call) throw new Error("Failed to create meeting");
 
-  call.getOrCreate({
+  void call.getOrCreate({
     data: {
       starts_at: new Date(meeting.startsAt).toISOString(),
       custom: {

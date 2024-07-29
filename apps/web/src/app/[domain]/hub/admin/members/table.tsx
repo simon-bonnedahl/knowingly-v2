@@ -11,7 +11,7 @@ import { DataTableFilterField } from "~/components/data-table/types"
 import { FunctionReturnType } from "convex/server"
 import { api } from "@knowingly/backend/convex/_generated/api"
 import { MembersTableToolbarActions } from "./toolbar-actions"
-import { IconKey } from "~/components/icons"
+import { IconKey } from "@knowingly/icons"
 
 
 

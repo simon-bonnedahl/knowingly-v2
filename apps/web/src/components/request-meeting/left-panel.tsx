@@ -5,16 +5,11 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@knowingly/ui/select";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from "@knowingly/ui/tooltip";
+;
 import { useLocale } from "@react-aria/i18n";
-import { CalendarIcon, Clock4 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { timeZones } from "./time-zones";
-import { Icons } from "../icons";
+import { Icons } from "@knowingly/icons";
 
 export function LeftPanel({
 	showForm,
@@ -39,7 +34,7 @@ export function LeftPanel({
 					<TooltipTrigger asChild>
 						<img
 							alt="Shadcn Cal"
-							src="/avatar.jpeg"
+							src="https://avatar.iran.liara.run/public/boy"
 							className="rounded-full border"
 							width={24}
 							height={24}
@@ -53,7 +48,7 @@ export function LeftPanel({
 				<p className="text-gray-12 text-2xl font-bold">{name}</p>
 				{showForm && (
 					<div className="flex text-gray-12">
-						<CalendarIcon className="size-4 mr-2" />
+						<Icons.calendarEvent className="size-4 mr-2" />
 						<div className="flex flex-col text-sm font-semibold">
 							<p>
 								{new Date(slotParam as string).toLocaleString(locale, {
@@ -69,7 +64,7 @@ export function LeftPanel({
 					</div>
 				)}
 				<div className="flex items-center text-gray-12">
-					<Clock4 className="size-4 mr-2" />
+					<Icons.clock className="size-4 mr-2" />
 					<p className="text-sm font-semibold">30 mins</p>
 				</div>
 				<div className="flex items-center text-gray-12">

@@ -1,7 +1,6 @@
 
 "use client"
 
-import { TrendingUp } from "lucide-react"
 import {
   Label,
   PolarGrid,
@@ -18,7 +17,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@knowingly/ui/card"
-import { ChartConfig, ChartContainer } from "@knowingly/ui/chart"
+import type { ChartConfig} from "@knowingly/ui/chart";
+import { ChartContainer } from "@knowingly/ui/chart"
 
 
 const chartConfig = {

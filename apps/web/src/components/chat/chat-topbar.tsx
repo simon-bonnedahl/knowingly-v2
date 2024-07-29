@@ -1,12 +1,10 @@
-import React from 'react'
 import { Info, Phone, Video } from 'lucide-react';
 import Link from 'next/link';
 import { Avatar, AvatarImage } from '@knowingly/ui/avatar';
 import { cn } from '@knowingly/ui';
 import { buttonVariants } from '@knowingly/ui/button';
-import { Ent } from '@knowingly/backend/convex/types';
-import { FunctionReturnType } from 'convex/server';
-import { api } from '@knowingly/backend/convex/_generated/api';
+import type { FunctionReturnType } from 'convex/server';
+import type { api } from '@knowingly/backend/convex/_generated/api';
 
 interface ChatTopbarProps {
     user: FunctionReturnType<typeof api.users.get>;

@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "~/lib/utils";
+import { cn } from "@knowingly/ui";
 import { useId } from "react";
 
 export const HorizontalGradient = ({

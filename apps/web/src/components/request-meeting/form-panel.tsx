@@ -4,21 +4,20 @@ import { Label } from "@knowingly/ui/label";
 
 import { Textarea } from "@knowingly/ui/textarea";
 
-import { UserPlus, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import * as React from "react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@knowingly/ui/tooltip";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@knowingly/backend/convex/_generated/api";
-import { Ent } from "@knowingly/backend/convex/types";
+import type { Ent } from "@knowingly/backend/convex/types";
 import { LoadingDots } from "../loaders";
+import { Icons } from "@knowingly/icons";
 
-type Guest = {
+interface Guest  {
 	email: string;
 };
 
-type FormPanelProps = {
+interface FormPanelProps  {
 	creator: Ent<"users">;
 };
 
@@ -63,7 +62,7 @@ export function FormPanel({ creator }: FormPanelProps) {
 			userId: creator._id,
 			isPublic: false,
 			notes: data.notes,
-			startsAt: new Date(slotParam as string).getTime(),
+			startsAt: new Date(slotParam!).getTime(),
 		});
 		setLoading(false);
 		router.push("/meetings");
@@ -124,7 +123,7 @@ export function FormPanel({ creator }: FormPanelProps) {
 				onClick={() => addGuest()}
 				className="w-fit"
 			>
-				<UserPlus className="mr-2 size-4" />
+				<Icons.usersPlus className="mr-2 size-4" />
 				Add guests
 			</Button>
 			<div className="flex justify-end gap-2">

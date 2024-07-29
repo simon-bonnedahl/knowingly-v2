@@ -78,7 +78,7 @@ const UserMessage = ({ children }: { children: React.ReactNode }) => {
       className="flex flex-row rounded-2xl  p-2  items-start space-x-2 bg-white dark:bg-neutral-900"
     >
       <Image
-        src="/avatar.jpeg"
+        src="https://avatar.iran.liara.run/public/boy"
         alt="avatar"
         height="100"
         width="100"

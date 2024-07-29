@@ -1,14 +1,11 @@
 "use client";
+import { Icons } from "@knowingly/icons";
 import {
   CallControls,
   PaginatedGridLayout,
   SpeakerLayout,
 } from "@stream-io/video-react-sdk";
-import {
-  BetweenHorizonalEnd,
-  BetweenVerticalEnd,
-  LayoutGrid,
-} from "lucide-react";
+
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import useStreamCall from "~/lib/hooks/useStreamCall";
@@ -40,17 +37,17 @@ function CallLayoutButtons({ layout, setLayout }: CallLayoutButtonsProps) {
   return (
     <div className="mx-auto w-full space-x-6">
       <button onClick={() => setLayout("speaker-vert")}>
-        <BetweenVerticalEnd
+        <Icons.layoutDistributeVertical
           className={layout !== "speaker-vert" ? "text-gray-400" : ""}
         />
       </button>
       <button onClick={() => setLayout("speaker-horiz")}>
-        <BetweenHorizonalEnd
+        <Icons.layoutDistributeHorizontal
           className={layout !== "speaker-horiz" ? "text-gray-400" : ""}
         />
       </button>
       <button onClick={() => setLayout("grid")}>
-        <LayoutGrid className={layout !== "grid" ? "text-gray-400" : ""} />
+        <Icons.layoutGrid className={layout !== "grid" ? "text-gray-400" : ""} />
       </button>
     </div>
   );

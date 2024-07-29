@@ -9,12 +9,10 @@ import {
 // import { Sidebar } from "../sidebar";
 import { Chat } from ".";
 import { cn } from "@knowingly/ui";
-import { userData } from "./mockupData";
 import { Sidebar } from "./side-bar";
-import { FunctionReturnType } from "convex/server";
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { useSearchParams } from "next/navigation";
-import { Id } from "@knowingly/backend/convex/_generated/dataModel";
+import type { Id } from "@knowingly/backend/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 
 interface ChatLayoutProps {

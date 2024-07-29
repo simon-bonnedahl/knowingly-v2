@@ -1,18 +1,14 @@
-import { url } from "inspector";
 import { useState } from "react";
 import Link from "next/link";
 
 import { Badge } from "@knowingly/ui/badge";
 import { Input } from "@knowingly/ui/input";
-import { Label } from "@knowingly/ui/label";
 import { Progress } from "@knowingly/ui/progress";
-import { RadioGroup, RadioGroupItem } from "@knowingly/ui/radio-group";
 import { Status } from "@knowingly/ui/status";
-import { Tag, TagInput } from "@knowingly/ui/tag-input";
+import type { Tag } from "@knowingly/ui/tag-input";
+import { TagInput } from "@knowingly/ui/tag-input";
 
-import { cn } from "~/lib/utils";
-import { IconKey, Icons } from "../icons";
-import { RingProgress } from "../ring-progress";
+import { cn } from "@knowingly/ui";
 import { FileUploader } from "../file-uploader";
 import { useUploadFiles } from "@xixixao/uploadstuff/react";
 import { useMutation } from "convex/react";
@@ -20,6 +16,8 @@ import { api } from "@knowingly/backend/convex/_generated/api";
 import { Modal, ModalContent, ModalDescription, ModalHeader, ModalTitle, ModalTrigger } from "@knowingly/ui/modal";
 import { Button } from "@knowingly/ui/button";
 import { GaugeCircle } from "@knowingly/ui/gauge-circle";
+import type { IconKey} from "@knowingly/icons";
+import { Icons } from "@knowingly/icons";
 
 
 export const CustomFieldTypes = {
@@ -150,7 +148,7 @@ export const CustomFieldTypes = {
       value: string;
       setValue: (value: any) => void;
     }) => {
-      const tags: Tag[] = !!value ? [{ id: value, text: value }] : [];
+      const tags: Tag[] = value ? [{ id: value, text: value }] : [];
       const onSetTags = (newTags: Tag[]) => {
         setValue(newTags[0]?.text);
       };

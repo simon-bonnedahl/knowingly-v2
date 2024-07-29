@@ -1,11 +1,12 @@
 'use client';
 
 import * as React from 'react';
-import { useDropzone  } from 'react-dropzone';
-import type {DropzoneOptions} from 'react-dropzone';
+import { useDropzone } from 'react-dropzone';
+import type { DropzoneOptions } from 'react-dropzone';
 import { twMerge } from 'tailwind-merge';
 import { KnowinglySpinner } from './loaders';
-import { IconUpload, IconX } from '@tabler/icons-react';
+import { Icons } from '@knowingly/icons';
+import { cn } from '@knowingly/ui';
 
 
 const variants = {
@@ -151,7 +152,7 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
           ) : (
             // Upload Icon
             <div className="flex flex-col items-center justify-center text-xs text-gray-400">
-              <IconUpload className="mb-2 h-7 w-7" />
+              <Icons.upload className="mb-2 h-7 w-7" />
               <div className="text-gray-400">
                 Click or drag file to this area to upload
               </div>
@@ -168,10 +169,8 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
               }}
             >
               <div className="flex h-5 w-5 items-center justify-center rounded-md border border-solid border-gray-500 bg-white transition-all duration-300 hover:h-6 hover:w-6 dark:border-gray-400 dark:bg-black">
-                <IconX
+                <Icons.x
                   className="text-gray-500 dark:text-gray-400"
-                  width={16}
-                  height={16}
                 />
               </div>
             </div>
@@ -192,7 +191,7 @@ const Button = React.forwardRef<
 >(({ className, ...props }, ref) => {
   return (
     <button
-      className={twMerge(
+      className={cn(
         // base
         'focus-visible:ring-ring inline-flex cursor-pointer items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50',
         // color

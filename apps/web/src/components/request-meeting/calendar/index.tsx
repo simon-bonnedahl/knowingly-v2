@@ -2,10 +2,9 @@
 
 import { createCalendar } from "@internationalized/date";
 import {
-	type CalendarProps,
-	type DateValue,
-	useCalendar,
+	useCalendar
 } from "@react-aria/calendar";
+import type {CalendarProps, DateValue} from "@react-aria/calendar";
 import { useLocale } from "@react-aria/i18n";
 import { useCalendarState } from "@react-stately/calendar";
 import { CalendarGrid } from "./calendar-grid";

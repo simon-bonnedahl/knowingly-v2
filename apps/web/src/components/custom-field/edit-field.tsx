@@ -1,34 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 
-import { Id } from "@knowingly/backend/convex/_generated/dataModel";
 import { Button } from "@knowingly/ui/button";
-import { Input } from "@knowingly/ui/input";
 
-import { CustomFieldTypeKey, CustomFieldTypes } from "./types";
+import type { CustomFieldTypeKey } from "./types";
+import { CustomFieldTypes } from "./types";
 import { usePreview } from "~/lib/hooks/usePreview";
+import type { Ent } from "@knowingly/backend/convex/types";
 
 interface EditFieldProps {
-  field: {
-    value: any;
-    _id: Id<"customFields">;
-    _creationTime: number;
-    icon?: string | undefined;
-    options?:
-      | {
-          suggestions?: string[] | undefined;
-          format?: string | undefined;
-        }
-      | undefined;
-    name: string;
-    type: string;
-    isLocked: boolean;
-    isSuggested: boolean;
-    slug: string;
-  };
+  field: Ent<"customFields">;
+  fieldValue: any;
   onEditValue: (id: string, value: any) => void;
 }
-export const EditField = ({ field, onEditValue }: EditFieldProps) => {
-  const [value, setValue] = useState(field.value);
+export const EditField = ({ field, fieldValue, onEditValue }: EditFieldProps) => {
+  const [value, setValue] = useState(fieldValue);
   const [active, setActive] = useState(false);
   const {preview} = usePreview();
 
