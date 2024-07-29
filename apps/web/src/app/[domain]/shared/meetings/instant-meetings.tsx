@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { Button } from "@knowingly/ui/button";
-import { Icons } from "~/components/icons";
 import { useMutation } from "convex/react";
 import { api } from "@knowingly/backend/convex/_generated/api";
+import { Icons } from "@knowingly/icons";
 
 export const InstantMeeting = () => {
   const router = useRouter();

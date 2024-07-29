@@ -1,33 +1,26 @@
-import { Ent } from "@knowingly/backend/convex/types"
-import { Button } from "@knowingly/ui/button"
+import type { Ent } from "@knowingly/backend/convex/types";
+import { Button } from "@knowingly/ui/button";
 import {
-    Modal,
-    ModalBody,
-    ModalClose,
-    ModalContent,
-    ModalDescription,
-    ModalFooter,
-    ModalHeader,
-    ModalTitle,
-    ModalTrigger,
-  } from "@knowingly/ui/modal"
-import { Icons } from "~/components/icons"
+	Modal, ModalContent, ModalTrigger
+} from "@knowingly/ui/modal";
 
 
 import {
-	type CalendarDate,
+	
 	getLocalTimeZone,
 	getWeeksInMonth,
-	today,
+	today
 } from "@internationalized/date";
+import type {CalendarDate} from "@internationalized/date";
 import type { DateValue } from "@react-aria/calendar";
 import { useLocale } from "@react-aria/i18n";
 import { useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
-import { LeftPanel } from "~/components/request-meeting/left-panel"
-import { Calendar } from "~/components/request-meeting/calendar"
-import { RightPanel } from "~/components/request-meeting/right-panel"
-import { FormPanel } from "~/components/request-meeting/form-panel"
+import { LeftPanel } from "~/components/request-meeting/left-panel";
+import { Calendar } from "~/components/request-meeting/calendar";
+import { RightPanel } from "~/components/request-meeting/right-panel";
+import { FormPanel } from "~/components/request-meeting/form-panel";
+import { Icons } from "@knowingly/icons";
 
 export const RequestMeeting = ({creator} : {creator : Ent<"users">}) => {
 
@@ -59,7 +52,7 @@ export const RequestMeeting = ({creator} : {creator : Ent<"users">}) => {
 	const handleChangeAvailableTime = (time: string) => {
 		const timeValue = time.split(":").join(" ");
 
-		const match = timeValue.match(/^(\d{1,2}) (\d{2})([ap]m)?$/i);
+		const match = /^(\d{1,2}) (\d{2})([ap]m)?$/i.exec(timeValue);
 		if (!match) {
 			console.error("Invalid time format");
 			return null;

@@ -12,7 +12,7 @@ import {
   TooltipTrigger,
 } from "@knowingly/ui/tooltip";
 
-import { Icon, IconKey, Icons } from "~/components/icons";
+import { Icon, IconKey, Icons } from "@knowingly/icons";
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { UpdateRoleSheet } from "./update-role-sheet";
 

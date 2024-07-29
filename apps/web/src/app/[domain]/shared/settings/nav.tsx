@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
-import { cn } from "~/lib/utils";
+import { cn } from "@knowingly/ui";
 import { useEffect, useRef, useState } from "react";
 
 export default function SettingsNav() {

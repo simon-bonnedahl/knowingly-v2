@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { useRouter } from "next/navigation";
@@ -7,13 +7,13 @@ import Link from "next/link";
 import { createReactBlockSpec } from "@blocknote/react";
 import { Label } from "@knowingly/ui/label";
 import { Separator } from "@knowingly/ui/separator";
-import { IconDots, IconPlus, IconSearch } from "@tabler/icons-react";
 import { Button } from "@knowingly/ui/button";
 import { Input } from "@knowingly/ui/input";
 import { Slider } from "@knowingly/ui/slider";
-import { Modal, ModalContent, ModalTrigger } from "@knowingly/ui/modal"
-import { MinimalCard, MinimalCardImage, MinimalCardTitle} from "@knowingly/ui/minimal-card"
+import { Modal, ModalContent, ModalTrigger } from "@knowingly/ui/modal";
+import { MinimalCard, MinimalCardImage, MinimalCardTitle } from "@knowingly/ui/minimal-card";
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
+import { Icons } from "@knowingly/icons";
 
 
 export const BlocknoteProfileGallery = createReactBlockSpec(
@@ -79,7 +79,7 @@ const ProfileGallery = ({ props }: { props: any }) => {
           />
         </div>
         <div className="relative ml-auto flex-1 md:grow-0">
-          <IconSearch className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Icons.search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             type="search"
             placeholder="Search..."
@@ -88,7 +88,7 @@ const ProfileGallery = ({ props }: { props: any }) => {
             className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
           />
         </div>
-        <IconDots className="ml-2 w-5 h-5" />
+        <Icons.dots className="ml-2 w-5 h-5" />
       </div>
       <Separator />
       <div
@@ -128,7 +128,7 @@ const CreateNewPageModal = () => {
 
     >
       <MinimalCard className="h-full flex items-center justify-center">
-      <IconPlus className="w-5 h-5" />
+      <Icons.plus className="w-5 h-5" />
       <span>New</span>
 
       </MinimalCard>

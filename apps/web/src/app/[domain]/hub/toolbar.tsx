@@ -12,7 +12,7 @@ import { Button } from "@knowingly/ui/button";
 import { useBanner } from "~/lib/hooks/useBanner";
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { IconPicker } from "../../../components/icon-picker";
-import { isFile, isUrl } from "~/lib/utils";
+import { isFile, isUrl } from "@knowingly/utils";
 
 interface ToolbarProps {
   initialData: Doc<"hubs">;

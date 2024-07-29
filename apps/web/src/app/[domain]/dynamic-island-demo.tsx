@@ -13,6 +13,8 @@ import { Button, buttonVariants } from "@knowingly/ui/button";
 import { Separator } from "@knowingly/ui/separator";
 import { TextAnimate } from "@knowingly/ui/text-animation";
 
+import type {
+  SizePresets} from "~/components/dynamic-island";
 import {
   DynamicContainer,
   DynamicDescription,
@@ -20,7 +22,6 @@ import {
   DynamicIsland,
   DynamicIslandProvider,
   DynamicTitle,
-  SizePresets,
   useDynamicIslandSize,
   useScheduledAnimations,
 } from "~/components/dynamic-island";
@@ -221,8 +222,8 @@ const FadeInStaggerContext = createContext(false);
 const viewport = { once: true, margin: "0px 0px -200px" };
 
 export function FadeIn(props: any) {
-  let shouldReduceMotion = useReducedMotion();
-  let isInStaggerGroup = useContext(FadeInStaggerContext);
+  const shouldReduceMotion = useReducedMotion();
+  const isInStaggerGroup = useContext(FadeInStaggerContext);
 
   return (
     <motion.div

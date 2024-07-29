@@ -33,6 +33,7 @@
     "@knowingly/icons": "workspace:*",
     "@knowingly/ui": "workspace:*",
     "@knowingly/validators": "workspace:*",
+    "@knowingly/utils": "workspace:*",
     "@react-aria/button": "3.9.3",
     "@react-aria/calendar": "3.5.6",
     "@react-aria/focus": "3.16.2",

@@ -7,12 +7,13 @@ import { toast } from "sonner"
 import { Modal, ModalClose, ModalContent, ModalDescription, ModalFooter, ModalHeader, ModalTitle, ModalTrigger } from "@knowingly/ui/modal"
 import { Button } from "@knowingly/ui/button"
 import { InviteMemberForm } from "../forms/invite-member-form"
-import { inviteMemberSchema, InviteMemberSchema } from "@knowingly/validators"
+import type { InviteMemberSchema } from "@knowingly/validators";
+import { inviteMemberSchema } from "@knowingly/validators"
 import { useAction } from "convex/react"
 import { api } from "@knowingly/backend/convex/_generated/api"
-import { Id } from "@knowingly/backend/convex/_generated/dataModel"
+import type { Id } from "@knowingly/backend/convex/_generated/dataModel"
 import { useSubdomain } from "~/lib/hooks/useSubdomain"
-import { Icons } from "../icons"
+import { Icons } from "@knowingly/icons"
 
 
 

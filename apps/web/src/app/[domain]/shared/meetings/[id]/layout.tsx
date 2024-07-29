@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { Metadata } from "next";
+import type { ReactNode } from "react";
+import type { Metadata } from "next";
 import StreamClientProvider from "./stream-client-provider";
 import '@stream-io/video-react-sdk/dist/css/styles.css';
 export const metadata: Metadata = {

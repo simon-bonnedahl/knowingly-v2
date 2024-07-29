@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-export default async function SharedLayout({
+export default  function SharedLayout({
   params,
   children,
 }: {

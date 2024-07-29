@@ -1,9 +1,8 @@
-import { Label } from '@knowingly/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@knowingly/ui/select';
 import { useCallStateHooks } from '@stream-io/video-react-sdk';
 import React from 'react';
-import { Icon, IconKey, Icons } from '~/components/icons';
-type DeviceSelectorProps = {
+import { Icon, IconKey, Icons } from '@knowingly/icons';
+interface DeviceSelectorProps  {
 icon: IconKey;
   devices: MediaDeviceInfo[];
   selectedDeviceId?: string;

@@ -1,13 +1,11 @@
-import { ReactNode, Suspense } from "react";
-import { Metadata } from "next";
+import type { ReactNode } from "react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { auth, getAuth } from "@clerk/nextjs/server";
-import { fetchQuery, preloadQuery } from "convex/nextjs";
+import { fetchQuery } from "convex/nextjs";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
-import { Button } from "@knowingly/ui/button";
 
 import { env } from "~/env";
 import Navbar from "../../components/navbar";
@@ -41,8 +39,8 @@ export async function generateMetadata({
   if (!hub) return null;
 
   const urlPattern = /^(http|https):\/\/([\w-]+(\.[\w-]+)+)(\/[\w-./?%&=]*)?$/;
-  const icon = urlPattern.test(hub.logo as string)
-    ? (hub.logo as string)
+  const icon = urlPattern.test(hub.logo!)
+    ? (hub.logo!)
     : "/logo-small-black.svg";
 
   return {

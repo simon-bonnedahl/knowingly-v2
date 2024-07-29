@@ -1,9 +1,10 @@
 "use client";
 
+import type {
+  User} from "@stream-io/video-react-sdk";
 import {
   StreamVideo,
-  StreamVideoClient,
-  User,
+  StreamVideoClient
 } from "@stream-io/video-react-sdk";
 import { useEffect, useState } from "react";
 
@@ -13,7 +14,6 @@ interface ClientProviderProps {
 import { env } from "~/env";
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { useAction, useQuery } from "convex/react";
-import { Id } from "@knowingly/backend/convex/_generated/dataModel";
 
 export default function StreamClientProvider({ children }: ClientProviderProps) {
   const videoClient = useInitializeVideoClient();

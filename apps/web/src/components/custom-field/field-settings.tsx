@@ -1,51 +1,31 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
-import { render } from "@react-three/fiber";
 import { useMutation } from "convex/react";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
-import { Id } from "@knowingly/backend/convex/_generated/dataModel";
 import { Button } from "@knowingly/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
+  DropdownMenu, DropdownMenuContent,
+  DropdownMenuItem, DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@knowingly/ui/dropdown-menu";
 import { Input } from "@knowingly/ui/input";
 
 import { usePreview } from "~/lib/hooks/usePreview";
-import { Icon, IconKey, Icons } from "../icons";
 import { IconPicker } from "./icon-picker";
-import { CustomFieldTypeKey, CustomFieldTypes } from "./types";
+import type { CustomFieldTypeKey} from "./types";
+import { CustomFieldTypes } from "./types";
+import type { Ent } from "@knowingly/backend/convex/types";
+import type { IconKey} from "@knowingly/icons";
+import { Icon, Icons } from "@knowingly/icons";
 
 interface EditFieldProps {
-  field: {
-    value: any;
-    _id: Id<"customFields">;
-    _creationTime: number;
-    icon?: string | undefined;
-    options?:
-      | {
-          suggestions?: string[] | undefined;
-          format?: string | undefined;
-        }
-      | undefined;
-    name: string;
-    type: string;
-    isLocked: boolean;
-    isSuggested: boolean;
-    slug: string;
-  };
+  field: Ent<"customFields">;
   onEditValue: (id: string, value: any) => void;
   onDeleteField: (id: string) => void;
 }
@@ -65,7 +45,7 @@ export function FieldSettings({
 
   useEffect(() => {
     if (icon === field.icon) return;
-    updateField({
+    void updateField({
       slug: field.slug,
       field: "icon",
       value: icon,
@@ -74,7 +54,7 @@ export function FieldSettings({
 
   useEffect(() => {
     if (name === field.name) return;
-    updateField({
+    void updateField({
       slug: field.slug,
       field: "name",
       value: name,
@@ -83,7 +63,7 @@ export function FieldSettings({
 
   useEffect(() => {
     if (options === field.options) return;
-    updateField({
+    void updateField({
       slug: field.slug,
       field: "options",
       value: options,
@@ -142,7 +122,7 @@ export function FieldSettings({
                   className="flex justify-between hover:cursor-pointer"
                   onClick={(e) => {
                     e.preventDefault();
-                    updateField({
+                    void updateField({
                       slug: field.slug,
                       field: "type",
                       value: key,

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { IconBell } from "@tabler/icons-react";
 
 import {
   Sheet,
@@ -12,10 +11,11 @@ import {
 
 import { useQuery } from "convex/react";
 import { api } from "@knowingly/backend/convex/_generated/api";
-import { Ent } from "@knowingly/backend/convex/types";
+import type { Ent } from "@knowingly/backend/convex/types";
 import Link from "next/link";
 import { Avatar, AvatarImage } from "@knowingly/ui/avatar";
-import { formatDate } from "~/lib/dateUtils";
+import { formatDate } from "@knowingly/utils";
+import { Icons } from "@knowingly/icons";
 
 
 export const Notifications = () => {
@@ -32,7 +32,7 @@ export const Notifications = () => {
           className="flex items-center gap-3 rounded-md bg-transparent px-4  py-2 text-sm font-normal text-foreground transition-all duration-150 ease-in-out hover:bg-card"
           onClick={() => setOpen(!open)}
         >
-          <IconBell className="h-5 w-5" />
+          <Icons.bell className="h-5 w-5" />
           Notifications
           {unRead && unRead.length > 0 && (
             <span className="rounded-full border border-gray-500 bg-primary px-2 text-xs font-normal text-primary-foreground">

@@ -1,15 +1,14 @@
 "use client";
 
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
-  usePathname,
   useRouter,
-  useSelectedLayoutSegments,
+  useSelectedLayoutSegments
 } from "next/navigation";
 import { useClerk } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
-import { FunctionReturnType } from "convex/server";
+import type { FunctionReturnType } from "convex/server";
 import { useTheme } from "next-themes";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
@@ -26,14 +25,13 @@ import {
 } from "@knowingly/ui/dropdown-menu";
 import { Skeleton } from "@knowingly/ui/skeleton";
 
-import { env } from "~/env";
 import useWindowSize from "~/lib/hooks/useWindowSize";
-import { cn, hexToHSL, truncate } from "~/lib/utils";
+import {  hexToHSL, truncate } from "@knowingly/utils";
 import HubSwitcher from "./hub-switcher";
-import { Icons } from "./icons";
+import { Icons } from "@knowingly/icons";
 import { Notifications } from "./notifications";
 import { Search } from "./search";
-import { Separator } from "@knowingly/ui/separator";
+import { cn } from "@knowingly/ui";
 
 export default function Navbar({ subdomain }: { subdomain: string }) {
   const segments = useSelectedLayoutSegments();
@@ -140,7 +138,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
 
   const adjustLightness = (hsl: string, amount: number) => {
     const [hue, saturation, lightness] = hsl.split(" ");
-    let newLightness = parseInt(lightness as string) + amount;
+    let newLightness = parseInt(lightness!) + amount;
     newLightness = Math.max(0, Math.min(100, newLightness)); // Clamp lightness value between 0 and 100
     return `${hue} ${saturation} ${newLightness}%`;
   };
@@ -157,7 +155,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
   };
 
   useEffect(() => {
-    if (currentHub && currentHub.brandingColor && theme)
+    if (currentHub?.brandingColor && theme)
       setPrimaryColor(currentHub.brandingColor, theme);
 
   }, [currentHub]);

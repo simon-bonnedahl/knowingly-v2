@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useQuery } from "convex/react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@knowingly/ui/tabs";

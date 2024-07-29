@@ -1,22 +1,20 @@
 import { api } from "@knowingly/backend/convex/_generated/api"
-import { Ent } from "@knowingly/backend/convex/types"
+import type { Ent } from "@knowingly/backend/convex/types"
+import { Icons } from "@knowingly/icons"
 import { Button } from "@knowingly/ui/button"
 import {
-    Modal,
-    ModalBody,
-    ModalClose,
-    ModalContent,
-    ModalDescription,
-    ModalFooter,
-    ModalHeader,
-    ModalTitle,
-    ModalTrigger,
-  } from "@knowingly/ui/modal"
+  Modal,
+  ModalBody, ModalContent,
+  ModalDescription,
+  ModalFooter,
+  ModalHeader,
+  ModalTitle,
+  ModalTrigger
+} from "@knowingly/ui/modal"
 import { Textarea } from "@knowingly/ui/textarea"
-import { useMutation, useQuery } from "convex/react"
+import { useMutation } from "convex/react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { Icons } from "~/components/icons"
 import { LoadingDots } from "~/components/loaders"
 
 export const SendMessage = ({creator} : {creator : Ent<"users">}) => {

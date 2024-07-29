@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { Label, Pie, PieChart, Sector } from "recharts"
-import { PieSectorDataItem } from "recharts/types/polar/Pie"
+import type { PieSectorDataItem } from "recharts/types/polar/Pie"
 
 import {
   Card,
@@ -11,8 +11,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@knowingly/ui/card"
+import type {
+  ChartConfig} from "@knowingly/ui/chart";
 import {
-  ChartConfig,
   ChartContainer,
   ChartStyle,
   ChartTooltip,

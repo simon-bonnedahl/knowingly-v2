@@ -3,8 +3,8 @@ import { useDateFormatter } from "@react-aria/i18n";
 import { VisuallyHidden } from "@react-aria/visually-hidden";
 import type { CalendarState } from "@react-stately/calendar";
 import type { DOMAttributes, FocusableElement } from "@react-types/shared";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { Button } from "./calendar-button";
+import { Icons } from "@knowingly/icons";
 
 export function CalendarHeader({
 	state,
@@ -40,10 +40,10 @@ export function CalendarHeader({
 				{monthName} <span className="text-gray-11">{year}</span>
 			</h2>
 			<Button {...prevButtonProps}>
-				<ChevronLeftIcon className="size-4" />
+				<Icons.chevronLeft className="size-4" />
 			</Button>
 			<Button {...nextButtonProps}>
-				<ChevronRightIcon className="size-4" />
+				<Icons.chevronRight className="size-4" />
 			</Button>
 		</div>
 	);

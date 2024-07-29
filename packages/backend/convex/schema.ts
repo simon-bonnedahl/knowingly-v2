@@ -6,7 +6,7 @@ const schema = defineEntSchema({
     name: v.string(),
     imageUrl: v.optional(v.string()),
     role: v.union(v.literal("USER"), v.literal("SUPERUSER")),
-    uploads : v.array(v.id("_storage")),
+    uploads: v.array(v.id("_storage")),
   })
     .field("email", v.string(), { unique: true })
     .field("tokenIdentifier", v.string(), { unique: true })
@@ -27,7 +27,7 @@ const schema = defineEntSchema({
     subscriptionId: v.optional(v.string()),
     endsOn: v.optional(v.number()),
     credits: v.optional(v.number()),
-    tier : v.union(v.literal("FREE"), v.literal("PRO"), v.literal("ENTERPRISE")),
+    tier: v.union(v.literal("FREE"), v.literal("PRO"), v.literal("ENTERPRISE")),
     features: v.optional(
       v.object({
         customRoles: v.boolean(),
@@ -77,7 +77,7 @@ const schema = defineEntSchema({
     ),
     expiresAt: v.number(),
   })
-  .field("email", v.string(), {unique: true})
+    .field("email", v.string(), { unique: true })
     .edge("role")
     .edge("hub"),
 
@@ -99,8 +99,11 @@ const schema = defineEntSchema({
     customFields: v.array(
       v.object({
         id: v.id("customFields"),
-        value: v.optional(
-          v.union(v.string(), v.number(), v.boolean(), v.array(v.string())),
+        value: v.union(
+          v.string(),
+          v.number(),
+          v.boolean(),
+          v.array(v.string()),
         ),
       }),
     ),
@@ -132,7 +135,7 @@ const schema = defineEntSchema({
     .edges("hubs"),
   messages: defineEnt({
     body: v.string(),
-    readBy : v.array(v.id("users")),
+    readBy: v.array(v.id("users")),
     meetingInvite: v.optional(v.id("meetingInvites")),
     hubInvite: v.optional(v.id("hubInvites")),
   })
@@ -156,14 +159,18 @@ const schema = defineEntSchema({
     .edges("participants", { to: "users" })
     .edges("meetingInvites", { ref: true }),
   meetingInvites: defineEnt({
-    status: v.union(v.literal("PENDING"), v.literal("ACCEPTED"), v.literal("DECLINED")),
+    status: v.union(
+      v.literal("PENDING"),
+      v.literal("ACCEPTED"),
+      v.literal("DECLINED"),
+    ),
     expiresAt: v.number(),
   })
     .edge("meeting")
     .edge("user"),
   emailTemplates: defineEnt({
     title: v.string(),
-    content: v.string(), // JSON stringified object 
+    content: v.string(), // JSON stringified object
     previewText: v.optional(v.string()),
     from: v.optional(v.string()),
     replyTo: v.optional(v.string()),

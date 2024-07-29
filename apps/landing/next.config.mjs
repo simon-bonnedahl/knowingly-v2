@@ -4,7 +4,7 @@ import remarkGfm from "remark-gfm";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: { domains: ["i.pravatar.cc", "images.unsplash.com"] },
+  images: { domains: ["i.pravatar.cc", "images.unsplash.com", "avatar.iran.liara.run"] },
   pageExtensions: ["ts", "tsx", "mdx"],
 };
 

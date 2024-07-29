@@ -6,7 +6,7 @@ import { cn } from "@knowingly/ui";
 import { buttonVariants } from "@knowingly/ui/button";
 import { Textarea } from "@knowingly/ui/textarea";
 import { EmojiPicker } from "./emoji-picker";
-import { Icons } from "../icons";
+import { Icons } from "@knowingly/icons";
 interface ChatBottombarProps {
   sendMessage: (message: string) => void;
   isMobile: boolean;

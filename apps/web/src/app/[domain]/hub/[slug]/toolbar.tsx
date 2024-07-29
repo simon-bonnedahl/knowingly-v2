@@ -1,20 +1,17 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { useMutation } from "convex/react";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
-import { Doc } from "@knowingly/backend/convex/_generated/dataModel";
-import { Avatar, AvatarFallback, AvatarImage } from "@knowingly/ui/avatar";
-import { Button, buttonVariants } from "@knowingly/ui/button";
+import type { Doc } from "@knowingly/backend/convex/_generated/dataModel";
+import { Avatar, AvatarImage } from "@knowingly/ui/avatar";
+import { Button } from "@knowingly/ui/button";
 
 import { IconPicker } from "~/components/icon-picker";
-import { Icons } from "~/components/icons";
 import { useBanner } from "~/lib/hooks/useBanner";
-import { isUrl } from "~/lib/utils";
-import { RequestMeeting } from "./request-meeting";
-import { SendMessage } from "./send-message";
+import { isFile, isUrl } from "@knowingly/utils";
+import { Icons } from "@knowingly/icons";
 
 interface ToolbarProps {
   initialData: Doc<"pages">;
@@ -28,15 +25,15 @@ export const PageToolbar = ({
   children,
 }: ToolbarProps) => {
   const [name, setName] = useState(initialData.name);
-  const params = useParams();
-  const subdomain = decodeURIComponent(params.domain as string).split(".")[0];
+  const [logo, setLogo] = useState(initialData.icon);
 
   const updatePage = useMutation(api.pages.update);
 
   const banner = useBanner();
 
   const onIconSelect = (icon: string) => {
-    updatePage({
+    setLogo(icon);
+    void updatePage({
       slug: initialData.slug,
       field: "icon",
       value: icon,
@@ -44,7 +41,7 @@ export const PageToolbar = ({
   };
 
   const onRemoveIcon = () => {
-    updatePage({
+    void updatePage({
       slug: initialData.slug,
       field: "icon",
       value: "",
@@ -52,7 +49,7 @@ export const PageToolbar = ({
   };
 
   useEffect(() => {
-    updatePage({
+    void updatePage({
       slug: initialData.slug,
       field: "name",
       value: name,
@@ -61,42 +58,42 @@ export const PageToolbar = ({
 
   return (
     <div className=" group relative w-full px-24 py-4">
-      {!!initialData.icon && !preview && (
+      {!!logo && !preview && (
         <div className="group/icon absolute -top-8  left-24 items-center gap-x-2 rounded-xl hover:bg-white/10 ">
           <IconPicker onChange={onIconSelect}>
           <Avatar className="h-full w-full rounded-sm transition hover:opacity-75">
-            {isUrl(initialData.icon) ? (
+            {(isUrl(logo) || isFile(logo)) ? (
                 <AvatarImage
-                  src={initialData.icon}
+                  src={logo}
                   className="size-[4.5rem] rounded-full object-cover"
                 />
             ) : (
-              <AvatarFallback className="bg-transparent">
-                <p className="text-7xl ">{initialData.icon}</p>
-              </AvatarFallback>
+              <div className="bg-transparent">
+                <p className="text-7xl ">{logo}</p>
+              </div>
             )}
           </Avatar>
           </IconPicker>
         </div>
       )}
-      {!!initialData.icon && preview && (
+      {!!logo && preview && (
         <div className="absolute -top-14 left-24 pt-6 text-7xl">
           <Avatar className="h-full w-full rounded-sm transition hover:opacity-75">
-            {isUrl(initialData.icon) ? (
+            {(isUrl(logo) || isFile(logo)) ? (
                 <AvatarImage
-                  src={initialData.icon}
+                  src={logo}
                   className="size-[4.5rem] rounded-full object-cover"
                 />
             ) : (
-              <AvatarFallback className="bg-transparent">
-                <p className="text-7xl ">{initialData.icon}</p>
-              </AvatarFallback>
+              <div className="bg-transparent">
+                <p className="text-7xl ">{logo}</p>
+              </div>
             )}
           </Avatar>
         </div>
       )}
       <div className="flex items-center gap-x-1 py-4 opacity-0 group-hover:opacity-100">
-        {!initialData.icon && !preview && (
+        {!logo && !preview && (
           <IconPicker asChild onChange={onIconSelect}>
             <Button
               onClick={banner.onOpen}

@@ -1,8 +1,7 @@
 import { ReactNode } from "react";
-import { redirect } from "next/navigation";
 import SettingsNav from "./nav";
 
-export default async function SettingsLayout({
+export default  function SettingsLayout({
   params,
   children,
 }: {

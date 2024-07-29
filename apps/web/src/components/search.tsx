@@ -2,9 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { DialogProps } from "@radix-ui/react-dialog";
 import { useQuery } from "convex/react";
-import { useTheme } from "next-themes";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@knowingly/ui/avatar";
@@ -20,8 +18,9 @@ import {
 } from "@knowingly/ui/command";
 
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
-import { cn, isUrl } from "~/lib/utils";
-import { Icons } from "./icons";
+import { isUrl } from "@knowingly/utils";
+import { Icons } from "@knowingly/icons";
+import { cn } from "@knowingly/ui";
 
 export function Search() {
   const router = useRouter();
@@ -87,7 +86,7 @@ export function Search() {
                 <Avatar className="mr-2 h-8 w-8 rounded-sm">
                   {isUrl(profile?.icon) ? (
                     <AvatarImage
-                      src={profile.icon!}
+                      src={profile.icon}
                       alt={profile.name}
                       className="h-full w-full rounded-full"
                     />

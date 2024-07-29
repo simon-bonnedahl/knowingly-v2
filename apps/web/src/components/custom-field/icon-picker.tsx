@@ -5,7 +5,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@knowingly/ui/popover"
-import { Icon, IconKey, Icons } from "../icons"
+import { Icon, IconKey, Icons } from "@knowingly/icons"
 import { useEffect, useState } from "react"
 
 interface IconPickerProps {

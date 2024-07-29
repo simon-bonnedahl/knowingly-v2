@@ -1,13 +1,10 @@
-import { Message, UserData } from "./mockupData";
 import React, { useRef } from "react";
 import ChatBottombar from "./chat-bottombar";
 import { AnimatePresence, motion } from "framer-motion";
 import { Avatar, AvatarImage } from "@knowingly/ui/avatar";
 import { cn } from "@knowingly/ui";
-import { FunctionReturnType } from "convex/server";
+import type { FunctionReturnType } from "convex/server";
 import { api } from "@knowingly/backend/convex/_generated/api";
-import { Ent } from "@knowingly/backend/convex/types";
-import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 
 interface ChatListProps {

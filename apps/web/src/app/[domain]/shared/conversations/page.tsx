@@ -1,12 +1,10 @@
-import { cookies } from "next/headers";
-import { preloadQuery } from "convex/nextjs";
 
-import { api } from "@knowingly/backend/convex/_generated/api";
-import { Id } from "@knowingly/backend/convex/_generated/dataModel";
+import { cookies } from "next/headers";
+
 
 import { ChatLayout } from "~/components/chat/chat-layout";
 
-export default async function ConversationsPage() {
+export default function ConversationsPage() {
   const layout = cookies().get("react-resizable-panels:layout");
   const defaultLayout = layout ? JSON.parse(layout.value) : undefined;
 

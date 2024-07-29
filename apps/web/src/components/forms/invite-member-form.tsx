@@ -26,8 +26,9 @@ import {
 import { Textarea } from "@knowingly/ui/textarea";
 
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
-import { capitalizeFirstLetter } from "~/lib/utils";
-import { Icon, IconKey } from "../icons";
+import { capitalizeFirstLetter } from "@knowingly/utils";
+import type { IconKey } from "@knowingly/icons";
+import { Icon } from "@knowingly/icons";
 
 interface InviteMemberFormProps
   extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {

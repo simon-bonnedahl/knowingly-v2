@@ -1,8 +1,6 @@
 
-import { LinkPreview } from "~/components/link-preview";
-import { DefaultReactSuggestionItem, createReactInlineContentSpec } from "@blocknote/react";
+import { createReactInlineContentSpec } from "@blocknote/react";
 import { Badge } from "@knowingly/ui/badge";
-import Link from "next/link";
 import { PagePreview } from "~/components/page-preview";
 
  

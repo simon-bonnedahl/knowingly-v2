@@ -1,14 +1,12 @@
 "use client";
-import { Ent } from "@knowingly/backend/convex/types";
+import type { Ent } from "@knowingly/backend/convex/types";
 import { Badge } from "@knowingly/ui/badge";
 import { Card } from "@knowingly/ui/card";
 import { Separator } from "@knowingly/ui/separator";
-import React from "react";
-import { formatDate, formatCountdown, formatTime } from "~/lib/dateUtils"
-import AvatarCircles  from "@knowingly/ui/avatar-circles";
-import { FunctionReturnType } from "convex/server";
-import { api } from "@knowingly/backend/convex/_generated/api";
-import { Button } from "~/components/request-meeting/calendar/calendar-button";
+import { formatDate, formatCountdown, formatTime } from "@knowingly/utils";
+import AvatarCircles from "@knowingly/ui/avatar-circles";
+import type { FunctionReturnType } from "convex/server";
+import type { api } from "@knowingly/backend/convex/_generated/api";
 import Link from "next/link";
 import { buttonVariants } from "@knowingly/ui/button";
 import { cn } from "@knowingly/ui";

@@ -3,9 +3,9 @@
 import { Button } from "@knowingly/ui/button"
 import type { Table } from "@tanstack/react-table"
 import { exportTableToCSV } from "~/components/data-table/export"
-import { Icons } from "~/components/icons"
 import { DataTableMember } from "./columns"
 import { InviteMemberModal } from "~/components/modals/invite-member-modal"
+import { Icons } from "@knowingly/icons"
 
 
 
