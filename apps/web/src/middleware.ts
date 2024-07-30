@@ -79,6 +79,11 @@ export default authMiddleware({
       );
     }
     if (hostname === `admin.${env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
+      if (!auth.userId && !auth.isPublicRoute) {
+        const prefix =
+          env.NODE_ENV === "development" ? "http://" : "https://";
+        return redirectToSignIn({ returnBackUrl: `${prefix}${hostname}/` });
+      }
 
 
       return NextResponse.rewrite(

@@ -175,6 +175,14 @@ const schema = defineEntSchema({
     from: v.optional(v.string()),
     replyTo: v.optional(v.string()),
   }).edge("hub"),
+  blogPosts: defineEnt({
+    title: v.string(),
+    content: v.string(),
+    isPublished: v.boolean(),
+    publishedAt: v.optional(v.number()),
+  })
+    .field("slug", v.string(), { unique: true })
+    .edge("author", { to: "users", field: "userId" }),
 });
 
 export default schema;
