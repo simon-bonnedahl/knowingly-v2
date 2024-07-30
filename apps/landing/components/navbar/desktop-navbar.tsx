@@ -66,10 +66,10 @@ export const DesktopNavbar = ({ navItems }: Props) => {
       </div>
       <div className="flex space-x-2 items-center">
         <ModeToggle />
-        <Button variant="simple" as={Link} href="auth.simbo.casa/sign-in">
+        <Button variant="simple" as={Link} href="https://auth.simbo.casa/sign-in">
           Login
         </Button>
-        <Button as={Link} href="auth.simbo.casa/sign-up">
+        <Button as={Link} href="https://auth.simbo.casa/sign-up">
           Sign Up
         </Button>
       </div>

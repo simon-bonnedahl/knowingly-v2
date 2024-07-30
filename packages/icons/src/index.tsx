@@ -1558,7 +1558,36 @@ export const Icons = {
       <path d="M4 20l16 0" />
       <path d="M6 9m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z" />
     </svg>
+  ),
+  chartLine: (props: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" strokeWidth={STROKE_WIDTH} stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M4 19l16 0" />
+      <path d="M4 15l4 -6l4 2l4 -5l4 4" />
+    </svg>
+  ),
+  users: (props: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" strokeWidth={STROKE_WIDTH} stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+      <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+    </svg>
+  ),
+  buildingCommunity: (props: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" strokeWidth={STROKE_WIDTH} stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M8 9l5 5v7h-5v-4m0 4h-5v-7l5 -5m1 1v-6a1 1 0 0 1 1 -1h10a1 1 0 0 1 1 1v17h-8" />
+      <path d="M13 7l0 .01" />
+      <path d="M17 7l0 .01" />
+      <path d="M17 11l0 .01" />
+      <path d="M17 15l0 .01" />
+    </svg>
   )
+  
+  
+  
   
   
   

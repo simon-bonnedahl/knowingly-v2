@@ -9,6 +9,13 @@ export const get = query({
   },
 });
 
+export const getByTokenIdentifier = query({
+  args: { tokenIdentifier: v.string() },
+  handler: async (ctx, args) => {
+    return await ctx.table("users").get("tokenIdentifier", args.tokenIdentifier);
+  },
+});
+
 export const getMe = query({
   args: {},
   handler: async (ctx) => {
