@@ -4,16 +4,19 @@ import reactConfig from "@knowingly/eslint-config/react";
 
 /** @type {import('typescript-eslint').Config} */
 export default [
+ 
   {
-    ignores: [".next/**"],
+    ignores: [".next/**", "node_modules/**", "dist/**"],
+    
   },
   ...baseConfig,
   ...reactConfig,
   ...nextjsConfig,
   ...restrictEnvAccess,
   {
+   
+    files: ["src/**/*.{js,ts,tsx}"], // Adjust this pattern to be more specific if needed
     rules: {
-      // Disable the prefer-nullish-coalescing rule
       "@typescript-eslint/prefer-nullish-coalescing": "off",
       "@typescript-eslint/no-unsafe-assignment": "off",
       "@typescript-eslint/no-unsafe-call": "off",
@@ -23,4 +26,5 @@ export default [
       "turbo/no-undeclared-env-vars": "off",
     },
   },
+ 
 ];

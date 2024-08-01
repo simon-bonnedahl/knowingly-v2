@@ -28,14 +28,13 @@ import { useTheme } from "next-themes";
 import { api } from "@knowingly/backend/convex/_generated/api";
 
 export const Sidebar = () => {
-  const { isMobile } = useWindowSize();
   const { theme, setTheme } = useTheme();
   const user = useQuery(api.users.getMe);
   const { signOut } = useAuth();
 
-  if (isMobile) {
-    return (
-      <Sheet>
+  return (
+    <>
+    <Sheet>
         <SheetTrigger asChild>
           <Button size="icon" variant="outline" className="sm:hidden">
             <Icons.alignCenter className="h-5 w-5" />
@@ -69,30 +68,29 @@ export const Sidebar = () => {
           </nav>
         </SheetContent>
       </Sheet>
-    );
-  }
-
-  return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
         <Link href={"https://app.simbo.casa"} className=" ml-1">
           <Logo size="small" theme={"light"} className="h-5 w-5" />
         </Link>
 
-        <NavItem href="#" label="Dashboard">
+        <NavItem href="/" label="Dashboard">
           <Icons.home className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="#" label="Hubs">
+        <NavItem href="/hubs" label="Hubs">
           <Icons.buildingCommunity className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/customers" label="Customers">
+        <NavItem href="/users" label="Users">
           <Icons.users className="h-5 w-5" />
         </NavItem>
 
         <NavItem href="#" label="Analytics">
           <Icons.chartLine className="h-5 w-5" />
+        </NavItem>
+        <NavItem href="/blog" label="Blog">
+          <Icons.notebook className="h-5 w-5" />
         </NavItem>
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
@@ -155,5 +153,7 @@ export const Sidebar = () => {
         </DropdownMenu>
       </nav>
     </aside>
+    </>
+
   );
 };

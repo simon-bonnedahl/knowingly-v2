@@ -1,28 +1,48 @@
-"use client"
-"use memo"
+"use client";
+"use memo";
 
-import * as React from "react"
-import { DataTableMember, getColumns } from "./columns"
-import { useDataTable } from "~/lib/hooks/useDataTable"
-import { DataTable } from "~/components/data-table/data-table"
-import { DataTableAdvancedToolbar } from "~/components/data-table/advanced/data-table-advanced-toolbar"
-import { DataTableToolbar } from "~/components/data-table/data-table-toolbar"
-import { DataTableFilterField } from "~/components/data-table/types"
-import { FunctionReturnType } from "convex/server"
-import { api } from "@knowingly/backend/convex/_generated/api"
-import { MembersTableToolbarActions } from "./toolbar-actions"
-import { IconKey } from "@knowingly/icons"
+import * as React from "react";
+import { Preloaded, usePreloadedQuery } from "convex/react";
+import { FunctionReturnType } from "convex/server";
 
+import { api } from "@knowingly/backend/convex/_generated/api";
+import { IconKey } from "@knowingly/icons";
 
+import { DataTable } from "~/components/data-table/data-table";
+import { DataTableSkeleton } from "~/components/data-table/data-table-skeleton";
+import { DataTableToolbar } from "~/components/data-table/data-table-toolbar";
+import { DataTableFilterField } from "~/components/data-table/types";
+import { useDataTable } from "~/lib/hooks/useDataTable";
+import { DataTableMember, getColumns } from "./columns";
+import { MembersTableToolbarActions } from "./toolbar-actions";
 
-
-export function MembersTable({ data }: { data: FunctionReturnType<typeof api.hubs.getMembers> }) {
+export function MembersTable({
+  preloaded,
+}: {
+  preloaded: Preloaded<typeof api.hubs.getMembers>;
+}) {
   // Feature flags for showcasing some additional features. Feel free to remove them.
 
-
   // Memoize the columns so they don't re-render on every render
-  const columns = React.useMemo(() => getColumns(), [])
+  const columns = React.useMemo(() => getColumns(), []);
 
+  const data = usePreloadedQuery(preloaded);
+
+  const roles = React.useMemo(() => {
+    const roles = data?.map((member) => member.role) || [];
+    return Array.from(new Set(roles));
+  }, [data]);
+
+  const tableData = React.useMemo(
+    () =>
+      data?.map((member) => ({
+        id: member._id,
+        name: member.user?.name || "-",
+        role: member.role,
+        _creationTime: member._creationTime,
+      })),
+    [data],
+  );
 
   const filterFields: DataTableFilterField<DataTableMember>[] = [
     {
@@ -30,16 +50,16 @@ export function MembersTable({ data }: { data: FunctionReturnType<typeof api.hub
       value: "name",
       placeholder: "Filter names...",
     },
-    // {
-    //   label: "Status",
-    //   value: "status",
-    //   options: tasks.status.enumValues.map((status) => ({
-    //     label: status[0]?.toUpperCase() + status.slice(1),
-    //     value: status,
-    //     icon: getStatusIcon(status),
-    //     withCount: true,
-    //   })),
-    // },
+    {
+      label: "Role",
+      value: "role",
+      options: roles.map((role) => ({
+        label: role?.name,
+        value: role,
+        icon: role?.icon,
+        withCount: true,
+      })),
+    },
     // {
     //   label: "Priority",
     //   value: "priority",
@@ -50,17 +70,7 @@ export function MembersTable({ data }: { data: FunctionReturnType<typeof api.hub
     //     withCount: true,
     //   })),
     // },
-  ]
-  const tableData = data?.map((member) => ({
-    id: member._id,
-    name: member.user?.name || "-",
-    role: {
-      id: member.role?._id,
-      name: member.role?.name || "-",
-      icon: member.role?.icon as IconKey,
-    },
-    _creationTime: member._creationTime,
-  }))
+  ];
 
   const { table } = useDataTable({
     data: tableData || [],
@@ -68,19 +78,16 @@ export function MembersTable({ data }: { data: FunctionReturnType<typeof api.hub
     pageCount: 1,
     // optional props
     filterFields,
-    defaultPerPage: 10,
-    defaultSort: "_creationTime.desc",
-  })
+  });
+  if (!data) {
+    return <DataTableSkeleton columnCount={5} />;
+  }
 
   return (
-    <DataTable
-      table={table}
-     
-    >
-   
-        <DataTableToolbar table={table} filterFields={filterFields} >
-          <MembersTableToolbarActions table={table} />
-        </DataTableToolbar>
+    <DataTable table={table}>
+      <DataTableToolbar table={table} filterFields={filterFields}>
+        <MembersTableToolbarActions table={table} />
+      </DataTableToolbar>
     </DataTable>
-  )
+  );
 }

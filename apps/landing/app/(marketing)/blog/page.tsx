@@ -1,10 +1,11 @@
 import { type Metadata } from "next";
-import { getAllBlogs } from "@/lib/blog";
 import { Background } from "@/components/background";
 import { Container } from "@/components/container";
 import { Heading } from "@/components/heading";
 import { Subheading } from "@/components/subheading";
-import { BlogCard } from "@/components/blog-card";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "@knowingly/backend/convex/_generated/api";
+import { BlogPostCard } from "@/components/blog-post-card";
 
 export const metadata: Metadata = {
   title: "Blogs - Knowingly",
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogsIndex() {
-  let blogs = await getAllBlogs();
+  const blogPosts = await fetchQuery(api.blogPosts.list);
 
   return (
     <div className="relative overflow-hidden py-20 md:py-0">
@@ -31,14 +32,14 @@ export default async function BlogsIndex() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 relative z-20 w-full mb-10">
-          {blogs.slice(0, 2).map((blog, index) => (
-            <BlogCard blog={blog} key={blog.title + index} />
+          {blogPosts.slice(0, 2).map((blogPost, index) => (
+            <BlogPostCard blogPost={blogPost} key={blogPost.title + index} />
           ))}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full relative z-20">
-          {blogs.slice(2).map((blog, index) => (
-            <BlogCard blog={blog} key={blog.title + index} />
+          {blogPosts.slice(2).map((blogPost, index) => (
+            <BlogPostCard blogPost={blogPost} key={blogPost.title + index} />
           ))}
         </div>
       </Container>

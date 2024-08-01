@@ -24,6 +24,20 @@ export const getMe = query({
   },
 });
 
+export const list = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.table("users")
+  },
+});
+
+export const update = mutation({
+  args: { id: v.id("users"), field: v.string(), value: v.any() },
+  handler: async (ctx, args) => {
+    await ctx.table("users").get(args.id).patch({ [args.field]: args.value });
+  },
+});
+
 export const createUser = internalMutation({
   args: {
     email: v.string(),

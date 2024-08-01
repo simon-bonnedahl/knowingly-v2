@@ -69,7 +69,7 @@ export default function PageLayout({ params }: { params: { slug: string } }) {
   }
 
   const onChange = async (content: any) => {
-    updatePage({
+    void updatePage({
       slug: params.slug,
       field: "customContent",
       value: JSON.stringify(content),
@@ -97,7 +97,7 @@ export default function PageLayout({ params }: { params: { slug: string } }) {
         className="hover:none absolute left-2 top-2  z-30 rounded-full w-10 h-10 p-1"
         onClick={goBack}
       >
-        <Icons.chevronLeft className="size-5" />
+        <Icons.arrowLeft className="size-5" />
       </Button>
       <div className="absolute right-2 top-[21rem] z-20 flex items-center gap-2">
         <Label className="font-medium">Preview</Label>

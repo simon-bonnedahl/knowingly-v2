@@ -31,11 +31,11 @@ interface DataTableProps<TData> extends React.HTMLAttributes<HTMLDivElement> {
 
 export function DataTable<TData>({
   table,
-  floatingBar = null,
   children,
   className,
   ...props
 }: DataTableProps<TData>) {
+
   return (
     <div
       className={cn("w-full space-y-2.5 overflow-auto", className)}
@@ -92,9 +92,8 @@ export function DataTable<TData>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex flex-col gap-2.5">
+       <div className="flex flex-col gap-2.5">
         <DataTablePagination table={table} />
-        {table.getFilteredSelectedRowModel().rows.length > 0 && floatingBar}
       </div>
     </div>
   )

@@ -91,9 +91,9 @@ export function Search() {
                       className="h-full w-full rounded-full"
                     />
                   ) : (
-                    <AvatarFallback className="h-full w-full border bg-transparent">
+                    <div className="h-full w-full border bg-transparent">
                       <p className="text-xl">{profile?.icon}</p>
-                    </AvatarFallback>
+                    </div>
                   )}
                 </Avatar>
                 {profile.name}

@@ -3,6 +3,7 @@ import { mutation, query } from "./functions";
 import { action } from "./_generated/server";
 import { api } from "./_generated/api";
 import { Id } from "./_generated/dataModel";
+import { PaginationOptions } from "convex/server";
 
 export const create = mutation({
     args: {name: v.string(), subdomain: v.string(), description: v.optional(v.string()),  isPublic: v.boolean(), tier: v.union(v.literal("FREE"), v.literal("PRO"), v.literal("ENTERPRISE"))},
@@ -33,10 +34,23 @@ export const getHub = query({
 
     },
   });
-export const getHubs = query({
+export const list = query({
     args: {},
     handler: async (ctx) => {
       const hubs = await ctx.table("hubs")
+      return hubs;
+    },
+  });
+
+export const advancedList = query({
+    args: {searchParams : v.any()},
+    handler: async (ctx, args) => {
+      const {name, page, per_page, sort} = args.searchParams;
+
+      const [field, direction] = sort ? sort?.split(".") : [undefined, undefined]
+      const pagination : PaginationOptions = {cursor: null, numItems: parseInt(per_page)}
+ 
+      const hubs = await ctx.table("hubs").filter(q => q.gte(q.field("name"), name)).order(direction ?? "desc")
       return hubs;
     },
   });

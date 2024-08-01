@@ -33,7 +33,7 @@ import { Icons } from "@knowingly/icons";
 export interface DataTableInvite {
     id: string
     email: string
-    
+    roleId: string
     role: {
       id: string
       name: string
@@ -92,6 +92,22 @@ export function getColumns(): ColumnDef<DataTableInvite>[]{
           <div className="flex space-x-2">
             <span className="max-w-[31.25rem] truncate font-medium">
               {row.getValue("email")}
+            </span>
+          </div>
+        )
+      },
+    },
+    {
+      accessorKey: "roleId",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Role ID" />
+      ),
+      cell: ({ row }) => {
+
+        return (
+          <div className="flex space-x-2">
+            <span className="max-w-[31.25rem] truncate font-medium">
+              {row.getValue("roleId")}
             </span>
           </div>
         )

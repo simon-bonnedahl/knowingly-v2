@@ -7,6 +7,8 @@ export default defineConfig({
   banner: {
     js: '// @ts-nocheck\n',
   },
+  loader: { '.js': 'jsx' },
+
   dts: true,
   clean: true,
   minify: true,

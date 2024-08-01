@@ -23,6 +23,7 @@ const config = {
     { hostname: "plus.unsplash.com" },
     { hostname: "confident-terrier-401.convex.cloud" },
     { hostname: "confident-terrier-401.convex.site" },
+    { hostname: "img.clerk.com" },
     ],
   },
 };

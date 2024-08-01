@@ -14,6 +14,7 @@ import {
   type ColumnFiltersState,
   type PaginationState,
   type SortingState,
+  type TableState,
   type VisibilityState,
 } from "@tanstack/react-table"
 import { z } from "zod"
@@ -41,22 +42,6 @@ interface UseDataTableProps<TData, TValue> {
    * @type number
    */
   pageCount: number
-
-  /**
-   * The default number of rows per page.
-   * @default 10
-   * @type number | undefined
-   * @example 20
-   */
-  defaultPerPage?: number
-
-  /**
-   * The default sort order.
-   * @default undefined
-   * @type `${Extract<keyof TData, string | number>}.${"asc" | "desc"}` | undefined
-   * @example "createdAt.desc"
-   */
-  defaultSort?: `${Extract<keyof TData, string | number>}.${"asc" | "desc"}`
 
   /**
    * Defines filter fields for the table. Supports both dynamic faceted filters and search filters.
@@ -96,9 +81,21 @@ interface UseDataTableProps<TData, TValue> {
    * @type boolean
    */
   enableAdvancedFilter?: boolean
+
+  /**
+   * The initial state of the table.
+   * Can be used to set the initial pagination, sorting, column visibility, row selection, column grouping, column pinning, and column filters.
+   * @default {}
+   */
+  state?: Omit<Partial<TableState>, "sorting"> & {
+    sorting?: {
+      id: Extract<keyof TData, string>
+      desc: boolean
+    }[]
+  }
 }
 
-const schema = z.object({
+const searchParamsSchema = z.object({
   page: z.coerce.number().default(1),
   per_page: z.coerce.number().optional(),
   sort: z.string().optional(),
@@ -108,20 +105,18 @@ export function useDataTable<TData, TValue>({
   data,
   columns,
   pageCount,
-  defaultPerPage = 10,
-  defaultSort,
   filterFields = [],
   enableAdvancedFilter = false,
+  state,
 }: UseDataTableProps<TData, TValue>) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
   // Search params
-  const search = schema.parse(Object.fromEntries(searchParams))
-  const page = search.page
-  const perPage = search.per_page ?? defaultPerPage
-  const sort = search.sort ?? defaultSort
+  const { page, per_page, sort } = searchParamsSchema.parse(
+    Object.fromEntries(searchParams)
+  )
   const [column, order] = sort?.split(".") ?? []
 
   // Memoize computation of searchableColumns and filterableColumns
@@ -182,16 +177,20 @@ export function useDataTable<TData, TValue>({
   // Table states
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
+    React.useState<VisibilityState>({
+      id: false,
+    })
   const [columnFilters, setColumnFilters] =
     React.useState<ColumnFiltersState>(initialColumnFilters)
 
   // Handle server-side pagination
   const [{ pageIndex, pageSize }, setPagination] =
-    React.useState<PaginationState>({
-      pageIndex: page - 1,
-      pageSize: perPage,
-    })
+    React.useState<PaginationState>(
+      state?.pagination ?? {
+        pageIndex: page - 1,
+        pageSize: per_page ?? 10,
+      }
+    )
 
   const pagination = React.useMemo(
     () => ({
@@ -202,12 +201,14 @@ export function useDataTable<TData, TValue>({
   )
 
   // Handle server-side sorting
-  const [sorting, setSorting] = React.useState<SortingState>([
-    {
-      id: column ?? "",
-      desc: order === "desc",
-    },
-  ])
+  const [sorting, setSorting] = React.useState<SortingState>(
+    state?.sorting ?? [
+      {
+        id: column ?? "",
+        desc: order === "desc",
+      },
+    ]
+  )
 
   React.useEffect(() => {
     router.push(
@@ -301,21 +302,22 @@ export function useDataTable<TData, TValue>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     JSON.stringify(filterableColumnFilters),
   ])
+  console.log("Column filters:", columnFilters)
 
   const table = useReactTable({
     data,
     columns,
-    pageCount: pageCount ?? -1,
     state: {
-      pagination,
+      ...state,
       sorting,
       columnVisibility,
       rowSelection,
       columnFilters,
+      pagination,
     },
     enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
     onPaginationChange: setPagination,
+    onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
@@ -325,9 +327,9 @@ export function useDataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-    manualPagination: true,
-    manualSorting: true,
-    manualFiltering: true,
+    manualPagination: false,
+    // manualSorting: true,
+    // manualFiltering: true,
   })
 
   return { table }

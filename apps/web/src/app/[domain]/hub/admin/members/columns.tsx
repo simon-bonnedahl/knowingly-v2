@@ -29,15 +29,12 @@ import { api } from "@knowingly/backend/convex/_generated/api"
 import type { Id } from "@knowingly/backend/convex/_generated/dataModel"
 import { formatDate } from "@knowingly/utils"
 import { Icons } from "@knowingly/icons";
+import { Ent } from "@knowingly/backend/convex/types";
 
 export interface DataTableMember {
     id: string
     name: string
-    role: {
-      id: string
-      name: string
-      icon: IconKey
-    }
+    role: Ent<"roles">
     _creationTime: number
     }
 
