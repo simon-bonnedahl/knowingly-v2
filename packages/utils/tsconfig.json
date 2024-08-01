@@ -5,6 +5,6 @@
     "jsx": "preserve",
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
-  "include": ["*.ts", "src", "../../apps/web/src/components/color-picker.tsx"],
+  "include": ["*.ts", "src"],
   "exclude": ["node_modules"]
 }

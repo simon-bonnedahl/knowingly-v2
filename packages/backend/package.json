@@ -6,11 +6,11 @@
     "dev": "convex dev",
     "setup": "convex dev --until-success"
   },
-  "author": "",
   "dependencies": {
     "@ai-sdk/openai": "^0.0.34",
     "@clerk/clerk-sdk-node": "^5.0.12",
     "@knowingly/email-renderer": "workspace:*",
+    "@knowingly/utils": "workspace:*",
     "@stream-io/node-sdk": "^0.3.0",
     "ai": "^3.2.14",
     "convex": "^1.8.0",

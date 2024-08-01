@@ -171,7 +171,7 @@ export function SignupForm() {
                     )}
                   >
                     Already have an account?{" "}
-                    <Link href="app.simbo.casa" className="text-black dark:text-white">
+                    <Link href="https://app.simbo.casa" className="text-black dark:text-white">
                       Sign in
                     </Link>
                   </p>

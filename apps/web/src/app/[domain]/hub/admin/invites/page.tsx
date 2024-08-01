@@ -1,23 +1,20 @@
-"use client"
 "use memo"
 
 import * as React from "react"
 
 
 import { InvitesTable } from "./table";
-import { useQuery } from "convex/react";
 import { api } from "@knowingly/backend/convex/_generated/api";
-import { useParams } from "next/navigation";
+import { preloadQuery } from "convex/nextjs";
 
 
 
 
 
-export default function AdminMembersPage() {
-  const { domain } = useParams();
-  const subdomain = decodeURIComponent(domain as string).split(".")[0];
+export default async function AdminMembersPage({params} : {params: {domain: string}}) {
 
-  const invites = useQuery(api.hubs.getInvites, { subdomain: subdomain as string});
+  const subdomain = params.domain.split(".")[0];
+  const preloadedInvites = await preloadQuery(api.hubs.getInvites, { subdomain: subdomain as string});
 
   
 
@@ -31,7 +28,7 @@ export default function AdminMembersPage() {
           </h1>
           
         </div>
-        <InvitesTable data={invites} />
+        <InvitesTable preloaded={preloadedInvites} />
         
   
       

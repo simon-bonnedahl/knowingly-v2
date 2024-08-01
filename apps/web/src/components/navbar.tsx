@@ -163,7 +163,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
 
 
 
-  const setPrimaryColor = (color: string | undefined, theme: "dark" | "light") => {
+  const setPrimaryColor = (color: string | undefined, theme: string | undefined) => {
     if (!color || !document) return;
     const colorHSL = hexToHSL(color);
     const adjustedColor = theme === "dark" ? adjustLightness(colorHSL, 30) : colorHSL;
@@ -306,7 +306,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
 
               <DropdownMenuGroup>
                 <DropdownMenuItem
-                  onClick={() => signOut({ returnTo: window.location.origin })}
+                  onClick={() => signOut({ redirectUrl: "/"})}
                   className="flex items-center gap-2"
                 >
                   <Icons.logout className="h-4 w-4 text-foreground" />

@@ -4,7 +4,7 @@ import { v } from "convex/values";
 const schema = defineEntSchema({
   users: defineEnt({
     name: v.string(),
-    imageUrl: v.optional(v.string()),
+    imageUrl: v.string(),
     role: v.union(v.literal("USER"), v.literal("SUPERUSER")),
     uploads: v.array(v.id("_storage")),
   })
@@ -15,7 +15,8 @@ const schema = defineEntSchema({
     .edges("receivedMessages", { to: "messages", ref: "receiverId" })
     .edges("notifications", { ref: true })
     .edges("meetings")
-    .edges("meetingInvites", { ref: true }),
+    .edges("meetingInvites", { ref: true })
+    .edges("blogPosts", { ref: true }),
   hubs: defineEnt({
     name: v.string(),
     description: v.optional(v.string()),
@@ -177,6 +178,7 @@ const schema = defineEntSchema({
   }).edge("hub"),
   blogPosts: defineEnt({
     title: v.string(),
+    banner: v.string(),
     content: v.string(),
     isPublished: v.boolean(),
     publishedAt: v.optional(v.number()),

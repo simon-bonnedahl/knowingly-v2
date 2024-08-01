@@ -1,42 +1,41 @@
 "use client"
 
-import React, { type SyntheticEvent } from "react"
+import React from "react"
+import type {SyntheticEvent} from "react";
 
 import ReactCrop, {
   centerCrop,
-  makeAspectCrop,
-  type Crop,
-  type PixelCrop,
+  makeAspectCrop
 } from "react-image-crop"
+import type {Crop, PixelCrop} from "react-image-crop";
 
 
 
 import "react-image-crop/dist/ReactCrop.css"
-import { CropIcon, Trash2Icon } from "lucide-react"
-import { Modal, ModalClose, ModalContent, ModalFooter, ModalTrigger } from "@knowingly/ui/modal"
-import { Avatar, AvatarFallback, AvatarImage } from "@knowingly/ui/avatar"
 import { Button } from "@knowingly/ui/button"
+import { Icons } from "@knowingly/icons";
+import Image from "next/image";
+
+interface FileWithPreview extends File {
+  preview: string
+}
 
 interface ImageCropperProps {
-  dialogOpen: boolean
-  setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
-  selectedFile: FileWithPreview | null
-  setSelectedFile: React.Dispatch<React.SetStateAction<FileWithPreview | null>>
+  selectedFile: FileWithPreview
+  setSelectedFile: (file: File) => void
+  aspect?: number | undefined
 }
 
 export function ImageCropper({
-  dialogOpen,
-  setDialogOpen,
   selectedFile,
   setSelectedFile,
+  aspect = undefined,
 }: ImageCropperProps) {
-  const aspect = 1
 
   const imgRef = React.useRef<HTMLImageElement | null>(null)
 
   const [crop, setCrop] = React.useState<Crop>()
   const [croppedImageUrl, setCroppedImageUrl] = React.useState<string>("")
-  const [croppedImage, setCroppedImage] = React.useState<string>("")
 
   function onImageLoad(e: SyntheticEvent<HTMLImageElement>) {
     if (aspect) {
@@ -51,6 +50,18 @@ export function ImageCropper({
       setCroppedImageUrl(croppedImageUrl)
     }
   }
+  function dataURLtoFile(dataurl: string, filename: string) {
+    const arr = dataurl.split(',');
+
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+}
 
   function getCroppedImg(image: HTMLImageElement, crop: PixelCrop): string {
     const canvas = document.createElement("canvas")
@@ -81,28 +92,14 @@ export function ImageCropper({
     return canvas.toDataURL("image/png", 1.0)
   }
 
-  async function onCrop() {
-    try {
-      setCroppedImage(croppedImageUrl)
-      setDialogOpen(false)
-    } catch (error) {
-      alert("Something went wrong!")
+   function onCrop() {
+      const file = dataURLtoFile(croppedImageUrl, selectedFile?.name ?? "cropped-image")
+      console.log(file)
+      setSelectedFile(file)
     }
-  }
 
   return (
-    <Modal open={dialogOpen} onOpenChange={setDialogOpen}>
-      <ModalTrigger>
-        <Avatar className="size-36 cursor-pointer ring-offset-2 ring-2 ring-slate-200">
-          <AvatarImage
-            src={croppedImage ? croppedImage : selectedFile?.preview}
-            alt="@shadcn"
-          />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
-      </ModalTrigger>
-      <ModalContent className="p-0 gap-0">
-        <div className="p-6 size-full">
+    <div className="">
           <ReactCrop
             crop={crop}
             onChange={(_, percentCrop) => setCrop(percentCrop)}
@@ -110,22 +107,17 @@ export function ImageCropper({
             aspect={aspect}
             className="w-full"
           >
-            <Avatar className="size-full rounded-none">
-              <AvatarImage
+              <Image
+                width={400}
+                height={400}
                 ref={imgRef}
-                className="size-full rounded-none "
+                className="size-full rounded-none  "
                 alt="Image Cropper Shell"
                 src={selectedFile?.preview}
                 onLoad={onImageLoad}
               />
-              <AvatarFallback className="size-full min-h-[460px] rounded-none">
-                Loading...
-              </AvatarFallback>
-            </Avatar>
           </ReactCrop>
-        </div>
-        <ModalFooter className="p-6 pt-0 justify-center ">
-          <ModalClose asChild>
+        <div className=" flex w-full justify-between ">
             <Button
               size={"sm"}
               type="reset"
@@ -135,17 +127,15 @@ export function ImageCropper({
                 setSelectedFile(null)
               }}
             >
-              <Trash2Icon className="mr-1.5 size-4" />
+              <Icons.trash className="mr-1.5 size-4" />
               Cancel
             </Button>
-          </ModalClose>
           <Button type="submit" size={"sm"} className="w-fit" onClick={onCrop}>
-            <CropIcon className="mr-1.5 size-4" />
+            <Icons.crop className="mr-1.5 size-4" />
             Crop
           </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </div>
+    </div>
   )
 }
 

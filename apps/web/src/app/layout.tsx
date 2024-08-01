@@ -8,9 +8,9 @@ import { TailwindIndicator } from "../components/tailwind-indicator";
 import { cn } from "@knowingly/ui";
 import ConvexClientProvider from "./ConvexClientProvider";
 import { Toaster } from "@knowingly/ui/sonner";
-import { AIAssistantProvider } from "./[domain]/AIAssistantProvider";
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { AlertDialogProvider } from "./AlertDialogProvider";
 
 export const metadata: Metadata = {
   title: "Knowingly",
@@ -44,6 +44,7 @@ export default function RootLayout({
         <ConvexClientProvider>
           <Toaster />
           <TailwindIndicator />
+          <AlertDialogProvider>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -52,6 +53,7 @@ export default function RootLayout({
           >
             {children}
           </ThemeProvider>
+          </AlertDialogProvider>
         </ConvexClientProvider>
         <Analytics/>
         <SpeedInsights/>

@@ -7,20 +7,26 @@ import { useDataTable } from "~/lib/hooks/useDataTable"
 import { DataTable } from "~/components/data-table/data-table"
 import { DataTableToolbar } from "~/components/data-table/data-table-toolbar"
 import { DataTableFilterField } from "~/components/data-table/types"
-import { FunctionReturnType } from "convex/server"
-import { api } from "@knowingly/backend/convex/_generated/api"
 import { InvitesTableToolbarActions } from "./toolbar-actions"
 import { IconKey } from "@knowingly/icons"
+import { Preloaded, usePreloadedQuery } from "convex/react"
 
 
 
 
-export function InvitesTable({ data }: { data: FunctionReturnType<typeof api.hubs.getInvites> }) {
+export function InvitesTable({ preloaded }: { preloaded: Preloaded<typeof api.hubs.getInvites> }) {
   // Feature flags for showcasing some additional features. Feel free to remove them.
 
 
   // Memoize the columns so they don't re-render on every render
   const columns = React.useMemo(() => getColumns(), [])
+
+  const data = usePreloadedQuery(preloaded);
+
+  const roles = React.useMemo(() => {
+    const roles = data?.map((invite) => invite.role) || [];
+    return Array.from(new Set(roles));
+  }, [data]);
 
 
   const filterFields: DataTableFilterField<DataTableInvite>[] = [
@@ -29,16 +35,17 @@ export function InvitesTable({ data }: { data: FunctionReturnType<typeof api.hub
       value: "email",
       placeholder: "Filter emails...",
     },
-    // {
-    //   label: "Status",
-    //   value: "status",
-    //   options: tasks.status.enumValues.map((status) => ({
-    //     label: status[0]?.toUpperCase() + status.slice(1),
-    //     value: status,
-    //     icon: getStatusIcon(status),
-    //     withCount: true,
-    //   })),
-    // },
+    {
+      label: "Role",
+      value: "role",
+      options: roles.map((role) => ({
+        label: role?.name,
+        value: role,
+        icon: role?.icon,
+        withCount: true,
+      })),
+    },
+
     // {
     //   label: "Priority",
     //   value: "priority",
@@ -50,8 +57,10 @@ export function InvitesTable({ data }: { data: FunctionReturnType<typeof api.hub
     //   })),
     // },
   ]
-  const tableData = data?.map((invite) => ({
-    id: invite._id,
+  const tableData = React.useMemo(
+    () =>
+      data?.map((invite) => ({
+        id: invite._id,
     email: invite.email,
     role: {
       id: invite.role?._id,
@@ -60,7 +69,10 @@ export function InvitesTable({ data }: { data: FunctionReturnType<typeof api.hub
     },
     status: invite.status,
     _creationTime: invite._creationTime,
-  }))
+      })),
+    [data],
+  );
+
 
   const { table } = useDataTable({
     data: tableData || [],
