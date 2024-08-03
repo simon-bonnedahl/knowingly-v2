@@ -23,6 +23,8 @@ const config = {
     { hostname: "plus.unsplash.com" },
     { hostname: "confident-terrier-401.convex.cloud" },
     { hostname: "confident-terrier-401.convex.site" },
+    { hostname: "neat-echidna-914.convex.cloud" },
+    { hostname: "neat-echidna-914.convex.site" },
     { hostname: "img.clerk.com" },
     ],
   },
