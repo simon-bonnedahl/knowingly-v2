@@ -29,7 +29,7 @@ export const Hero = () => {
         }}
         className="flex justify-center"
       >
-        <Badge onClick={() => router.push("/blog/top-5-llm-of-all-time")}>
+        <Badge onClick={() => router.push("/blog/integrated-video-calls-knowingly")}>
           We have a new blog post! Check it out
         </Badge>
       </motion.div>

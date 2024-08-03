@@ -71,7 +71,7 @@ const editor = useCreateBlockNote({
       <BlockNoteView
         editor={editor}
         editable={editable}
-        className="w-full border border-black"
+        className="w-full "
         draggable={false}
         sideMenu={false}
         

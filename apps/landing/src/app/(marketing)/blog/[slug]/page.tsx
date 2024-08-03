@@ -1,13 +1,8 @@
-import { useParams } from "next/navigation";
-import {  useQuery } from "convex/react";
 import { fetchQuery } from "convex/nextjs";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
-import { Id } from "@knowingly/backend/convex/_generated/dataModel";
 import { Metadata } from "next";
 import { BlogLayout } from "~/components/blog-layout";
-
-
 
 export async function generateMetadata({
     params,
