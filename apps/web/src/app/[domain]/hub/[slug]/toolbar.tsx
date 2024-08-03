@@ -66,7 +66,7 @@ export const PageToolbar = ({
         </div>
       )}
       {!!logo && preview && (
-        <div className="absolute -top-14 left-24 pt-6 text-7xl">
+        <div className="absolute -top-10 ">
           <Avatar className="h-full w-full rounded-sm transition hover:opacity-75">
             {(isUrl(logo) || isFile(logo)) ? (
                 <AvatarImage

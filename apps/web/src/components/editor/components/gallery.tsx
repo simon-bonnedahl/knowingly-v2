@@ -3,15 +3,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  CustomBlockConfig,
-  InlineContentSchema,
-  PropSchema,
-  StyleSchema,
-} from "@blocknote/core";
+
 import {
   createReactBlockSpec,
-  ReactCustomBlockRenderProps,
 } from "@blocknote/react";
 import { useMutation, useQuery } from "convex/react";
 
@@ -35,7 +29,6 @@ import {
   SelectValue,
 } from "@knowingly/ui/select";
 import { Separator } from "@knowingly/ui/separator";
-import { Slider } from "@knowingly/ui/slider";
 import { capitalizeFirstLetter } from "@knowingly/utils";
 
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
@@ -105,7 +98,7 @@ export const BlocknoteGallery = createReactBlockSpec(
             <div className="flex  w-full items-center   ">
               <div className="flex flex-row items-center gap-2">
                 <Label>Columns:</Label>
-                <Select defaultValue={columns} onValueChange={setColumns}>
+                <Select defaultValue={columns.toString()} onValueChange={setColumns}>
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Select columns" />
                   </SelectTrigger>

@@ -55,6 +55,31 @@ export const createUser = internalMutation({
       role: "USER",
       uploads: [],
     });
+    // fetch all hub invites for this email and create notifications
+    const hubInvites = await ctx.table("hubInvites").filter((q) =>
+      q.eq(q.field("email"), email)
+    );
+    await Promise.all(
+      hubInvites.map(async (invite) => {
+        await ctx.table("members").insert({
+          userId: user,
+          hubId: invite.hubId,
+          roleId: invite.roleId,
+        });
+        const inviter = await invite.edge("inviter");
+        const title = `${inviter.name} has invited you to join a hub`;
+        const body = `You have been invited to join a hub. Click here to view the invite`;
+        const actionPath = `/?invite=${invite.inviteToken}`;
+        await ctx.table("notifications").insert({
+          title,
+          body,
+          actionPath,
+          userId: user,
+          icon: inviter.imageUrl,
+          read : false
+        });
+        })
+    );
   },
 });
 

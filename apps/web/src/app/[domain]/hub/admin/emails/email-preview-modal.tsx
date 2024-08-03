@@ -13,6 +13,7 @@ import { toast } from "sonner"
 
 
 export function EmailPreviewModal() {
+  const [open, setOpen] = React.useState(false)
   const { json, previewText } = useEditorContext((s) => {
     return {
       json: s.json,
@@ -25,6 +26,7 @@ export function EmailPreviewModal() {
   const [html, setHtml] = React.useState<string>('');
 
   React.useEffect(() => {
+    if(!open) return
     toast.promise( getPreviewHtml({json: JSON.stringify(json), previewText}), {
       loading: "Generating preview...",
       success: (data) => {
@@ -33,14 +35,14 @@ export function EmailPreviewModal() {
       },
       error: (error) =>  `Error: ${error.data}`,
     });
-  },[json, getPreviewHtml, previewText])
+  },[open])
   
 
 
     return (
-      <Modal >
+      <Modal open={open} onOpenChange={setOpen}>
         <ModalTrigger asChild>
-          <Button variant="ringHover" >
+          <Button variant="ringHover" onClick={()=> setOpen(true)} >
             <Icons.eye className="mr-2 size-4" aria-hidden="true" />
             Preview
           </Button>

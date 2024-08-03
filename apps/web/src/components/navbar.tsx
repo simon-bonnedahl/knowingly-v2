@@ -169,7 +169,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
     if (!color || !document) return;
     const colorHSL = hexToHSL(color);
     const adjustedColor =
-      theme === "dark" ? adjustLightness(colorHSL, 30) : colorHSL;
+      theme === "dark" ? adjustLightness(colorHSL, 25) : colorHSL;
     document.documentElement.style.setProperty("--primary", adjustedColor);
     const shades = generateShades(colorHSL, 5);
     if (theme === "dark") shades.reverse();

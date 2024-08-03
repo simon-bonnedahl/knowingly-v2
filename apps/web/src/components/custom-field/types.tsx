@@ -233,7 +233,6 @@ export const CustomFieldTypes = {
           enableAutocomplete
           autocompleteOptions={tags}
         />
-        //   <Input value={value} onChange={(e) => setValue(e.currentTarget.value)} />
       );
     },
     button: ({ value, options }: { value: any; options: any }) => (
