@@ -1,4 +1,4 @@
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 
 import { api, internal } from "./_generated/api";
 import { action } from "./_generated/server";
@@ -29,8 +29,12 @@ export const create = mutation({
   },
   handler: async (ctx, args) => {
     const { hubId, roleId, email } = args;
-    if(!ctx.userId) throw new Error("Cannot create invite");
+    if(!ctx.userId) throw new ConvexError("Unauthorized");
     const user = await ctx.table("users").get("email", email);
+    if(user) {
+      const membership = await user.edge("memberships").filter(q => q.eq(q.field("hubId"), hubId));
+      if(membership) throw new ConvexError("User is already a member of this hub");
+    }
     const status = "PENDING";
     const expiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 days
     const inviteToken =
@@ -77,11 +81,11 @@ export const send = action({
   },
   handler: async (ctx, args) => {
     const user = await ctx.runQuery(api.users.getMe);
+    if(!user) throw new ConvexError("Unauthorized");
     const hub = await ctx.runQuery(api.hubs.getHub, {
       subdomain: args.subdomain,
     });
-    if (!hub) throw new Error("Hub not found");
-
+    if (!hub) throw new ConvexError("Hub not found");
     const hubInvite = await ctx.runMutation(api.hubInvites.create, {
       hubId: hub._id,
       roleId: args.roleId,
@@ -89,7 +93,7 @@ export const send = action({
       message: args.message,
     });
     if (hubInvite.user) {
-      const title = `${user ? user.name : "Someone"} has invited you to join a hub`;
+      const title = `${user.name} has invited you to join a hub`;
       const body = `You have been invited to join a hub. Click here to view the invite`;
       const actionPath = `/?invite=${hubInvite.inviteToken}`;
       await ctx.runMutation(internal.notifications.create, {
@@ -100,6 +104,7 @@ export const send = action({
         icon: user?.imageUrl ?? hub?.logo,
       });
     }
+    return
     //TODO: send email
     //TODO: do something with message
   },

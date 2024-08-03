@@ -184,9 +184,9 @@ export function FileUploader(props: FileUploaderProps) {
           loading: `Uploading file...`,
           success: () => {
             setFiles([])
-            return `file uploaded`
+            return `Success: File uploaded`
           },
-          error: `Failed to upload file`,
+          error: (error) => `Error: ${error.data}`,
         })
   }, [croppedFile])
 

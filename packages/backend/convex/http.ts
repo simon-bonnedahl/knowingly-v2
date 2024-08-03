@@ -123,6 +123,7 @@ app.post("/api/clerk", async (c, ctx) => {
           name: result.data.first_name + " " + result.data.last_name,
           imageUrl: result.data.image_url,
         });
+        
     }
 
     return new Response(null, {
