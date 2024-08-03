@@ -14,7 +14,7 @@ const config = {
       { hostname: "www.google.com" },
       { hostname: "media.licdn.com" },
       { hostname: "image.unsplash.com" },
-      { hostname: "ofhdkjyiwnkwvjsgfxki.supabase.co" },
+      { hostname: "i.pravatar.cc" },
       { hostname: "images.unsplash.com" },
       { hostname: "files.edgestore.dev" },
       { hostname: "www.notion.so" },
@@ -24,6 +24,7 @@ const config = {
     { hostname: "neat-echidna-914.convex.cloud" },
     { hostname: "neat-echidna-914.convex.site" },
     { hostname: "img.clerk.com" },
+    { hostname: "avatar.iran.liara.run" },
     ],
   },
 };

@@ -65,12 +65,11 @@ export function BlogLayout({
                 {blogPost.title}
               </h1>
             </header>
-            <div
-              className="prose prose-sm dark:prose-invert mt-8"
-              data-mdx-content
-            >
-              <Editor initialContent={blogPost.content} editable={false} />
+            <div className="mt-4">
+
+              <Editor initialContent={blogPost.content} editable={false}  />
             </div>
+
           </article>
         </div>
       </div>

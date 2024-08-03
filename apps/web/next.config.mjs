@@ -40,4 +40,5 @@ export default  withSentryConfig(config, {
   hideSourceMaps: true,
   disableLogger: true,
   automaticVercelMonitors: true,
+  telemetry: false,
 });

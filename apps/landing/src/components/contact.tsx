@@ -77,7 +77,7 @@ export function ContactForm() {
       title: "linkedin",
       href: "#",
       icon: (
-        <Icons.linkedin className="h-5 w-5 text-muted dark:text-muted-dark hover:text-black" />
+        <Icons.linkedin className="h-6 w-6 text-muted dark:text-muted-dark hover:text-black" />
       ),
     },
   ];

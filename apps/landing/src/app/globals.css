@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import "./prism.css";
 
 :root {
   --foreground-rgb: 0, 0, 0;

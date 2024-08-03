@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Heading } from "./heading";
 import { Subheading } from "./subheading";
 import { cn } from "@knowingly/ui";
@@ -12,8 +11,7 @@ export const Testimonials = () => {
     <div className="relative z-20 py-10 md:py-40">
       <Heading as="h2">Loved by people all over the universe</Heading>
       <Subheading className="text-center max-w-lg mx-auto">
-        Knowingly is used by millions of people around the globe.Our APIs have
-        fan bases and people fight for us over twitter.
+        Knowingly is used by millions of people around the globe.
       </Subheading>
       <TestimonialGrid />
     </div>
