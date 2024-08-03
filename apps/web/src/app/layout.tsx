@@ -42,7 +42,6 @@ export default function RootLayout({
         )}
       >
         <ConvexClientProvider>
-          <Toaster />
           <TailwindIndicator />
           <AlertDialogProvider>
           <ThemeProvider
@@ -51,6 +50,8 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+          <Toaster richColors />
+
             {children}
           </ThemeProvider>
           </AlertDialogProvider>

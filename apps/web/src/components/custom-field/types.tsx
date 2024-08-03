@@ -206,7 +206,7 @@ export const CustomFieldTypes = {
       value: string[];
       setValue: (value: any) => void;
     }) => {
-      const tags: Tag[] = value.map((tag) => {
+      const tags: Tag[] = value?.map((tag) => {
         return {
           id: tag,
           text: tag,

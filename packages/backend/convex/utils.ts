@@ -1,5 +1,4 @@
-import { ActionCtx, MutationCtx, QueryCtx } from "./_generated/server";
-
+"use node";
 export function missingEnvVariableUrl(envVarName: string, whereToGet: string) {
   const deployment = deploymentName();
   if (!deployment) return `Missing ${envVarName} in environment variables.`;

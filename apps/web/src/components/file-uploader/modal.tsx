@@ -15,20 +15,19 @@ import {
 import { Separator } from "@knowingly/ui/separator";
 
 import { FileUploader } from ".";
-import { LoadingDots } from "../loaders";
 import { Skeleton } from "@knowingly/ui/skeleton";
 
 interface FileUploadModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  setFile: (file: string) => void;
+  setUpload: (file: string) => void;
   recommendedAspect ?: number;
 }
 
 export const FileUploadModal = ({
   open,
   setOpen,
-  setFile,
+  setUpload,
  recommendedAspect,
 }: FileUploadModalProps) => {
   const uploads = useQuery(api.users.getUploads);
@@ -57,7 +56,7 @@ export const FileUploadModal = ({
                 variant={"ringHover"}
                 className="h-fit w-fit p-0"
                 onClick={() => {
-                  setFile(upload as string);
+                  setUpload(upload as string);
                   setOpen(false);
                 }}
                 key={upload}

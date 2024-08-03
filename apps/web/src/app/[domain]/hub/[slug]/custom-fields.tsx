@@ -84,7 +84,7 @@ export const CustomFields = ({customFields, preview=false}: CustomFieldsProps) =
 
 
   return (
-    <div className="w-full px-24 py-4">
+    <div className="w-full py-4 ">
      
     {!preview ? (
       <>

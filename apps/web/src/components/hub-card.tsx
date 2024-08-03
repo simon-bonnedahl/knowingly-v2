@@ -29,7 +29,7 @@ export default function HubCard({
       <div className="mt-2 flex w-full items-center justify-between">
         <div className="flex w-full flex-col">
           <div className="flex w-full items-center justify-between">
-            <h3 className="font-cal my-0 truncate text-xl font-bold tracking-wide text-black dark:text-white">
+            <h3 className="font-cal my-0 truncate text-xl font-bold tracking-wide text-foreground">
               {hub.name}
             </h3>
             <a
@@ -41,7 +41,7 @@ export default function HubCard({
             </a>
           </div>
 
-          <p className=" line-clamp-1 text-sm font-normal leading-snug  text-black dark:text-white">
+          <p className=" line-clamp-1 text-sm font-normal leading-snug  text-foreground">
             {hub.description}
           </p>
         </div>

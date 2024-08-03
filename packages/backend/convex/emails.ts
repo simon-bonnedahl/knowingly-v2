@@ -7,6 +7,7 @@ import { isFile, isUrl} from "@knowingly/utils"
 
 import { action } from "./_generated/server";
 import { mutation, query } from "./functions";
+import { defaultEmailContent } from "./constants";
 
 export const preview = action({
   args: { json: v.string(), previewText: v.string() },
@@ -91,13 +92,12 @@ export const createTemplate = mutation({
       const hub = await ctx.table("hubs").get("subdomain", args.subdomain);
         if(!hub) throw new Error("Hub not found");
       const logo = (isFile(hub.logo) || isUrl(hub.logo)) ? hub.logo : "/logo-small-black.svg";
-      const content = `{"type":"doc","content":[{"type":"logo","attrs":{"src":${logo},"alt":null,"title":null,"maily-component":"logo","size":"lg","alignment":"left"}},{"type":"spacer","attrs":{"height":"xl"}},{"type":"heading","attrs":{"textAlign":"left","level":2},"content":[{"type":"text","marks":[{"type":"bold"}],"text":"Discover Mailys"}]},{"type":"paragraph","attrs":{"textAlign":"left"},"content":[{"type":"text","text":"Are you ready to transform your email communication? Introducing Maily, the powerful email editor that enables you to craft captivating emails effortlessly."}]},{"type":"button","attrs":{"mailyComponent":"button","text":"Try Maily Now →","url":"","alignment":"left","variant":"filled","borderRadius":"round","buttonColor":"#141313","textColor":"#ffffff"}},{"type":"spacer","attrs":{"height":"xl"}}]}`
       const user = await ctx.userX();
       const from = `${user.name} <${hub.subdomain}@knowingly.ai>`;
       const replyTo = `${user.name} <${user.email}>`;
       const template = await ctx.table("emailTemplates").insert({
         title: "New Template",
-        content,
+        content: defaultEmailContent(logo),
         from,
         replyTo,
         hubId: hub._id

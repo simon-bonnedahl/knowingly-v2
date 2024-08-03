@@ -34,7 +34,7 @@ export const list = query({
 export const update = mutation({
   args: { id: v.id("users"), field: v.string(), value: v.any() },
   handler: async (ctx, args) => {
-    await ctx.table("users").get(args.id).patch({ [args.field]: args.value });
+    await ctx.table("users").getX(args.id).patch({ [args.field]: args.value });
   },
 });
 

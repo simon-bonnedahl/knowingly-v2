@@ -48,7 +48,7 @@ export function Sidebar({  isCollapsed, conversations  }: SidebarProps) {
                 "h-8 w-8"
               )}
             >
-              <Icons.edit />
+              <Icons.edit className="size-6" />
             </Link>
           </div>
         </div>

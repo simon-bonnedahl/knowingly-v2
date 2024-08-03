@@ -69,7 +69,7 @@ const MinimalCardTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h3
     ref={ref}
-    className={cn("text-lg mt-2 font-semibold leading-tight px-1", className)}
+    className={cn("text-lg font-semibold leading-tight px-2 border", className)}
     {...props}
   />
 ))

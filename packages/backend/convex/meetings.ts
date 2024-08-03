@@ -80,7 +80,8 @@ export const get = query({
 export const list = query({
     args: {},
     handler: async (ctx) => {
-        const user = await ctx.userX();
+        const user = await ctx.user();
+        if(!user) return [];
         const meetings =  await user.edge("meetings").map(async (meeting) => ({
             ...meeting,
                 participants: await meeting.edge("participants")
@@ -101,7 +102,8 @@ export const upcomingCount = query({
 export const getInvites = query({
     args: {},
     handler: async (ctx) => {
-        const user = await ctx.userX();
+        const user = await ctx.user();
+        if(!user) return [];
         const invites =  await user.edge("meetingInvites").map(async (invite) => {
             const meeting = await invite.edge("meeting")
             return {

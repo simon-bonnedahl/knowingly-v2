@@ -16,8 +16,6 @@ import {
 import "@blocknote/core/fonts/inter.css";
 
 import "@blocknote/mantine/style.css";
-import { BlocknoteProfileGallery } from "./components/profile-gallery";
-import { IconGlobe, IconLayersSubtract, IconUsers } from "@tabler/icons-react";
 import { BlocknoteGlobe } from "./components/globe";
 import { BlocknoteButton } from "./components/button";
 import { BlocknoteMention } from "./components/mention";
@@ -26,6 +24,8 @@ import { api } from "@knowingly/backend/convex/_generated/api";
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { uploadFile } from "./upload-file";
 import { BlocknoteAlert } from "./components/alert";
+import { BlocknoteGallery } from "./components/gallery";
+import { Icon, Icons } from "@knowingly/icons";
 
 
 
@@ -38,7 +38,7 @@ interface EditorProps {
 const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
   const { resolvedTheme } = useTheme()
   const subdomain = useSubdomain();
-  const members = useQuery(api.hubs.getMembers, { subdomain });
+  // const members = useQuery(api.hubs.getMembers, { subdomain });
   const pages = useQuery(api.pages.getPagesByHub, { subdomain });
   const getUploadUrl = useMutation(api.files.generateUploadUrl);
 
@@ -62,7 +62,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
       ...defaultBlockSpecs,
       alert: BlocknoteAlert,
       button: BlocknoteButton,
-      profileGallery: BlocknoteProfileGallery,
+      gallery: BlocknoteGallery,
       globe: BlocknoteGlobe,
     },
     inlineContentSpecs: {
@@ -72,15 +72,15 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
     },
 
   });
-  const insertProfileGallery = (editor: typeof schema.BlockNoteEditor) => ({
-    title: "Profile Gallery",
+  const insertGallery = (editor: typeof schema.BlockNoteEditor) => ({
+    title: "Gallery",
     onItemClick: () => {
       insertOrUpdateBlock(editor, {
-        type: "profileGallery",
+        type: "gallery",
       });
     },
     group: "Database",
-    icon: <IconUsers width={18} />,
+    icon: <Icons.layoutGrid className="size-4"/>,
   });
 
   const insertGlobe = (editor: typeof schema.BlockNoteEditor) => ({
@@ -91,7 +91,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
       });
     },
     group: "Random",
-    icon: <IconGlobe width={18} />,
+    icon: <Icons.world className="size-4"/>,
   });
   const insertAlert = (editor: typeof schema.BlockNoteEditor) => ({
     title: "Alert",
@@ -101,7 +101,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
       });
     },
     group: "Text",
-    icon: <IconLayersSubtract width={18} />,
+    icon: <Icons.infoCircle className="size-4"/>,
   });
   const insertButton = (editor: typeof schema.BlockNoteEditor) => ({
     title: "Button",
@@ -111,7 +111,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
       });
     },
     group: "Text",
-    icon: <IconLayersSubtract width={18} />,
+    icon: <Icons.copy className="size-4"/>,
   });
   // const insertExcalidraw = (editor: typeof schema.BlockNoteEditor) => ({
   //   title: "Excalidraw",
@@ -180,7 +180,7 @@ const editor = useCreateBlockNote({
         triggerCharacter={"/"}
         getItems={async (query) =>
           filterSuggestionItems(
-            [...getDefaultReactSlashMenuItems(editor), insertProfileGallery(editor), insertGlobe(editor), insertAlert(editor), insertButton(editor)],
+            [...getDefaultReactSlashMenuItems(editor), insertGallery(editor), insertGlobe(editor), insertAlert(editor), insertButton(editor)],
             query
           )
         }

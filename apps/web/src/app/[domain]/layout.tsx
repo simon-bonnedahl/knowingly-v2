@@ -11,6 +11,10 @@ import { env } from "~/env";
 import Navbar from "../../components/navbar";
 import { AIAssistantProvider } from "./AIAssistantProvider";
 import { DynamicIslandDemo } from "./dynamic-island-demo";
+import { Onborda, OnbordaProvider } from "~/components/onborda";
+import { steps } from "~/components/onborda/steps-hub";
+import OnbordaCard from "~/components/onborda/onborda-card";
+
 
 export async function generateMetadata({
   params,
@@ -39,8 +43,8 @@ export async function generateMetadata({
   if (!hub) return null;
 
   const urlPattern = /^(http|https):\/\/([\w-]+(\.[\w-]+)+)(\/[\w-./?%&=]*)?$/;
-  const icon = urlPattern.test(hub.logo!)
-    ? (hub.logo!)
+  const icon = urlPattern.test(hub.logo)
+    ? (hub.logo)
     : "/logo-small-black.svg";
 
   return {
@@ -73,6 +77,9 @@ export default async function Layout({
   // const {userId} = auth()
   const domain = decodeURIComponent(params.domain);
   const subdomain = domain.split(".")[0];
+  if(!subdomain) {
+    return notFound()
+  }
 
   // if(!userId ) {
   //   return(
@@ -85,9 +92,14 @@ export default async function Layout({
   //   )
   // }
 
-  if (true) {
     return (
       <>
+      <OnbordaProvider>
+      <Onborda
+      steps={steps}
+      cardComponent={OnbordaCard}
+      shadowOpacity="0.8"
+    >
         <AIAssistantProvider>
           <Navbar subdomain={subdomain} />
           <DynamicIslandDemo />
@@ -95,9 +107,10 @@ export default async function Layout({
             {children}
           </div>
         </AIAssistantProvider>
+        </Onborda>
+        </OnbordaProvider>
       </>
     );
-  }
   const hub = await fetchQuery(api.hubs.getHub, { subdomain });
   if (!hub) return notFound();
 

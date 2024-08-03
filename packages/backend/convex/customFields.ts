@@ -4,16 +4,16 @@ import slugify from "slugify";
 
 
 export const get = query({
-    args: { id: v.string() },
+    args: { id: v.id("customFields") },
     handler: async (ctx, args) => {
         return await ctx.table("customFields").get(args.id);
     },
     });
 
 export const update = mutation({
-    args: { slug: v.string(), field:v.string(), value: v.any() },
+    args: { id: v.id("customFields"), field:v.string(), value: v.any() },
     handler: async (ctx, args) => {
-        const {slug, field, value} = args;
+        const {id, field, value} = args;
         // if(field === "name") {
         //     const customField = await ctx.table("customFields").get("slug", slugify(args.value, {lower: true}));
         //     if(customField) throw new Error("Custom field with this name already exists");
@@ -21,6 +21,6 @@ export const update = mutation({
 
         // }
 
-        return await ctx.table("customFields").getX("slug", slug).patch({[field]: value});
+        return await ctx.table("customFields").getX(id).patch({[field]: value});
     },
     });
