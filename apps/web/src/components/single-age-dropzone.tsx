@@ -4,7 +4,6 @@ import * as React from 'react';
 import { useDropzone } from 'react-dropzone';
 import type { DropzoneOptions } from 'react-dropzone';
 import { twMerge } from 'tailwind-merge';
-import { KnowinglySpinner } from './loaders';
 import { Icons } from '@knowingly/icons';
 import { cn } from '@knowingly/ui';
 
@@ -127,7 +126,8 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
       <div className="relative">
         {disabled && (
           <div className="flex items-center justify-center absolute inset-y-0 h-full w-full bg-background/80 z-50">
-            <KnowinglySpinner  />
+            <div className="text-sm text-gray-400">Disabled
+              </div>
           </div>
         )}
         <div

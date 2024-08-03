@@ -163,6 +163,7 @@ export function getColumns(): ColumnDef<DataTableMember>[]{
         const roles = useQuery(api.hubs.getRoles, { subdomain })
         const updateMember = useMutation(api.members.update)
 
+
         return (
           <>
              {/* <UpdateInvite
@@ -182,42 +183,44 @@ export function getColumns(): ColumnDef<DataTableMember>[]{
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40">
-              <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>Edit role</DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent>
-                    <DropdownMenuRadioGroup
-                      value={row.original.role.id}
-                      onValueChange={(value) => {
-                        startUpdateTransition(() => {
-                          toast.promise(
-                             updateMember({
-                              id: row.original.id as Id<"members">,
-                              field: "roleId",
-                              value: value as Id<"roles">,
-                            }),
-                            {
-                              loading: "Updating...",
-                              success: "Member role updated",
-                              // error: (err) => console.log(error) getErrorMessage(err),
-                            }
-                          )
-                        })
-                      }}
-                    >
-                      {roles?.map((role) => (
-                        <DropdownMenuRadioItem
-                          key={role._id}
-                          value={role._id}
-                          className="capitalize"
-                          disabled={isUpdatePending}
-                        >
-                          {capitalizeFirstLetter(role.name)}
-                        </DropdownMenuRadioItem>
-                      ))}
-                      
-                    </DropdownMenuRadioGroup>
-                  </DropdownMenuSubContent>
-                </DropdownMenuSub>
+                   <DropdownMenuSub>
+                   <DropdownMenuSubTrigger >Edit role</DropdownMenuSubTrigger>
+                   <DropdownMenuSubContent>
+                     <DropdownMenuRadioGroup
+                       value={row.original.role._id}
+                       onValueChange={(value) => {
+                         startUpdateTransition(() => {
+                           toast.promise(
+                              updateMember({
+                               id: row.original.id as Id<"members">,
+                               field: "roleId",
+                               value: value as Id<"roles">,
+                             }),
+                             {
+                               loading: "Updating",
+                               success: "Success: Member role updated",
+                               error(error) {
+                                console.log(error.data)
+                                  return `Error: ${error.data}`
+                               },
+                             }
+                           )
+                         })
+                       }}
+                     >
+                       {roles?.map((role) => (
+                         <DropdownMenuRadioItem
+                           key={role._id}
+                           value={role._id}
+                           className="capitalize"
+                           disabled={isUpdatePending}
+                         >
+                           {capitalizeFirstLetter(role.name)}
+                         </DropdownMenuRadioItem>
+                       ))}
+                     </DropdownMenuRadioGroup>
+                   </DropdownMenuSubContent>
+                 </DropdownMenuSub>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onSelect={() => setShowDeleteTaskDialog(true)}

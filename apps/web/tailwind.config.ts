@@ -7,8 +7,8 @@ module.exports = {
   content: [
     "./src/components/**/*.{ts,tsx}",
     "./src/app/**/*.{ts,tsx}",
-    "../../packages/ui/**/*.{ts,tsx}",
-    "@knowingly/ui/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@knowingly/ui/**/*.{js,ts,jsx,tsx}",
+    '../../node_modules/onborda/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     container: {

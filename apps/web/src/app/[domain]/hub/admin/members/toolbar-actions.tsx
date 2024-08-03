@@ -28,7 +28,7 @@ export function MembersTableToolbarActions({
       ) : null} */}
       <InviteMemberModal />
       <Button
-        variant="outline"
+        variant="ringHover"
         size="sm"
         onClick={() =>
           exportTableToCSV(table, {

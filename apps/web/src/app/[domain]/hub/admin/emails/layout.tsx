@@ -14,7 +14,7 @@ export default function AdminEmailsLayout({
   return (
     <EditorProvider>
       <div className="flex flex-col  py-2 h-full space-y-6 ">
-        <h1 className="font-cal text-3xl font-bold dark:text-white">Emails</h1>
+        <h1 className="font-cal text-3xl font-bold text-foreground">Emails</h1>
         <div className="flex h-full gap-4  p-4 ">
 
 

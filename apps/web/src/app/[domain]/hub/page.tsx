@@ -10,9 +10,12 @@ import { usePreview } from "~/lib/hooks/usePreview";
 import { Switch } from "@knowingly/ui/switch";
 import { Label } from "@knowingly/ui/label";
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
+import { useSearchParams } from "next/navigation";
+import { InviteModal } from "~/components/modals/invite-modal";
 
 export default function HubPage() {
   const subdomain = useSubdomain();
+  const searchParams = useSearchParams();
 
   const hub = useQuery(api.hubs.getHub, {subdomain});
   const updateHub = useMutation(api.hubs.update);
@@ -37,6 +40,8 @@ export default function HubPage() {
 
 
   return (
+    <>
+    <InviteModal  inviteToken={searchParams.get("invite")}/>
     <div className="flex flex-col w-full items-center relative">
       <div className="absolute top-[21rem] right-2 z-20 flex items-center gap-2">
         <Label className="font-medium">Preview</Label>
@@ -49,7 +54,7 @@ export default function HubPage() {
       <Banner url={hub.banner} preview={preview} />
 
       <HubToolbar initialData={hub} preview={preview} />
-      <div className="p-4 w-full pb-[400px]">
+      <div className="p-4 w-full pb-[400px]" >
         <Editor
           onChange={onChange}
           initialContent={hub.customContent}
@@ -57,5 +62,6 @@ export default function HubPage() {
         />
       </div>
     </div>
+    </>
   );
 }

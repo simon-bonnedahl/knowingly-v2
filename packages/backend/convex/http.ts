@@ -2,9 +2,10 @@ import { Hono } from "hono";
 import { HonoWithConvex, HttpRouterWithHono } from "convex-helpers/server/hono";
 import { cors } from "hono/cors";
 import { openai } from "@ai-sdk/openai";
-import { CoreMessage, streamText } from "ai";
+import { CoreMessage, embed, streamText } from "ai";
 import { ActionCtx } from "./_generated/server";
 import { api, internal } from "./_generated/api";
+import { customContentToMarkdown } from "./blocknote";
 
 const app: HonoWithConvex<ActionCtx> = new Hono();
 app.use("/api/*", cors());
@@ -15,20 +16,48 @@ app.post("/api/chat", async (c) => {
 
   const subdomain = c.req.header("origin")!.split(".")[0].replace("https://", "").replace("http://", "");
 
+  const hub = await c.env.runQuery(api.hubs.getHub, { subdomain });
+  if(!hub) throw new Error("Hub not found");
+   const { embedding } = await embed({
+    model: openai.embedding('text-embedding-3-small'),
+    value: messages.map(m => m.content).join("\n"),
+  });
+
+  const results = await c.env.vectorSearch("pages", "by_embedding", {
+    vector: embedding,
+    limit: 16,
+    filter: (q) => q.eq("hubId", hub._id),
+  });
+  const pages = await c.env.runQuery(api.pages.getPages, { ids: results.map((r) => r._id) });
+  let pageContext = ""
+  for (const page of pages) {
+    pageContext += `Name: ${page.name} `;
+    pageContext += `Slug: ${page.slug} `;
+    pageContext += `Type: ${page.type} `;
+    pageContext += `Image: ${page.image} `;
+    pageContext += `Icon: ${page.icon} `;
+    pageContext += `Custom Fields:  `;
+    for (const field of page.customFields) {
+      const f = await c.env.runQuery(api.customFields.get, { id: field.id });
+      if (!f) continue;
+      pageContext += `${f.name}: ${field.value} `;
+    }
+    pageContext += `Custom Content: ${customContentToMarkdown(page.customContent)} `;
+    pageContext += "\n \n"
+
+  }
 
 
-
-  const pages = await c.env.runQuery(api.pages.getPagesByHub, { subdomain});
 
   messages.unshift({
     role: "system",
-    content: "You can be a helpful assistant that can provide information based on context from pages on the site." +
-    " Pages available are: " + JSON.stringify(pages) + 
+    content: "You can be a helpful assistant that can provide information based on context from pages on the current hub." +
+    " Pages context: " + pageContext +
     " You can use /slug to link to a page. But if you do it, do it on a separate line and mask the link with the page name" + 
-    "You can also provide any image you see fits" + 
+    "You can also provide any image you see fits" +
+    "If you respond with information about any page, always link to the page" +
     "Feel free to use plenty of emojis and gifs to make the conversation more engaging." +
-    "If the user asks for a something that doesnt exist in any of the pages, just provide a short response about it. "
-
+    "If the user asks for a something that doesn't exist in any of your context, just provide a short response about it. And lets them know there is no result in the hub."
   });
   
 

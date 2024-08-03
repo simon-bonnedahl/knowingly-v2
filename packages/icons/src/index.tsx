@@ -1,5 +1,6 @@
 import { arrows } from "./arrows";
 import { brands } from "./brands";
+import { userIcons } from "./userIcons";
 
 export type IconProps = React.HTMLAttributes<SVGElement>;
 
@@ -30,6 +31,7 @@ export const Icons = {
   ),
   ...brands,
   ...arrows,
+  ...userIcons,
   bell: (props: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -256,44 +258,6 @@ export const Icons = {
       <path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
       <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
       <path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-    </svg>
-  ),
-  userSquareRounded: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="44"
-      height="44"
-      viewBox="0 0 24 24"
-      strokeWidth={STROKE_WIDTH}
-      stroke="currentColor"
-      fill="none"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M12 13a3 3 0 1 0 0 -6a3 3 0 0 0 0 6z" />
-      <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z" />
-      <path d="M6 20.05v-.05a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v.05" />
-    </svg>
-  ),
-  userShield: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="44"
-      height="44"
-      viewBox="0 0 24 24"
-      strokeWidth={STROKE_WIDTH}
-      stroke="currentColor"
-      fill="none"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M6 21v-2a4 4 0 0 1 4 -4h2" />
-      <path d="M22 16c0 4 -2.5 6 -3.5 6s-3.5 -2 -3.5 -6c1 0 2.5 -.5 3.5 -1.5c1 1 2.5 1.5 3.5 1.5z" />
-      <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
     </svg>
   ),
   check: (props: IconProps) => (
@@ -1023,128 +987,6 @@ export const Icons = {
       <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
     </svg>
   ),
-  userStar: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="44"
-      height="44"
-      viewBox="0 0 24 24"
-      strokeWidth={STROKE_WIDTH}
-      stroke="currentColor"
-      fill="none"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-      <path d="M6 21v-2a4 4 0 0 1 4 -4h.5" />
-      <path d="M17.8 20.817l-2.172 1.138a.392 .392 0 0 1 -.568 -.41l.415 -2.411l-1.757 -1.707a.389 .389 0 0 1 .217 -.665l2.428 -.352l1.086 -2.193a.392 .392 0 0 1 .702 0l1.086 2.193l2.428 .352a.39 .39 0 0 1 .217 .665l-1.757 1.707l.414 2.41a.39 .39 0 0 1 -.567 .411l-2.172 -1.138z" />
-    </svg>
-  ),
-
-  userX: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="44"
-      height="44"
-      viewBox="0 0 24 24"
-      strokeWidth={STROKE_WIDTH}
-      stroke="currentColor"
-      fill="none"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-      <path d="M6 21v-2a4 4 0 0 1 4 -4h3.5" />
-      <path d="M22 22l-5 -5" />
-      <path d="M17 22l5 -5" />
-    </svg>
-  ),
-
-  usersPlus: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="44"
-      height="44"
-      viewBox="0 0 24 24"
-      strokeWidth={STROKE_WIDTH}
-      stroke="currentColor"
-      fill="none"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M5 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-      <path d="M3 21v-2a4 4 0 0 1 4 -4h4c.96 0 1.84 .338 2.53 .901" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-      <path d="M16 19h6" />
-      <path d="M19 16v6" />
-    </svg>
-  ),
-  userEdit: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="44"
-      height="44"
-      viewBox="0 0 24 24"
-      strokeWidth={STROKE_WIDTH}
-      stroke="currentColor"
-      fill="none"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-      <path d="M6 21v-2a4 4 0 0 1 4 -4h3.5" />
-      <path d="M18.42 15.61a2.1 2.1 0 0 1 2.97 2.97l-3.39 3.42h-3v-3l3.42 -3.39z" />
-    </svg>
-  ),
-
-  userExclamation: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="44"
-      height="44"
-      viewBox="0 0 24 24"
-      strokeWidth={STROKE_WIDTH}
-      stroke="currentColor"
-      fill="none"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-      <path d="M6 21v-2a4 4 0 0 1 4 -4h4c.348 0 .686 .045 1.008 .128" />
-      <path d="M19 16v3" />
-      <path d="M19 22v.01" />
-    </svg>
-  ),
-  userCancel: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="44"
-      height="44"
-      viewBox="0 0 24 24"
-      strokeWidth={STROKE_WIDTH}
-      stroke="currentColor"
-      fill="none"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-      <path d="M6 21v-2a4 4 0 0 1 4 -4h3.5" />
-      <path d="M19 19m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-      <path d="M17 21l4 -4" />
-    </svg>
-  ),
   hourglass: (props: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -1165,24 +1007,7 @@ export const Icons = {
       <path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z" />
     </svg>
   ),
-  circleCheck: (props: IconProps) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="44"
-      height="44"
-      viewBox="0 0 24 24"
-      strokeWidth={STROKE_WIDTH}
-      stroke="currentColor"
-      fill="none"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
-      <path d="M9 12l2 2l4 -4" />
-    </svg>
-  ),
+  
   microphoneOff: (props: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -1566,15 +1391,6 @@ export const Icons = {
       <path d="M4 15l4 -6l4 2l4 -5l4 4" />
     </svg>
   ),
-  users: (props: IconProps) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" strokeWidth={STROKE_WIDTH} stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-      <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
-      <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-      <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
-    </svg>
-  ),
   buildingCommunity: (props: IconProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" strokeWidth={STROKE_WIDTH} stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -1599,22 +1415,45 @@ export const Icons = {
       <path d="M8 5v10a1 1 0 0 0 1 1h10" />
       <path d="M5 8h10a1 1 0 0 1 1 1v10" />
     </svg>
-  )
+  ),
+  starFilled: (props: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" strokeWidth={STROKE_WIDTH} stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z" strokeWidth="0" fill="currentColor" />
+    </svg>
+  ),
   
+  star: (props: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" strokeWidth={STROKE_WIDTH} stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" />
+    </svg>
+  ),
+  circleCheckFilled: (props: IconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" strokeWidth={STROKE_WIDTH} stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z" strokeWidth="0" fill="currentColor" />
+    </svg>
+  ),
+  circleCheck: (props: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="44"
+      height="44"
+      viewBox="0 0 24 24"
+      strokeWidth={STROKE_WIDTH}
+      stroke="currentColor"
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+      <path d="M9 12l2 2l4 -4" />
+    </svg>
+  ),
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
   
   
   

@@ -2,9 +2,11 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { useQuery } from "convex/react";
+import { useAction, useQuery } from "convex/react";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
+import { Icons } from "@knowingly/icons";
+import { cn } from "@knowingly/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "@knowingly/ui/avatar";
 import {
   CommandDialog,
@@ -16,17 +18,23 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from "@knowingly/ui/command";
+import { capitalizeFirstLetter, isUrl } from "@knowingly/utils";
 
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
-import { isUrl } from "@knowingly/utils";
-import { Icons } from "@knowingly/icons";
-import { cn } from "@knowingly/ui";
+import type { Ent } from "@knowingly/backend/convex/types";
 
 export function Search() {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const subdomain = useSubdomain();
-  const profiles = useQuery(api.pages.getPagesByHub, { subdomain });
+  const pages = useQuery(api.pages.getPagesByHub, { subdomain });
+  const getPages = useAction(api.pages.vectorSearch);
+  const [search, setSearch] = React.useState("");
+  const [searchResults, setSearchResults] = React.useState<Ent<"pages">[]>();
+
+  React.useEffect(() => {
+    setSearchResults(pages);
+  }, [pages]);
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -54,6 +62,43 @@ export function Search() {
     command();
   }, []);
 
+  React.useEffect(() => {
+    const fetchPages = async () => {
+      if (searchResults?.length === 0 && search.length > 0) {
+        const result = await getPages({ query: search, subdomain });
+        if (result && result.length > 0) {
+        setSearchResults(result);
+        }
+      }
+    };
+    void fetchPages();
+  }, [searchResults]);
+
+  React.useEffect(() => {
+    if (search.length > 0) {
+      const results = pages?.filter((page) =>
+        page.name.toLowerCase().includes(search.toLowerCase()),
+      );
+      setSearchResults(results);
+    } else {
+      setSearchResults(pages);
+    }
+  }, [search]);
+
+  const groupPagesByType = (pages: Ent<"pages">[] | undefined) => {
+    if (!pages) return {};
+
+    return pages.reduce((acc, page) => {
+      const type = page.type || "Unknown"; // Default to "Unknown" if no type
+      if (!acc[type]) {
+        acc[type] = [];
+      }
+      acc[type].push(page);
+      return acc;
+    }, {} as Record<string, Ent<"pages">[]>);
+  };
+
+
   return (
     <>
       <button
@@ -66,15 +111,48 @@ export function Search() {
         Search
         <CommandShortcut>⌘K</CommandShortcut>
       </button>
-      <CommandDialog open={open} onOpenChange={setOpen}>
+      <CommandDialog open={open} onOpenChange={setOpen} shouldFilter={false}>
         <CommandInput
+          value={search}
+          onValueChange={setSearch}
           placeholder="Type a command or search..."
           className="border-none focus:ring-0"
         />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup heading="Profiles">
-            {profiles?.map((profile) => (
+          {Object.entries(groupPagesByType(searchResults)).map(
+            ([type, pages]) => (
+              <CommandGroup key={type} heading={capitalizeFirstLetter(type)}>
+                {pages.map((page) => (
+                  <CommandItem
+                    className="flex items-center gap-1 hover:cursor-pointer"
+                    key={page._id}
+                    value={page.name}
+                    onSelect={() => {
+                      runCommand(() => router.push(`/${page.slug}`));
+                    }}
+                  >
+                    <Avatar className="mr-2 h-8 w-8 rounded-sm">
+                      {isUrl(page?.icon) ? (
+                        <AvatarImage
+                          src={page.icon}
+                          alt={page.name}
+                          className="h-full w-full rounded-full"
+                        />
+                      ) : (
+                        <AvatarFallback className="h-full w-full border bg-transparent">
+                          <p className="text-xl">{page?.icon}</p>
+                        </AvatarFallback>
+                      )}
+                    </Avatar>
+                    {page.name}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            ),
+          )}
+          {/* <CommandGroup heading="Profiles">
+            {searchResults?.map((profile) => (
               <CommandItem
                 className=" flex items-center gap-1 hover:cursor-pointer "
                 key={profile._id}
@@ -91,15 +169,15 @@ export function Search() {
                       className="h-full w-full rounded-full"
                     />
                   ) : (
-                    <div className="h-full w-full border bg-transparent">
+                    <AvatarFallback className="h-full w-full border bg-transparent">
                       <p className="text-xl">{profile?.icon}</p>
-                    </div>
+                    </AvatarFallback>
                   )}
                 </Avatar>
                 {profile.name}
               </CommandItem>
             ))}
-          </CommandGroup>
+          </CommandGroup> */}
           <CommandSeparator />
         </CommandList>
       </CommandDialog>

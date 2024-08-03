@@ -46,7 +46,7 @@ export function FieldSettings({
   useEffect(() => {
     if (icon === field.icon) return;
     void updateField({
-      slug: field.slug,
+      id: field._id,
       field: "icon",
       value: icon,
     });
@@ -55,7 +55,7 @@ export function FieldSettings({
   useEffect(() => {
     if (name === field.name) return;
     void updateField({
-      slug: field.slug,
+      id: field._id,
       field: "name",
       value: name,
     });
@@ -64,7 +64,7 @@ export function FieldSettings({
   useEffect(() => {
     if (options === field.options) return;
     void updateField({
-      slug: field.slug,
+      id: field._id,
       field: "options",
       value: options,
     });
@@ -123,7 +123,7 @@ export function FieldSettings({
                   onClick={(e) => {
                     e.preventDefault();
                     void updateField({
-                      slug: field.slug,
+                      id: field._id,
                       field: "type",
                       value: key,
                     });

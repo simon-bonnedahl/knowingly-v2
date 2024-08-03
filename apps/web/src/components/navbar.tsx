@@ -1,17 +1,16 @@
 "use client";
 
+import type { FunctionReturnType } from "convex/server";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import {
-  useRouter,
-  useSelectedLayoutSegments
-} from "next/navigation";
+import { useRouter, useSelectedLayoutSegments } from "next/navigation";
 import { useClerk } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
-import type { FunctionReturnType } from "convex/server";
 import { useTheme } from "next-themes";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
+import { Icons } from "@knowingly/icons";
+import { cn } from "@knowingly/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "@knowingly/ui/avatar";
 import {
   DropdownMenu,
@@ -24,14 +23,12 @@ import {
   DropdownMenuTrigger,
 } from "@knowingly/ui/dropdown-menu";
 import { Skeleton } from "@knowingly/ui/skeleton";
+import { hexToHSL, truncate } from "@knowingly/utils";
 
 import useWindowSize from "~/lib/hooks/useWindowSize";
-import {  hexToHSL, truncate } from "@knowingly/utils";
 import HubSwitcher from "./hub-switcher";
-import { Icons } from "@knowingly/icons";
 import { Notifications } from "./notifications";
 import { Search } from "./search";
-import { cn } from "@knowingly/ui";
 
 export default function Navbar({ subdomain }: { subdomain: string }) {
   const segments = useSelectedLayoutSegments();
@@ -40,11 +37,17 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
   const { isMobile } = useWindowSize();
   const user = useQuery(api.users.getMe);
   const hubs = useQuery(api.users.getMyHubs);
-  const unreadMessages = useQuery(api.messages.getUnreadCount) ;
+  const unreadMessages = useQuery(api.messages.getUnreadCount);
   const { signOut } = useClerk();
 
   const [currentHub, setCurrentHub] =
     useState<FunctionReturnType<typeof api.users.getMyHubs>[number]>();
+
+  const isAdminVisible = useMemo(() => {
+    if (subdomain === "app") return false;
+    if (user?.role === "SUPERUSER") return true;
+    if (currentHub?.role.permissions.canSeeAdminPanel) return true;
+  }, [user, currentHub, subdomain]);
 
   const tabs = useMemo(() => {
     const topTabs = [
@@ -98,7 +101,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
         href: "/admin",
         isActive: segments[1] === "admin",
         icon: <Icons.userShield className="h-5 w-5" />,
-        visible: subdomain !== "app",
+        visible: isAdminVisible,
       },
       // {
       //   name: "Hub Settings",
@@ -157,27 +160,23 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
   useEffect(() => {
     if (currentHub?.brandingColor && theme)
       setPrimaryColor(currentHub.brandingColor, theme);
-
   }, [currentHub]);
 
-
-
-
-  const setPrimaryColor = (color: string | undefined, theme: string | undefined) => {
+  const setPrimaryColor = (
+    color: string | undefined,
+    theme: string | undefined,
+  ) => {
     if (!color || !document) return;
     const colorHSL = hexToHSL(color);
-    const adjustedColor = theme === "dark" ? adjustLightness(colorHSL, 30) : colorHSL;
-    document.documentElement.style.setProperty('--primary', adjustedColor);
+    const adjustedColor =
+      theme === "dark" ? adjustLightness(colorHSL, 30) : colorHSL;
+    document.documentElement.style.setProperty("--primary", adjustedColor);
     const shades = generateShades(colorHSL, 5);
-    if(theme === "dark") shades.reverse();
+    if (theme === "dark") shades.reverse();
     shades.forEach((shade, index) => {
-      document.documentElement.style.setProperty(
-        `--chart-${index + 1}`,
-        shade,
-      );
+      document.documentElement.style.setProperty(`--chart-${index + 1}`, shade);
     });
-
-  }
+  };
 
   if (isMobile) return null;
 
@@ -190,13 +189,13 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
           <HubSwitcher
             currentHub={currentHub}
             hubs={hubs}
-            className=" w-full bg-card h-12"
+            className=" h-12 w-full bg-card"
           />
         ) : (
           <Skeleton className="h-12 w-full bg-card " />
         )}
 
-        <div className="mt-2 pt-2 flex h-full flex-col justify-between border-t">
+        <div className="mt-2 flex h-full flex-col justify-between border-t pt-2">
           <div className="flex flex-col gap-2">
             {subdomain !== "app" && <Search />}
             {tabs.top.map(({ name, href, isActive, icon, visible, count }) => (
@@ -240,15 +239,21 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
         {/* profile */}
         <div className="mt-4  flex h-12 w-full items-center justify-between">
           <div className="flex items-center gap-2">
-            <Avatar className="h-8 w-8">
-              <AvatarImage src={user?.imageUrl} className="object-cover" />
-              <AvatarFallback className="bg-white text-black">
-                {user?.name
-                  .split(" ")
-                  .map((name) => name[0]?.toUpperCase() || "?")
-                  .join("")}
-              </AvatarFallback>
-            </Avatar>
+            <div className="relative">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src={user?.imageUrl} className="object-cover" />
+                <AvatarFallback className="bg-white text-black">
+                  {user?.name
+                    .split(" ")
+                    .map((name) => name[0]?.toUpperCase() || "?")
+                    .join("")}
+                </AvatarFallback>
+              </Avatar>
+              {user?.role === "SUPERUSER" && (
+              <Icons.starFilled className="absolute bottom-0 -right-0.5 size-3 text-yellow-500" />
+              )}
+            </div>
+
             <div className="flex flex-col ">
               <span className="truncate text-sm font-medium">{user?.name}</span>
               {user?.email && (
@@ -275,7 +280,8 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
                   checked={theme === "light"}
                   onClick={() => {
                     setTheme("light");
-                    setPrimaryColor(currentHub?.brandingColor, "light")}}
+                    setPrimaryColor(currentHub?.brandingColor, "light");
+                  }}
                 >
                   Light
                 </DropdownMenuCheckboxItem>
@@ -283,7 +289,8 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
                   checked={theme === "dark"}
                   onClick={() => {
                     setTheme("dark");
-                    setPrimaryColor(currentHub?.brandingColor, "dark")}}
+                    setPrimaryColor(currentHub?.brandingColor, "dark");
+                  }}
                 >
                   Dark
                 </DropdownMenuCheckboxItem>
@@ -306,7 +313,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
 
               <DropdownMenuGroup>
                 <DropdownMenuItem
-                  onClick={() => signOut({ redirectUrl: "/"})}
+                  onClick={() => signOut({ redirectUrl: "/" })}
                   className="flex items-center gap-2"
                 >
                   <Icons.logout className="h-4 w-4 text-foreground" />

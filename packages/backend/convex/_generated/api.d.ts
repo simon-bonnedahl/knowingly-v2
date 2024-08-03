@@ -14,9 +14,12 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as blocknote from "../blocknote.js";
 import type * as blogPosts from "../blogPosts.js";
 import type * as calls from "../calls.js";
 import type * as clerk from "../clerk.js";
+import type * as constants from "../constants.js";
+import type * as crons from "../crons.js";
 import type * as customFields from "../customFields.js";
 import type * as emails from "../emails.js";
 import type * as files from "../files.js";
@@ -45,9 +48,12 @@ import type * as utils from "../utils.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  blocknote: typeof blocknote;
   blogPosts: typeof blogPosts;
   calls: typeof calls;
   clerk: typeof clerk;
+  constants: typeof constants;
+  crons: typeof crons;
   customFields: typeof customFields;
   emails: typeof emails;
   files: typeof files;

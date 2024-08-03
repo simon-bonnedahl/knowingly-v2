@@ -32,7 +32,7 @@ export function IconPicker({ icon, setIcon }: IconPickerProps) {
             <Icon name={icon} className="w-5 h-5 " />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-fit max-h-64 overflow-y-scroll">
+      <PopoverContent className="w-fit max-h-64 overflow-y-scroll z-50">
       <Input
         value={search}
         onChange={(e) => setSearch(e.target.value)}

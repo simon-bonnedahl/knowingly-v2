@@ -1,41 +1,20 @@
 import { ReactNode } from "react";
+
 import { AssistantModal } from "@knowingly/ui/assistant/assistant-modal";
 
 
-export default async function HubLayout({
+export default function HubLayout({
   params,
   children,
 }: {
   params: { domain: string };
   children: ReactNode;
 }) {
-  
-
-
-
   return (
-    
-       
-          <div className="flex flex-col w-full  overflow-y-scroll relative h-screen ">
-            <AssistantModal />
-          {/* <div className="w-full h-8 top-2 left-2 absolute  z-30 ">
-            <Breadcrumb>
-            <BreadcrumbList>
-                <BreadcrumbItem>
-                <BreadcrumbLink href="/">Home</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                <BreadcrumbLink href="/components">Components</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-                </BreadcrumbItem>
-            </BreadcrumbList>
-            </Breadcrumb>
-            </div> */}
-          {children}
-        </div>
+    <div className="relative flex h-screen  w-full flex-col overflow-y-scroll ">
+        <AssistantModal />
+
+      {children}
+    </div>
   );
 }

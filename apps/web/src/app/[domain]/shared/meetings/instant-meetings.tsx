@@ -1,19 +1,19 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useMutation } from "convex/react";
 import { toast } from "sonner";
 
-import { Button } from "@knowingly/ui/button";
-import { useMutation } from "convex/react";
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { Icons } from "@knowingly/icons";
+import { Button } from "@knowingly/ui/button";
 
 export const InstantMeeting = () => {
   const router = useRouter();
 
   const createInstantMeeting = useMutation(api.meetings.createInstant);
 
-  const onCreate = async() => {
+  const onCreate = async () => {
     createInstantMeeting()
       .then((res) => {
         toast.success("Meeting created");
@@ -22,9 +22,18 @@ export const InstantMeeting = () => {
       .catch((err) => {
         toast.error(err.message);
       });
-    };
+  };
 
-  return <Button size={"sm"} variant={"ringHover"} onClick={onCreate} className="h-full">
-    <Icons.plus className="mr-2 size-4" />
-    Instant Meeting</Button>;
+  return (
+    <Button
+      id="onborda-step2"
+      size={"sm"}
+      variant={"ringHover"}
+      onClick={onCreate}
+      className="h-full"
+    >
+      <Icons.plus className="mr-2 size-4" />
+      Instant Meeting
+    </Button>
+  );
 };

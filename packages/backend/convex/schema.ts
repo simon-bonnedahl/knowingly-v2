@@ -1,6 +1,13 @@
 import { defineEnt, defineEntSchema, getEntDefinitions } from "convex-ents";
 import { v } from "convex/values";
 
+export const pageTypes = v.union(
+  v.literal("PROFILE"),
+  v.literal("EVENT"),
+  v.literal("TEMPLATE"),
+  v.literal("CUSTOM"),
+);
+
 const schema = defineEntSchema({
   users: defineEnt({
     name: v.string(),
@@ -16,12 +23,13 @@ const schema = defineEntSchema({
     .edges("notifications", { ref: true })
     .edges("meetings")
     .edges("meetingInvites", { ref: true })
-    .edges("blogPosts", { ref: true }),
+    .edges("blogPosts", { ref: true })
+    .edges("hubInvites", { ref: true }),
   hubs: defineEnt({
     name: v.string(),
     description: v.optional(v.string()),
-    logo: v.optional(v.string()), // Can be URL or emoji
-    banner: v.optional(v.string()),
+    logo: v.string(), // Can be URL or emoji
+    banner: v.string(),
     brandingColor: v.string(),
     customContent: v.string(), // JSON stringified object (blockquote json structure for markdown)
     isPublic: v.boolean(),
@@ -40,14 +48,13 @@ const schema = defineEntSchema({
     .field("customDomain", v.optional(v.string()))
     .edges("members", { ref: true })
     .edges("hubInvites", { ref: true })
-    .edges("roles")
+    .edges("roles", { ref: true })
     .edges("pages", { ref: true })
     .edges("customFields")
     .edges("emailTemplates", { ref: true }),
 
   roles: defineEnt({
     name: v.string(),
-    isDefault: v.boolean(),
     isLocked: v.boolean(),
     icon: v.optional(v.string()),
     permissions: v.object({
@@ -59,12 +66,13 @@ const schema = defineEntSchema({
       canDeleteCustomField: v.boolean(),
       canInviteMember: v.boolean(),
       canRemoveMember: v.boolean(),
+      canEditRole: v.boolean(),
       canSeeAdminPanel: v.boolean(),
       canEditHub: v.boolean(),
       canDeleteHub: v.boolean(),
     }),
   })
-    .edges("hubs")
+    .edge("hub")
     .edges("members", { ref: true })
     .edges("hubInvites", { ref: true }),
   hubInvites: defineEnt({
@@ -78,9 +86,11 @@ const schema = defineEntSchema({
     ),
     expiresAt: v.number(),
   })
+    .field("inviteToken", v.string(), { unique: true })
     .field("email", v.string(), { unique: true })
     .edge("role")
-    .edge("hub"),
+    .edge("hub")
+    .edge("inviter", { to: "users", field: "userId" }),
 
   members: defineEnt({})
     .edge("user")
@@ -89,12 +99,7 @@ const schema = defineEntSchema({
     .edges("pages", { ref: true }),
   pages: defineEnt({
     name: v.string(),
-    type: v.union(
-      v.literal("PROFILE"),
-      v.literal("EVENT"),
-      v.literal("TEMPLATE"),
-      v.literal("CUSTOM"),
-    ),
+    type: pageTypes,
     image: v.optional(v.string()),
     icon: v.optional(v.string()), // Can be URL or emoji
     customFields: v.array(
@@ -108,13 +113,20 @@ const schema = defineEntSchema({
         ),
       }),
     ),
-    customContent: v.optional(v.string()), // JSON stringified object (blockquote json structure for markdown)
+    customContent: v.string(), // JSON stringified object (blockquote json structure for markdown)
     isPublic: v.boolean(),
     isLocked: v.boolean(),
+    embedding: v.optional(v.array(v.float64())),
+    updatedEmbedding: v.boolean(),
   })
     .field("slug", v.string(), { unique: true })
     .edge("member")
-    .edge("hub"),
+    .edge("hub")
+    .vectorIndex("by_embedding", {
+      vectorField: "embedding",
+      dimensions: 1536,
+      filterFields: ["type", "hubId"],
+    }),
   customFields: defineEnt({
     name: v.string(),
     icon: v.optional(v.string()),
@@ -129,7 +141,7 @@ const schema = defineEntSchema({
       }),
     ), //  JSON stringified object (own rules) ex. { "format": any, "suggestions": any,  }
   })
-    .field("slug", v.string(), { unique: true })
+    .field("slug", v.string()) //Remove this? What is it used for?
     .searchIndex("search_slug", {
       searchField: "slug",
     })

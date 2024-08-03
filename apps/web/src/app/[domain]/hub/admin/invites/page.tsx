@@ -14,7 +14,8 @@ import { preloadQuery } from "convex/nextjs";
 export default async function AdminMembersPage({params} : {params: {domain: string}}) {
 
   const subdomain = params.domain.split(".")[0];
-  const preloadedInvites = await preloadQuery(api.hubs.getInvites, { subdomain: subdomain as string});
+  if(!subdomain) return null;
+  const preloadedInvites = await preloadQuery(api.hubs.getInvites, { subdomain});
 
   
 
@@ -23,7 +24,7 @@ export default async function AdminMembersPage({params} : {params: {domain: stri
       <div className="flex  flex-col space-y-12  py-2">
       <div className="flex flex-col space-y-4">
         <div className="flex items-center justify-between">
-          <h1 className="font-cal text-3xl font-bold dark:text-white">
+          <h1 className="font-cal text-3xl font-bold text-foreground">
             Invites
           </h1>
           
