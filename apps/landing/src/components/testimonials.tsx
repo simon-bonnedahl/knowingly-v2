@@ -283,16 +283,19 @@ function splitArray<T>(array: Array<T>, numParts: number) {
     if (!result[index]) {
       result[index] = [];
     }
-    result[index].push(array[i]);
+    const a = array[i];
+    if(a === undefined) continue;
+    result[index].push(a);
   }
   return result;
 }
 
 function TestimonialGrid() {
   let columns = splitArray(testimonials, 3);
-  let column1 = columns[0];
-  let column2 = columns[1];
-  let column3 = splitArray(columns[2], 2);
+  let column1 = columns[0] || []; // Ensure it's not undefined
+  let column2 = columns[1] || []; // Ensure it's not undefined
+  let column3 = columns[2] ? splitArray(columns[2], 2) : [[], []]; // Default to two empty arrays if undefined
+
   return (
     <InViewDiv className="relative -mx-4 mt-16 grid h-[49rem] max-h-[150vh] grid-cols-1 items-start gap-8 overflow-hidden px-4 sm:mt-20 md:grid-cols-2 lg:grid-cols-3">
       <TestimonialColumn

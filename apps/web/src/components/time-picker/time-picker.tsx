@@ -3,7 +3,7 @@
 import * as React from "react";
 import { TimePickerInput } from "./time-picker-input";
 import { Label } from "@knowingly/ui/label";
-import { IconClock } from "@tabler/icons-react";
+import { Icons } from "@knowingly/icons";
 
 interface TimePicker {
   date: Date | undefined;
@@ -64,7 +64,7 @@ export function TimePicker({
         />
       </div>
       <div className="flex h-10 items-center">
-        <IconClock className="ml-2 h-4 w-4" />
+        <Icons.clock className="ml-2 h-4 w-4" />
       </div>
     </div>
   );

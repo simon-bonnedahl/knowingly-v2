@@ -373,17 +373,16 @@ export function hexToRgb(hex: string) {
   });
 
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16),
-      }
-    : null;
+  if (!result || result.length < 3) return null;
+  return{
+        r: parseInt(result[1] as string, 16),
+        g: parseInt(result[2] as string, 16),
+        b: parseInt(result[3] as string, 16),
+      };
 }
 
 export function genRandomNumbers(min: number, max: number, count: number) {
-  const arr = [];
+  const arr : number[] = [];
   while (arr.length < count) {
     const r = Math.floor(Math.random() * (max - min)) + min;
     if (!arr.includes(r)) arr.push(r);

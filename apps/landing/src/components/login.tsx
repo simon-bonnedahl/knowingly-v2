@@ -15,10 +15,10 @@ import {
 import Link from "next/link";
 import { cn } from "@knowingly/ui";
 import { useRouter } from "next/navigation";
-import { IconBrandGithub } from "@tabler/icons-react";
 import Password from "./password";
 import { Button } from "./button";
 import { Logo } from "./Logo";
+import { Icons } from "@knowingly/icons";
 
 const formSchema = z.object({
   email: z
@@ -169,7 +169,7 @@ export function LoginForm() {
 
               <div className="mt-6 w-full flex items-center justify-center">
                 <Button onClick={() => {}} className="w-full py-1.5">
-                  <IconBrandGithub className="h-5 w-5" />
+                  <Icons.gitHub className="h-5 w-5" />
                   <span className="text-sm font-semibold leading-6">
                     Github
                   </span>

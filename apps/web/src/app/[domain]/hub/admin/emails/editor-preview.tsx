@@ -1,8 +1,8 @@
 "use client";
 
 import type { JSONContent, Editor as TiptapEditor } from "@tiptap/core";
-import { useEffect, useState } from "react";
-import { useAction, useMutation } from "convex/react";
+import { useState } from "react";
+import { useAction } from "convex/react";
 
 import type { EditorProps } from "@knowingly/email-editor";
 import { api } from "@knowingly/backend/convex/_generated/api";
@@ -27,6 +27,7 @@ interface EditorPreviewProps {
   content?: JSONContent;
   config?: Partial<EditorProps["config"]>;
 }
+
 
 export function EditorPreview(props: EditorPreviewProps) {
   const { className, content: defaultContent, config: defaultConfig } = props;
@@ -53,11 +54,10 @@ export function EditorPreview(props: EditorPreviewProps) {
   const onSend = () => {
     toast.promise( send({ json: JSON.stringify(json), subject, from, replyTo, to, previewText }), {
       loading: "Sending...",
-      success: "Email sent",
-      error: "Failed to send email",
+      success: "Success: Email sent",
+      error: (error) => `Error: ${error.data}`,
     });
 
-    console.log("Sending email");
   }
 
   const defaultHtml = `<img src="https://simbo.casa/logo-small-black.svg" data-maily-component="logo" data-size="md" data-alignment="left" style="position:relative;margin-top:0;height:48px;margin-right:auto;margin-left:0"><div data-maily-component="spacer" data-height="xl" style="width: 100%; height: 64px;" class="spacer" contenteditable="false"></div><h2><strong>Discover Maily</strong></h2><p>Are you ready to transform your email communication? Introducing Maily, the powerful email editor that enables you to craft captivating emails effortlessly.</p><p>Elevate your email communication with Maily! Click below to try it out:</p><a data-maily-component="button" mailycomponent="button" text="Try Maily Now →" url="" alignment="left" variant="filled" borderradius="round" buttoncolor="#141313" textcolor="#ffffff"></a><div data-maily-component="spacer" data-height="xl" style="width: 100%; height: 64px;" class="spacer" contenteditable="false"></div><p>Join our vibrant community of users and developers on GitHub, where Maily is an <a target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/arikchakma/maily.to"><em>open-source</em></a> project. Together, we'll shape the future of email editing.</p><p>Regards,<br>Arikko</p>`;
