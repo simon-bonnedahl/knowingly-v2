@@ -85,9 +85,10 @@ export const getUploads = query({
     args: { },
     handler: async (ctx, args) => {
         const user = await ctx.user()
-        if (!user) {
+        if (!user || !user.uploads) {
             return []
         }
+
 
         return await Promise.all(user.uploads.map(async (upload) => {
             return await ctx.storage.getUrl(upload)
