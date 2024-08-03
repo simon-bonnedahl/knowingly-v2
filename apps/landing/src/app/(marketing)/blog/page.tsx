@@ -6,6 +6,7 @@ import { Subheading } from "~/components/subheading";
 import { fetchQuery } from "convex/nextjs";
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { BlogPostCard } from "~/components/blog-post-card";
+import { Ent } from "@knowingly/backend/convex/types";
 
 export const metadata: Metadata = {
   title: "Blogs - Knowingly",
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogsIndex() {
-  const blogPosts = await fetchQuery(api.blogPosts.list);
+  const blogPosts  = await fetchQuery(api.blogPosts.list) ;
 
   return (
     <div className="relative overflow-hidden py-20 md:py-0">
@@ -32,13 +33,7 @@ export default async function BlogsIndex() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 relative z-20 w-full mb-10">
-          {blogPosts.slice(0, 2).map((blogPost) => (
-            <BlogPostCard blogPost={blogPost} key={blogPost._id} />
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full relative z-20">
-          {blogPosts.slice(2).map((blogPost) => (
+          {blogPosts?.map((blogPost : any) => (
             <BlogPostCard blogPost={blogPost} key={blogPost._id} />
           ))}
         </div>

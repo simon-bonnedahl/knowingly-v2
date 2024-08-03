@@ -1,11 +1,13 @@
 {
-  "extends": "@knowingly/tsconfig/base.json",
+  // "extends": "@knowingly/tsconfig/base.json",
   "compilerOptions": {
-    "lib": [
-      "es2022",
-      "dom",
-      "dom.iterable"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "moduleResolution": "Bundler",
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
@@ -25,9 +27,9 @@
     "resolveJsonModule": true
   },
   "include": [
-    ".",
-    "src/**/*",
-    ".next/types/**/*.ts"
+    "**/*.ts", "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next-env.d.ts"
   ],
   "exclude": [
     "node_modules"

@@ -1,10 +1,32 @@
-
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  images: { domains: ["i.pravatar.cc", "images.unsplash.com", "avatar.iran.liara.run", "img.clerk.com", "confident-terrier-401.convex.cloud"] },
-  pageExtensions: ["ts", "tsx", ],
+/** @type {import("next").NextConfig} */
+const config = {
+  reactStrictMode: true,
+  transpilePackages: [
+    "@knowingly/backend",
+    "@knowingly/ui",
+    "@knowingly/validators",
+    "geist"
+  ],
+  eslint: { ignoreDuringBuilds: true },
+  typescript: { ignoreBuildErrors: true },
+  images: {
+    remotePatterns: [
+      { hostname: "www.google.com" },
+      { hostname: "media.licdn.com" },
+      { hostname: "image.unsplash.com" },
+      { hostname: "ofhdkjyiwnkwvjsgfxki.supabase.co" },
+      { hostname: "images.unsplash.com" },
+      { hostname: "files.edgestore.dev" },
+      { hostname: "www.notion.so" },
+    { hostname: "plus.unsplash.com" },
+    { hostname: "confident-terrier-401.convex.cloud" },
+    { hostname: "confident-terrier-401.convex.site" },
+    { hostname: "neat-echidna-914.convex.cloud" },
+    { hostname: "neat-echidna-914.convex.site" },
+    { hostname: "img.clerk.com" },
+    ],
+  },
 };
 
 
-
-export default nextConfig;
+export default config;

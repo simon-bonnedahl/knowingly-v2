@@ -8,9 +8,6 @@ import { useThree, Canvas, extend } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import countries from "./globe.json";
 import { defaultProps } from "@blocknote/core";
-import { Slider } from "@knowingly/ui/slider";
-import { usePreview } from "~/lib/hooks/usePreview";
-import { ColorPicker } from "~/components/color-picker";
 
 export const BlocknoteGlobe = createReactBlockSpec(
   {
@@ -31,12 +28,8 @@ export const BlocknoteGlobe = createReactBlockSpec(
   },
   {
     render: (props) => {
-      return <GlobeDemo props={props}/>;
-    },
-  }
-);
 
-const GlobeDemo = ({props} : {props : any}) => {
+const Globe = () => {
   const globeConfig = {
     pointSize: 4,
     globeColor: "#062056",
@@ -68,46 +61,16 @@ const GlobeDemo = ({props} : {props : any}) => {
       endLat: -22.9068,
       endLng: -43.1729,
       arcAlt: 0.1,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+      color: colors[Math.floor(Math.random() * (colors.length - 1))] || props.block.props.color,
     },
     // ... other arcs
   ];
   
-  const [size, setSize] = useState(props.block.props.size as number);
-  const [color, setColor] = useState(props.block.props.color as string);
-
-  const { preview } = usePreview();
-
-  useEffect(() => {
-    props.editor.updateBlock(props.block, {
-      type: "globe",
-      props: { size: size },
-    }),
-      [size];
-  });
-  useEffect(() => {
-    props.editor.updateBlock(props.block, {
-      type: "globe",
-      props: { color: color },
-    }),
-      [color];
-  });
+  const [size, setSize] = useState(props.block.props.size );
+  const [color, setColor] = useState(props.block.props.color);
 
   return (
     <div className="flex w-fit flex-col">
-      {!preview && (
-        <div className="flex flex-row items-center gap-2">
-          <Slider
-            min={300}
-            max={600}
-            step={10}
-            value={[size]}
-            onValueChange={(value) => setSize(value[0])}
-            className="w-[300px]"
-          />
-          <ColorPicker value={color} onChange={setColor} />
-        </div>
-      )}
       <div
         className="flex items-center justify-center"
         style={{
@@ -120,6 +83,12 @@ const GlobeDemo = ({props} : {props : any}) => {
     </div>
   );
 };
+
+      return <Globe />;
+    },
+  }
+);
+
 
 declare module "@react-three/fiber" {
   interface ThreeElements {
@@ -234,6 +203,7 @@ export function Globe({ globeConfig, data }: WorldProps) {
     const points = [];
     for (let i = 0; i < arcs.length; i++) {
       const arc = arcs[i];
+      if (!arc) continue;
       const rgb = hexToRgb(arc.color) as { r: number; g: number; b: number };
       points.push({
         size: defaultProps.pointSize,
@@ -250,7 +220,6 @@ export function Globe({ globeConfig, data }: WorldProps) {
         lng: arc.endLng,
       });
     }
-
     // remove duplicates for same lat and lng
     const filteredPoints = points.filter(
       (v, i, a) =>
@@ -289,12 +258,12 @@ export function Globe({ globeConfig, data }: WorldProps) {
       .arcStartLng((d) => (d as { startLng: number }).startLng * 1)
       .arcEndLat((d) => (d as { endLat: number }).endLat * 1)
       .arcEndLng((d) => (d as { endLng: number }).endLng * 1)
-      .arcColor((e: any) => (e as { color: string }).color)
+      .arcColor((e) => (e as { color: string }).color)
       .arcAltitude((e) => {
         return (e as { arcAlt: number }).arcAlt * 1;
       })
-      .arcStroke((e) => {
-        return [0.32, 0.28, 0.3][Math.round(Math.random() * 2)];
+      .arcStroke(() => {
+        return [0.32, 0.28, 0.3][Math.round(Math.random() * 2)] || null;
       })
       .arcDashLength(defaultProps.arcLength)
       .arcDashInitialGap((e) => (e as { order: number }).order * 1)
