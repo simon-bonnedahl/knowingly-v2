@@ -1,11 +1,15 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { useMutation } from "convex/react";
+import { toast } from "sonner";
 
 import type { Ent } from "@knowingly/backend/convex/types";
-import { Icon } from "@knowingly/icons";
 import { api } from "@knowingly/backend/convex/_generated/api";
+import { Icon } from "@knowingly/icons";
+import { cn } from "@knowingly/ui";
+import { Button, buttonVariants } from "@knowingly/ui/button";
 import { Input } from "@knowingly/ui/input";
 import { Label } from "@knowingly/ui/label";
 import {
@@ -17,11 +21,8 @@ import {
 } from "@knowingly/ui/sheet";
 import { Switch } from "@knowingly/ui/switch";
 
-import { toast } from "sonner";
 import { IconPicker } from "~/components/icon-picker";
-import { Button } from "@knowingly/ui/button";
-import Image from "next/image";
-
+import { RenderIcon } from "~/components/icon-picker/render-icon";
 
 interface UpdateRoleSheetProps
   extends React.ComponentPropsWithRef<typeof Sheet> {
@@ -41,8 +42,9 @@ export function UpdateRoleSheet({ role, ...props }: UpdateRoleSheetProps) {
   }, [role]);
 
   React.useEffect(() => {
-    if (permissions === role.permissions) return
-      toast.promise(update({
+    if (permissions === role.permissions) return;
+    toast.promise(
+      update({
         roleId: role._id,
         field: "permissions",
         value: permissions,
@@ -50,45 +52,50 @@ export function UpdateRoleSheet({ role, ...props }: UpdateRoleSheetProps) {
       {
         loading: "Updating role...",
         success: "Success: Role updated",
-        error: (error) =>  {
-          setPermissions(role.permissions)
-          return `Error: ${error.data}`
-     }
-      })
+        error: (error) => {
+          setPermissions(role.permissions);
+          return `Error: ${error.data}`;
+        },
+      },
+    );
   }, [permissions]);
 
   React.useEffect(() => {
-    if (name === role.name) return
-    toast.promise(update({
-      roleId: role._id,
-      field: "name",
-      value: name,
-    }),
-    {
-      loading: "Updating role...",
-      success: "Success: Role updated",
-      error: (error) => {
-        setName(role.name)
-        return `Error: ${error.data}`
-   }
-    })
+    if (name === role.name) return;
+    toast.promise(
+      update({
+        roleId: role._id,
+        field: "name",
+        value: name,
+      }),
+      {
+        loading: "Updating role...",
+        success: "Success: Role updated",
+        error: (error) => {
+          setName(role.name);
+          return `Error: ${error.data}`;
+        },
+      },
+    );
   }, [name]);
 
   React.useEffect(() => {
-    if (icon === role.icon) return
-    toast.promise(update({
-      roleId: role._id,
-      field: "icon",
-      value: icon,
-    }),
-    {
-      loading: "Updating role...",
-      success: "Success: Role updated",
-      error: (error) =>  {
-        setIcon(role.icon)
-        return `Error: ${error.data}`
-   },
-    })
+    if (icon === role.icon) return;
+    toast.promise(
+      update({
+        roleId: role._id,
+        field: "icon",
+        value: icon,
+      }),
+      {
+        loading: "Updating role...",
+        success: "Success: Role updated",
+        error: (error) => {
+          setIcon(role.icon);
+          return `Error: ${error.data}`;
+        },
+      },
+    );
   }, [icon]);
 
   return (
@@ -106,31 +113,18 @@ export function UpdateRoleSheet({ role, ...props }: UpdateRoleSheetProps) {
         </div>
         <div className="flex flex-col">
           <Label className="text-lg font-medium">Icon</Label>
-          <IconPicker onChange={setIcon} >
-          <Button variant="outline" className="h-9 w-9 px-2">
-              <div className="size-[1.25rem]">
-                {icon.type === "URL" && (
-                  <Image
-                    src={icon.value}
-                    width={50}
-                    height={50}
-                    alt="icon"
-                    className="size-full rounded-full object-cover"
-                  />
+          <div className="size-fit">
+            <IconPicker onChange={setIcon}>
+              <div
+                className={cn(
+                  buttonVariants({ variant: "outline" }),
+                  "size-10 p-0"
                 )}
-                {icon.type === "EMOJI" && (
-                  <span className=" select-none text-[1.25rem] leading-[1.25rem]">
-                    {icon.value}
-                  </span>
-                )}
-                {icon.type === "ICON" && (
-                  <Icon name={icon.value} className="size-full" />
-                )}
+              >
+                <RenderIcon size={1} icon={icon} />
               </div>
-            </Button>
-          </IconPicker>
-
-
+            </IconPicker>
+          </div>
         </div>
 
         <div className="flex flex-col gap-4">
@@ -139,7 +133,7 @@ export function UpdateRoleSheet({ role, ...props }: UpdateRoleSheetProps) {
             <div key={key} className="flex items-center justify-between">
               <span className="text-sm">{key}</span>
               <Switch
-                checked={permissions[key as keyof typeof permissions] }
+                checked={permissions[key as keyof typeof permissions]}
                 onCheckedChange={(checked) => {
                   setPermissions((prev) => ({ ...prev, [key]: checked }));
                 }}

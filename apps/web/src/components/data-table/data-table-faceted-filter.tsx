@@ -19,7 +19,8 @@ import {
   PopoverTrigger,
 } from "@knowingly/ui/popover"
 import { Separator } from "@knowingly/ui/separator"
-import { Icon, IconKey, Icons } from "@knowingly/icons"
+import { RenderIcon } from "../icon-picker/render-icon"
+import { Icons } from "@knowingly/icons"
 
 interface DataTableFacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -110,10 +111,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                       <Icons.check className="size-4" aria-hidden="true" />
                     </div>
                     {option.icon && (
-                      <Icon name={option.icon}
-                        className="mr-2 size-4 text-muted-foreground"
-                        aria-hidden="true"
-                      />
+                      <RenderIcon icon={option.icon} size={1} className="mr-2 text-muted-foreground" />
                     )}
                     <span>{option.label}</span>
                     {option.withCount &&

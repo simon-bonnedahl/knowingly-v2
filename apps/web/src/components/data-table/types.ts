@@ -1,9 +1,9 @@
-import { IconKey } from "@knowingly/icons"
+import { Icon } from "@knowingly/backend/convex/types"
 
 export interface Option {
     label: string
     value: string
-    icon?: IconKey
+    icon?: Icon
     withCount?: boolean
   }
   

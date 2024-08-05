@@ -20,7 +20,6 @@ import {
   DropdownMenuTrigger,
 } from "@knowingly/ui/dropdown-menu"
 import { DataTableColumnHeader } from "~/components/data-table/data-table-column-header"
-import type { IconKey } from "@knowingly/icons";
 import { Icon } from "@knowingly/icons"
 import { capitalizeFirstLetter } from "@knowingly/utils"
 import { useSubdomain } from "~/lib/hooks/useSubdomain"
@@ -30,6 +29,8 @@ import type { Id } from "@knowingly/backend/convex/_generated/dataModel"
 import { formatDate } from "@knowingly/utils"
 import { Icons } from "@knowingly/icons";
 import { Ent } from "@knowingly/backend/convex/types";
+import Image from "next/image";
+import { RenderIcon } from "~/components/icon-picker/render-icon";
 
 export interface DataTableMember {
     id: string
@@ -103,11 +104,7 @@ export function getColumns(): ColumnDef<DataTableMember>[]{
 
         return (
           <div className="flex w-[6.25rem] items-center">
-            <Icon 
-             name={role.icon}
-              className="mr-2 size-4 text-muted-foreground"
-              aria-hidden="true"
-            />
+           <RenderIcon icon={role.icon} size={1} className="mr-2 text-muted-foreground" />
             <span className="capitalize">{capitalizeFirstLetter(role.name)}</span>
 
           </div>

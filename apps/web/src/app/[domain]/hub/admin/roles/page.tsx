@@ -2,10 +2,11 @@
 
 import * as React from "react";
 import { useMutation, useQuery } from "convex/react";
+import { toast } from "sonner";
 
+import type { Ent } from "@knowingly/backend/convex/types";
 import { api } from "@knowingly/backend/convex/_generated/api";
-import type { IconKey} from "@knowingly/icons";
-import { Icon, Icons } from "@knowingly/icons";
+import {  Icons } from "@knowingly/icons";
 import { Button } from "@knowingly/ui/button";
 import {
   Tooltip,
@@ -16,8 +17,7 @@ import {
 
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { UpdateRoleSheet } from "./update-role-sheet";
-import type { Ent } from "@knowingly/backend/convex/types";
-import { toast } from "sonner";
+import { RenderIcon } from "~/components/icon-picker/render-icon";
 
 export default function AdminRolesPage() {
   const [open, setOpen] = React.useState(false);
@@ -30,16 +30,16 @@ export default function AdminRolesPage() {
     toast.promise(addRole({ subdomain }), {
       loading: "Creating role...",
       success: "Success: Role created",
-      error: (error) =>  {
-        return `Error: ${error.data}`
-   },
+      error: (error) => {
+        return `Error: ${error.data}`;
+      },
     });
-  }
+  };
 
   return (
     <>
       {roleToEdit && (
-      <UpdateRoleSheet role={roleToEdit} open={open} onOpenChange={setOpen} />
+        <UpdateRoleSheet role={roleToEdit} open={open} onOpenChange={setOpen} />
       )}
       <div className="flex max-w-screen-xl flex-col space-y-12  py-2">
         <div className="flex flex-col space-y-6">
@@ -55,11 +55,7 @@ export default function AdminRolesPage() {
                 className="grid min-h-20 grid-cols-3 items-center justify-between rounded-lg bg-background p-4 shadow-sm"
               >
                 <div className="flex items-center">
-                  <Icon
-                    name={role.icon as IconKey}
-                    className="mr-2 size-4 text-muted-foreground"
-                    aria-hidden="true"
-                  />
+                <RenderIcon icon={role.icon} size={1}  className="mr-2 text-muted-foreground" />
                   <span className="text-sm font-medium">{role.name}</span>
                 </div>
                 <TooltipProvider delayDuration={50}>
@@ -67,7 +63,11 @@ export default function AdminRolesPage() {
                     <TooltipTrigger asChild>
                       <div className="flex w-fit items-center  gap-1">
                         {Object.keys(role.permissions).map((permission) => {
-                          if (role.permissions[permission as keyof typeof role.permissions] === true)
+                          if (
+                            role.permissions[
+                              permission as keyof typeof role.permissions
+                            ] === true
+                          )
                             return (
                               <div
                                 key={permission}
@@ -83,7 +83,11 @@ export default function AdminRolesPage() {
                           Permissions
                         </span>
                         {Object.keys(role.permissions).map((permission) => {
-                          if (role.permissions[permission as keyof typeof role.permissions] === true)
+                          if (
+                            role.permissions[
+                              permission as keyof typeof role.permissions
+                            ] === true
+                          )
                             return (
                               <div
                                 key={permission}
@@ -110,7 +114,7 @@ export default function AdminRolesPage() {
                         onClick={() => {
                           console.log(role);
                           setRoleToEdit(role);
-                          setOpen(true)
+                          setOpen(true);
                         }}
                       >
                         <Icons.pencil
@@ -118,11 +122,20 @@ export default function AdminRolesPage() {
                           aria-hidden="true"
                         />
                       </Button>
-
-                      <Icons.trash
+                      <Button
+                        variant={"ghost"}
+                        size={"icon"}
+                        onClick={() => {
+                          console.log(role);
+                          setRoleToEdit(role);
+                          setOpen(true);
+                        }}
+                      >
+                        <Icons.trash
                         className="size-5 text-red-400"
                         aria-hidden="true"
                       />
+                      </Button>
                     </>
                   )}
                 </div>

@@ -13,8 +13,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@knowingly/ui/popover";
 import { Separator } from "@knowingly/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@knowingly/ui/tabs";
 
-import { FileUploader } from "./file-uploader";
-import { LoadingDots } from "./loaders";
+import { FileUploader } from "../file-uploader";
+import { LoadingDots } from "../loaders";
 import { Input } from "@knowingly/ui/input";
 import {  useEffect, useState } from "react";
 import { Icons } from "@knowingly/icons";

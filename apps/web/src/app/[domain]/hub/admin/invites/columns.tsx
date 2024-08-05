@@ -29,6 +29,7 @@ import { api } from "@knowingly/backend/convex/_generated/api"
 import type { Id } from "@knowingly/backend/convex/_generated/dataModel"
 import { formatDate } from "@knowingly/utils"
 import { Icons } from "@knowingly/icons";
+import { RenderIcon } from "~/components/icon-picker/render-icon";
 
 export interface DataTableInvite {
     id: string
@@ -124,11 +125,7 @@ export function getColumns(): ColumnDef<DataTableInvite>[]{
 
         return (
           <div className="flex w-[6.25rem] items-center">
-            <Icon 
-             name={role.icon}
-              className="mr-2 size-4 text-muted-foreground"
-              aria-hidden="true"
-            />
+             <RenderIcon icon={role.icon} size={1} className="mr-2 text-muted-foreground" />
             <span className="capitalize">{capitalizeFirstLetter(role.name)}</span>
           </div>
         )
