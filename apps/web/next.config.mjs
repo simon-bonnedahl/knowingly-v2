@@ -30,15 +30,17 @@ const config = {
   },
 };
 
-export default  withSentryConfig(config, {
-  // Sentry configuration options
-  org: "student-lck",
-  project: "knowingly",
-  silent: !process.env.CI,
-  authToken: process.env.SENTRY_AUTH_TOKEN,
-  widenClientFileUpload: true,
-  hideSourceMaps: true,
-  disableLogger: true,
-  automaticVercelMonitors: true,
-  telemetry: false,
-});
+export default config;
+
+// export default  withSentryConfig(config, {
+//   // Sentry configuration options
+//   org: "student-lck",
+//   project: "knowingly",
+//   silent: !process.env.CI,
+//   authToken: process.env.SENTRY_AUTH_TOKEN,
+//   widenClientFileUpload: true,
+//   hideSourceMaps: true,
+//   disableLogger: true,
+//   automaticVercelMonitors: true,
+//   telemetry: false,
+// });
