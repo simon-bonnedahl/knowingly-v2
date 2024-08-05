@@ -4,7 +4,7 @@ import * as React from "react";
 import { useMutation } from "convex/react";
 
 import type { Ent } from "@knowingly/backend/convex/types";
-import type { IconKey } from "@knowingly/icons";
+import { Icon } from "@knowingly/icons";
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { Input } from "@knowingly/ui/input";
 import { Label } from "@knowingly/ui/label";
@@ -17,8 +17,10 @@ import {
 } from "@knowingly/ui/sheet";
 import { Switch } from "@knowingly/ui/switch";
 
-import { IconPicker } from "~/components/field/icon-picker";
 import { toast } from "sonner";
+import { IconPicker } from "~/components/icon-picker";
+import { Button } from "@knowingly/ui/button";
+import Image from "next/image";
 
 
 interface UpdateRoleSheetProps
@@ -104,7 +106,31 @@ export function UpdateRoleSheet({ role, ...props }: UpdateRoleSheetProps) {
         </div>
         <div className="flex flex-col">
           <Label className="text-lg font-medium">Icon</Label>
-          <IconPicker icon={icon as IconKey} setIcon={setIcon} />
+          <IconPicker onChange={setIcon} >
+          <Button variant="outline" className="h-9 w-9 px-2">
+              <div className="size-[1.25rem]">
+                {icon.type === "URL" && (
+                  <Image
+                    src={icon.value}
+                    width={50}
+                    height={50}
+                    alt="icon"
+                    className="size-full rounded-full object-cover"
+                  />
+                )}
+                {icon.type === "EMOJI" && (
+                  <span className=" select-none text-[1.25rem] leading-[1.25rem]">
+                    {icon.value}
+                  </span>
+                )}
+                {icon.type === "ICON" && (
+                  <Icon name={icon.value} className="size-full" />
+                )}
+              </div>
+            </Button>
+          </IconPicker>
+
+
         </div>
 
         <div className="flex flex-col gap-4">
