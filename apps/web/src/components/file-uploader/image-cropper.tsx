@@ -99,7 +99,7 @@ export function ImageCropper({
     }
 
   return (
-    <div className="">
+    <div className="flex flex-col">
           <ReactCrop
             crop={crop}
             onChange={(_, percentCrop) => setCrop(percentCrop)}
@@ -111,13 +111,13 @@ export function ImageCropper({
                 width={400}
                 height={400}
                 ref={imgRef}
-                className="size-full rounded-none  "
+                className="size-full "
                 alt="Image Cropper Shell"
                 src={selectedFile?.preview}
                 onLoad={onImageLoad}
               />
           </ReactCrop>
-        <div className=" flex w-full justify-between ">
+        <div className=" flex w-full border-b py-4 justify-between ">
             <Button
               size={"sm"}
               type="reset"
@@ -131,7 +131,7 @@ export function ImageCropper({
               Cancel
             </Button>
           <Button type="submit" size={"sm"} className="w-fit" onClick={onCrop}>
-            <Icons.crop className="mr-1.5 size-4" />
+            <Icons.crop className="mr-1.5 size-5" />
             Crop
           </Button>
         </div>

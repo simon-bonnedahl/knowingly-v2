@@ -1,63 +1,80 @@
 import { useState } from "react";
 import Link from "next/link";
 
+import type { Tag } from "@knowingly/ui/tag-input";
+import type {
+  FieldOptions,
+  FieldType,
+  FieldValue,
+  Icon,
+} from "@knowingly/backend/convex/types";
+import { Icons } from "@knowingly/icons";
+import { cn } from "@knowingly/ui";
 import { Badge } from "@knowingly/ui/badge";
+import { Button } from "@knowingly/ui/button";
+import { GaugeCircle } from "@knowingly/ui/gauge-circle";
 import { Input } from "@knowingly/ui/input";
 import { Progress } from "@knowingly/ui/progress";
 import { Status } from "@knowingly/ui/status";
-import type { Tag } from "@knowingly/ui/tag-input";
 import { TagInput } from "@knowingly/ui/tag-input";
 
-import { cn } from "@knowingly/ui";
-import { FileUploader } from "../file-uploader";
-import { useUploadFiles } from "@xixixao/uploadstuff/react";
-import { useMutation } from "convex/react";
-import { api } from "@knowingly/backend/convex/_generated/api";
-import { Modal, ModalContent, ModalDescription, ModalHeader, ModalTitle, ModalTrigger } from "@knowingly/ui/modal";
-import { Button } from "@knowingly/ui/button";
-import { GaugeCircle } from "@knowingly/ui/gauge-circle";
-import type { IconKey} from "@knowingly/icons";
-import { Icons } from "@knowingly/icons";
+import { FileUploadModal } from "../file-uploader/modal";
 
-
-export const CustomFieldTypes = {
-  text: {
-    name: "Text",
-    icon: "alignLeft" as IconKey,
-    defaultValue: "",
+type FieldTypes = {
+  [key in FieldType]: {
+    name: string;
+    icon: Icon;
+    defaultValue: FieldValue;
     renderSettings: ({
       options,
       setOptions,
     }: {
-      options: any;
-      setOptions: (options: any) => void;
-    }) => null,
+      options: FieldOptions;
+      setOptions: (options: FieldOptions) => void;
+    }) => JSX.Element;
     valueInput: ({
       value,
       setValue,
     }: {
-      value: any;
-      setValue: (value: any) => void;
-    }) => (
-      <Input value={value} onChange={(e) => setValue(e.currentTarget.value)} />
-    ),
-    button: ({ value, options }: { value: any; options: any }) => (
-      <div>{value}</div>
-    ),
-  },
-  number: {
-    name: "Number",
-    icon: "hash" as IconKey,
-    defaultValue: 0,
-    renderSettings: ({
+      value: FieldValue;
+      setValue: (value: FieldValue) => void;
+    }) => JSX.Element;
+    button: ({
+      value,
       options,
-      setOptions,
     }: {
-      options: any;
-      setOptions: (options: any) => void;
-    }) => {
-      const onValueChange = (value: any) => {
-        setOptions((options) => ({ ...options, showAs: value }));
+      value: FieldValue;
+      options: FieldOptions;
+    }) => JSX.Element;
+  };
+};
+export const Fields: FieldTypes = {
+  TEXT: {
+    name: "Text",
+    icon: {
+      type: "ICON",
+      value: "alignLeft",
+    },
+    defaultValue: "",
+    renderSettings: ({ options, setOptions }) => <div className="w-full"></div>,
+    valueInput: ({ value, setValue }) => (
+      <Input
+        value={value as string}
+        onChange={(e) => setValue(e.currentTarget.value)}
+      />
+    ),
+    button: ({ value, options }) => <div>{value}</div>,
+  },
+  NUMBER: {
+    name: "Number",
+    icon: {
+      type: "ICON",
+      value: "hash",
+    },
+    defaultValue: 0,
+    renderSettings: ({ options, setOptions }) => {
+      const onValueChange = (value: string) => {
+        setOptions({ ...options, showAs: value });
       };
       const number = 66;
       return (
@@ -88,69 +105,58 @@ export const CustomFieldTypes = {
             </button>
             <button
               className={cn(
-                "relative flex h-12 w-full flex-col items-center rounded-md border transition-all duration-150 ease-in-out pt-1",
+                "relative flex h-12 w-full flex-col items-center rounded-md border pt-1 transition-all duration-150 ease-in-out",
                 options?.showAs === "ring" && "border-2 border-primary",
               )}
               onClick={() => onValueChange("ring")}
             >
-              <GaugeCircle value={number} max={100} min={0}  showNumber={false} className="size-5"/>
+              <GaugeCircle
+                value={number}
+                max={100}
+                min={0}
+                showNumber={false}
+                className="size-5"
+              />
               <span className="absolute bottom-0 text-xs">Ring</span>
             </button>
           </div>
         </div>
       );
     },
-    valueInput: ({
-      value,
-      setValue,
-    }: {
-      value: any;
-      setValue: (value: any) => void;
-    }) => (
+    valueInput: ({ value, setValue }) => (
       <Input
-        value={value}
+        value={value as number}
         onChange={(e) => setValue(parseInt(e.currentTarget.value))}
       />
     ),
-    button: ({ value, options }: { value: any; options: any }) => {
+    button: ({ value, options }) => {
+      if (typeof value !== "number") throw new Error("Value must be a number");
       return (
-        <div className="flex w-full items-center gap-1 min-h-5">
-          {options?.showAs === "number" && value}
-          {options?.showAs === "bar" && (
+        <div className="flex min-h-5 w-full items-center gap-1">
+          {options.showAs === "number" && value}
+          {options.showAs === "bar" && (
             <Progress value={value} max={100} className="h-2 w-16" />
           )}
           {options?.showAs === "ring" && (
-            <GaugeCircle value={value} max={100} min={0}  className="size-10"/>
+            <GaugeCircle value={value} max={100} min={0} className="size-10" />
           )}
         </div>
       );
     },
   },
-  select: {
+  SELECT: {
     name: "Select",
-    icon: "select" as IconKey,
-    defaultValue: null,
-    renderSettings: ({
-      options,
-      setOptions,
-    }: {
-      options: any;
-      setOptions: (options: any) => void;
-    }) => (
-      <div className="w-full">
-    
-      </div>
-    ),
-    valueInput: ({
-      value,
-      setValue,
-    }: {
-      value: string;
-      setValue: (value: any) => void;
-    }) => {
+    icon: {
+      type: "ICON",
+      value: "select",
+    },
+    defaultValue: "",
+    renderSettings: ({ options, setOptions }) => <div className="w-full"></div>,
+    valueInput: ({ value, setValue }) => {
+      if (typeof value !== "string") throw new Error("Value must be a string");
       const tags: Tag[] = value ? [{ id: value, text: value }] : [];
       const onSetTags = (newTags: Tag[]) => {
-        setValue(newTags[0]?.text);
+        setValue(newTags[0]?.text ?? "");
       };
       const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
 
@@ -173,7 +179,7 @@ export const CustomFieldTypes = {
         />
       );
     },
-    button: ({ value, options }: { value: any; options: any }) => (
+    button: ({ value, options }) => (
       <div className="flex min-h-5 gap-2">
         {value && (
           <Badge className="rounded-sm px-2 text-xs font-normal">
@@ -184,29 +190,17 @@ export const CustomFieldTypes = {
       </div>
     ),
   },
-  multiSelect: {
+  MULTI_SELECT: {
     name: "Multi Select",
-    icon: "list" as IconKey,
+    icon: {
+      type: "ICON",
+      value: "list",
+    },
     defaultValue: [],
-    renderSettings: ({
-      options,
-      setOptions,
-    }: {
-      options: any;
-      setOptions: (options: any) => void;
-    }) => (
-      <div className="w-full">
-
-      </div>
-    ),
-    valueInput: ({
-      value,
-      setValue,
-    }: {
-      value: string[];
-      setValue: (value: any) => void;
-    }) => {
-      const tags: Tag[] = value?.map((tag) => {
+    renderSettings: ({ options, setOptions }) => <div className="w-full"></div>,
+    valueInput: ({ value, setValue }) => {
+      if (!Array.isArray(value)) throw new Error("Value must be an array");
+      const tags: Tag[] = value.map((tag) => {
         return {
           id: tag,
           text: tag,
@@ -235,203 +229,147 @@ export const CustomFieldTypes = {
         />
       );
     },
-    button: ({ value, options }: { value: any; options: any }) => (
-      <div className="flex min-h-5 flex-wrap gap-2">
-        {value.map((tag: string) => (
-          <Badge key={tag} className="rounded-sm px-2 text-xs font-normal">
-            {" "}
-            {tag}{" "}
-          </Badge>
-        ))}
-      </div>
-    ),
+    button: ({ value, options }) => {
+      if (!Array.isArray(value)) throw new Error("Value must be an array");
+      return (
+        <div className="flex min-h-5 flex-wrap gap-2">
+          {value.map((tag) => (
+            <Badge key={tag} className="rounded-sm px-2 text-xs font-normal">
+              {" "}
+              {tag}{" "}
+            </Badge>
+          ))}
+        </div>
+      );
+    },
   },
-  status: {
+  STATUS: {
     name: "Status",
-    icon: "loader" as IconKey,
+    icon: {
+      type: "ICON",
+      value: "loader",
+    },
     defaultValue: "",
-    renderSettings: ({
-      options,
-      setOptions,
-    }: {
-      options: any;
-      setOptions: (options: any) => void;
-    }) => (
-      <div className="w-full">
-
-      </div>
+    renderSettings: ({ options, setOptions }) => <div className="w-full"></div>,
+    valueInput: ({ value, setValue }) => (
+      <Input
+        value={value as string}
+        onChange={(e) => setValue(e.currentTarget.value)}
+      />
     ),
-    valueInput: ({
-      value,
-      setValue,
-    }: {
-      value: any;
-      setValue: (value: any) => void;
-    }) => (
-      <Input value={value} onChange={(e) => setValue(e.currentTarget.value)} />
-    ),
-    button: ({ value, options }: { value: any; options: any }) => (
-      <Status>{value}</Status>
-    ),
+    button: ({ value, options }) => <Status>{value}</Status>,
   },
-  email: {
+  EMAIL: {
     name: "Email",
-    icon: "at" as IconKey,
+    icon: {
+      type: "ICON",
+      value: "at",
+    },
     defaultValue: "",
-    renderSettings: ({
-      options,
-      setOptions,
-    }: {
-      options: any;
-      setOptions: (options: any) => void;
-    }) => (
-      <div className="w-full">
-        <span>Number</span>
-        <span>Bar</span>
-        <span>Circle</span>
-      </div>
+    renderSettings: ({ options, setOptions }) => <div className="w-full"></div>,
+    valueInput: ({ value, setValue }) => (
+      <Input
+        value={value as string}
+        onChange={(e) => setValue(e.currentTarget.value)}
+      />
     ),
-    valueInput: ({
-      value,
-      setValue,
-    }: {
-      value: any;
-      setValue: (value: any) => void;
-    }) => (
-      <Input value={value} onChange={(e) => setValue(e.currentTarget.value)} />
-    ),
-    button: ({ value, options }: { value: any; options: any }) => (
-      <a href={"mailto:" + value}>{value}</a>
-    ),
+    button: ({ value, options }) => <a href={"mailto:" + value}>{value}</a>,
   },
-  phone: {
+  PHONE: {
     name: "Phone",
-    icon: "phone" as IconKey,
+    icon: {
+      type: "ICON",
+      value: "phone",
+    },
     defaultValue: "",
-    renderSettings: ({
-      options,
-      setOptions,
-    }: {
-      options: any;
-      setOptions: (options: any) => void;
-    }) => (
-      <div className="w-full">
-
-      </div>
-    ),
+    renderSettings: ({ options, setOptions }) => <div className="w-full"></div>,
     valueInput: ({
       value,
       setValue,
-    }: {
-      value: any;
-      setValue: (value: any) => void;
     }) => (
-      <Input value={value} onChange={(e) => setValue(e.currentTarget.value)} />
+      <Input value={value as string} onChange={(e) => setValue(e.currentTarget.value)} />
     ),
-    button: ({ value, options }: { value: any; options: any }) => (
+    button: ({ value, options }) => (
       <a href={"tel:" + value}>{value}</a>
     ),
   },
-  url: {
+  URL: {
     name: "URL",
-    icon: "link" as IconKey,
+    icon: {
+      type: "ICON",
+      value: "link",
+    },
     defaultValue: "",
     renderSettings: ({
       options,
       setOptions,
-    }: {
-      options: any;
-      setOptions: (options: any) => void;
-    }) => (
-      <div className="w-full">
-
-      </div>
-    ),
+    }) => <div className="w-full"></div>,
     valueInput: ({
       value,
       setValue,
-    }: {
-      value: any;
-      setValue: (value: any) => void;
     }) => (
-      <Input value={value} onChange={(e) => setValue(e.currentTarget.value)} />
+      <Input value={value as string} onChange={(e) => setValue(e.currentTarget.value)} />
     ),
-    button: ({ value, options }: { value: any; options: any }) => (
+    button: ({ value, options }) => (
       <Link href={value}>{value.replace("https://", "")}</Link>
     ),
   },
-  file_media: {
-    name: "Files & Media",
-    icon: "paperclip" as IconKey,
+  FILE: {
+    name: "File",
+    icon: {
+      type: "ICON",
+      value: "paperclip",
+    },
     defaultValue: "",
     renderSettings: ({
       options,
       setOptions,
-    }: {
-      options: any;
-      setOptions: (options: any) => void;
-    }) => (
-      <div className="w-full">
-
-      </div>
-    ),
+    }) => <div className="w-full"></div>,
     valueInput: ({
       value,
       setValue,
-    }: {
-      value: any;
-      setValue: (value: any) => void;
     }) => {
-        const getUploadUrl = useMutation(api.files.generateUploadUrl);
-        const [files, setFiles] = useState<File[]>([])
-        const { startUpload, isUploading } = useUploadFiles(getUploadUrl)
-          return(
-            <div>
-
-            <Modal>
-      <ModalTrigger asChild>
-        <Button variant="outline">
-          Upload files {files.length > 0 && `(${files.length})`}
-        </Button>
-      </ModalTrigger>
-      <ModalContent className="sm:max-w-xl">
-        <ModalHeader>
-          <ModalTitle>Upload files</ModalTitle>
-          <ModalDescription>
-            Drag and drop your files here or click to browse.
-          </ModalDescription>
-        </ModalHeader>
-        <FileUploader
-        maxFiles={4}
-        maxSize={4 * 1024 * 1024}
-        onUpload={startUpload}
-        // value={files} 
-        // onValueChange={setFiles}
-        disabled={isUploading}
-      />
-      </ModalContent>
-    </Modal>
-    </div>
-
-       )
+      const [fileUploaderOpen, setFileUploaderOpen] = useState(false);
+      const onUpload = (upload: string) => {
+        setValue(upload);
+      };
+      return (
+        <div>
+          <FileUploadModal
+            open={fileUploaderOpen}
+            setOpen={setFileUploaderOpen}
+            setUpload={onUpload}
+            recommendedAspect={16 / 9}
+          />
+          <Button
+            variant={"ringHover"}
+            className="absolute bottom-0 right-0 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100"
+            size="sm"
+            onClick={() => setFileUploaderOpen(true)}
+          >
+            <Icons.pencil className="mr-1 size-4" />
+            Edit
+          </Button>
+        </div>
+      );
     },
-    button: ({ value, options }: { value: any; options: any }) => (
+    button: ({ value, options }) => (
       <div>{value}</div>
     ),
   },
-  mediaEmbedding: {
+  MEDIA_EMBEDDING: {
     name: "Media Embedding",
-    icon: "music" as IconKey,
+    icon: {
+      type: "ICON",
+      value: "music",
+    },
     defaultValue: "",
     renderSettings: ({
       options,
       setOptions,
-    }: {
-      options: any;
-      setOptions: (options: any) => void;
     }) => {
-      const onValueChange = (value: any) => {
-        setOptions((options) => ({ ...options, format: value }));
+      const onValueChange = (value: string) => {
+        setOptions(({ ...options, format: value }));
       };
       return (
         <div>
@@ -461,7 +399,7 @@ export const CustomFieldTypes = {
             </button>
             <button
               className={cn(
-                "relative flex h-12 w-full flex-col items-center rounded-md border transition-all duration-150 ease-in-out pt-1",
+                "relative flex h-12 w-full flex-col items-center rounded-md border pt-1 transition-all duration-150 ease-in-out",
                 options?.format === "youtube" && "border-2 border-primary",
               )}
               onClick={() => onValueChange("youtube")}
@@ -477,22 +415,20 @@ export const CustomFieldTypes = {
     valueInput: ({
       value,
       setValue,
-    }: {
-      value: any;
-      setValue: (value: any) => void;
     }) => (
-      <Input value={value} onChange={(e) => setValue(e.currentTarget.value)} />
+      <Input value={value as string} onChange={(e) => setValue(e.currentTarget.value)} />
     ),
-    button: ({ value, options }: { value: any; options: any }) => {
+    button: ({ value, options }) => {
+      if (typeof value !== "string") throw new Error("Value must be a string");
       let src = value;
-      const format = options?.format ?? "spotify";
+      const format = options.format ?? "spotify";
       switch (format) {
         case "spotify":
           src = value.replace("open.spotify.com", "open.spotify.com/embed");
 
           return (
             <iframe
-              className="h-20 rounded-xl w-full "
+              className="h-20 w-full rounded-xl "
               src={src}
               allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
               loading="lazy"
@@ -502,10 +438,11 @@ export const CustomFieldTypes = {
           // Transform SoundCloud link to embed format
           src =
             value.replace("soundcloud.com", "w.soundcloud.com/player") +
-            "&url=" +encodeURIComponent(value);
+            "&url=" +
+            encodeURIComponent(value);
           return (
             <iframe
-              className="rounded-xl w-full h-32"
+              className="h-32 w-full rounded-xl"
               allow="autoplay"
               src={src}
             ></iframe>
@@ -514,8 +451,7 @@ export const CustomFieldTypes = {
           src = value.replace("watch?v=", "embed/");
           return (
             <iframe
-              
-              className="w-full aspect-video rounded-xl"
+              className="aspect-video w-full rounded-xl"
               src={src}
               title="YouTube Audio player"
               allow="accelerometer;  clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -525,7 +461,7 @@ export const CustomFieldTypes = {
           src = value.replace("open.spotify.com", "open.spotify.com/embed");
           return (
             <iframe
-              className="h-20 rounded-xl w-full "
+              className="h-20 w-full rounded-xl "
               src={src}
               allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
               loading="lazy"
@@ -535,4 +471,3 @@ export const CustomFieldTypes = {
     },
   },
 };
-export type CustomFieldTypeKey = keyof typeof CustomFieldTypes;

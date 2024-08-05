@@ -5,7 +5,7 @@ import { openai } from "@ai-sdk/openai";
 import { CoreMessage, embed, streamText } from "ai";
 import { ActionCtx } from "./_generated/server";
 import { api, internal } from "./_generated/api";
-import { customContentToMarkdown } from "./blocknote";
+import { blockContentToMarkdown } from "./blocknote";
 
 const app: HonoWithConvex<ActionCtx> = new Hono();
 app.use("/api/*", cors());
@@ -28,21 +28,23 @@ app.post("/api/chat", async (c) => {
     limit: 16,
     filter: (q) => q.eq("hubId", hub._id),
   });
-  const pages = await c.env.runQuery(api.pages.getPages, { ids: results.map((r) => r._id) });
+  const pages = await c.env.runQuery(api.pages.list, { ids: results.map((r) => r._id) });
   let pageContext = ""
   for (const page of pages) {
+    if(!page) continue;
+    pageContext += `ID: ${page._id} `;
+    pageContext += `Query matching score: ${results.find(r => r._id === page._id)?._score} `;
     pageContext += `Name: ${page.name} `;
-    pageContext += `Slug: ${page.slug} `;
     pageContext += `Type: ${page.type} `;
-    pageContext += `Image: ${page.image} `;
+    pageContext += `Banner: ${page.banner} `;
     pageContext += `Icon: ${page.icon} `;
     pageContext += `Custom Fields:  `;
-    for (const field of page.customFields) {
-      const f = await c.env.runQuery(api.customFields.get, { id: field.id });
+    for (const field of page.fields) {
+      const f = await c.env.runQuery(api.fields.get, { id: field.id });
       if (!f) continue;
       pageContext += `${f.name}: ${field.value} `;
     }
-    pageContext += `Custom Content: ${customContentToMarkdown(page.customContent)} `;
+    pageContext += `Custom Content: ${blockContentToMarkdown(page.content)} `;
     pageContext += "\n \n"
 
   }
@@ -52,8 +54,8 @@ app.post("/api/chat", async (c) => {
   messages.unshift({
     role: "system",
     content: "You can be a helpful assistant that can provide information based on context from pages on the current hub." +
-    " Pages context: " + pageContext +
-    " You can use /slug to link to a page. But if you do it, do it on a separate line and mask the link with the page name" + 
+    " Pages context with query matching scores: " + pageContext +
+    " You can use /ID to link to a page. But if you do it, do it on a separate line and mask the link with the page name" +
     "You can also provide any image you see fits" +
     "If you respond with information about any page, always link to the page" +
     "Feel free to use plenty of emojis and gifs to make the conversation more engaging." +
@@ -123,7 +125,6 @@ app.post("/api/clerk", async (c, ctx) => {
           name: result.data.first_name + " " + result.data.last_name,
           imageUrl: result.data.image_url,
         });
-        
     }
 
     return new Response(null, {

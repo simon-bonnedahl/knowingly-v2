@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import slugify from "slugify";
 
 import { mutation, query } from "./functions";
+import { defaultBanner } from "./constants";
 
 export const list = query({
   args: {},
@@ -54,7 +55,7 @@ export const create = mutation({
       .insert({
         title,
         content,
-        banner: "/banner.png",
+        banner: defaultBanner,
         slug: slugify(title, { lower: true }),
         userId: ctx.userId,
         isPublished: false,

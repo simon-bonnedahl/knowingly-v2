@@ -53,7 +53,7 @@ function convertBlockToMarkdown(block: Block): string {
 
 
 
-export const customContentToMarkdown = (content: string) => {
+export const blockContentToMarkdown = (content: string) => {
    const blocks = JSON.parse(content) as Block[];
     const markdown = blocks.map(convertBlockToMarkdown).join('\n\n');
     return markdown;

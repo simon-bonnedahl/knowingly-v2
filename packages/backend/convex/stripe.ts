@@ -4,7 +4,6 @@ import { v } from "convex/values";
 import Stripe from "stripe";
 
 import { action, internalAction } from "./_generated/server";
-import { internal } from "./_generated/api";
 
 type Metadata = {
   userId: string;

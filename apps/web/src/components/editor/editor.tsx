@@ -25,7 +25,7 @@ import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { uploadFile } from "./upload-file";
 import { BlocknoteAlert } from "./components/alert";
 import { BlocknoteGallery } from "./components/gallery";
-import { Icon, Icons } from "@knowingly/icons";
+import {  Icons } from "@knowingly/icons";
 
 
 
@@ -39,7 +39,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
   const { resolvedTheme } = useTheme()
   const subdomain = useSubdomain();
   // const members = useQuery(api.hubs.getMembers, { subdomain });
-  const pages = useQuery(api.pages.getPagesByHub, { subdomain });
+  const pages = useQuery(api.pages.getPagesByHubTest, { subdomain });
   const getUploadUrl = useMutation(api.files.generateUploadUrl);
 
 
@@ -79,7 +79,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
         type: "gallery",
       });
     },
-    group: "Database",
+    group: "Collection",
     icon: <Icons.layoutGrid className="size-4"/>,
   });
 
@@ -140,8 +140,8 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
           type: "mention",
           props: {
             user: page.name,
-            href: `/${page.slug}`,
-            image: page.image ?? "",
+            href: `/${page._id}`,
+            image: page.banner.value ?? "",
           },
         },
         " ", // add a space after the mention

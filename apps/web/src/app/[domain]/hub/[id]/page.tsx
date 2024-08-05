@@ -13,13 +13,17 @@ import { Switch } from "@knowingly/ui/switch";
 
 import { Banner } from "~/components/banner";
 import { usePreview } from "~/lib/hooks/usePreview";
-import { CustomFields } from "./custom-fields";
 import { PageToolbar } from "./toolbar";
 import { Separator } from "@knowingly/ui/separator";
 import { RequestMeeting } from "./request-meeting";
 import { SendMessage } from "./send-message";
 import { Button } from "@knowingly/ui/button";
 import { Icons } from "@knowingly/icons";
+import { FieldList } from "~/components/field/field-list";
+import { Id } from "@knowingly/backend/convex/_generated/dataModel";
+import { JSONContent } from "@tiptap/core";
+import { toast } from "sonner";
+import { useEdit } from "~/lib/hooks/useEdit";
 
 // export async function generateStaticParams() {
 //   const allHubs = await db.hub.findMany({
@@ -43,13 +47,13 @@ import { Icons } from "@knowingly/icons";
 //   return allPaths;
 // }
 
-export default function PagePage({ params }: { params: { slug: string } }) {
-
-  const page = useQuery(api.pages.getPage, { slug: params.slug });
-  const creator = useQuery(api.pages.getCreator, { slug: params.slug });
+export default function PagePage({ params }: { params: { id: string } }) {
+  const id = params.id as Id<"pages">;
+  const page = useQuery(api.pages.getPage, { id });
+  const creator = useQuery(api.pages.getCreator, { id});
   const updatePage = useMutation(api.pages.update);
 
-  const { preview, togglePreview } = usePreview();
+  const { edit, toggleEdit } = useEdit();
 
   const Editor = useMemo(
     () => dynamic(() => import("~/components/editor/editor"), { ssr: false }),
@@ -61,14 +65,19 @@ export default function PagePage({ params }: { params: { slug: string } }) {
   }
 
   const onChange = async (content: any) => {
-    void updatePage({
-      slug: params.slug,
-      field: "customContent",
-      value: JSON.stringify(content),
-    });
+    try {
+      await updatePage({
+        id,
+        field: "content",
+        value: JSON.stringify(content),
+      });
+    } catch (error: any) {
+      toast.error(`Error: ${error.data}`);
+    }
+   
   };
 
-  const goBack = () => {
+  const goBack = () => {  //TODO: Change to static href?
     window.history.back();
   };
 
@@ -84,13 +93,13 @@ export default function PagePage({ params }: { params: { slug: string } }) {
         <Icons.arrowLeft className="size-5" />
       </Button>
       <div className="absolute right-2 top-[21rem] z-20 flex items-center gap-2">
-        <Label className="font-medium">Preview</Label>
-        <Switch checked={preview} onCheckedChange={togglePreview} />
+        <Label className="font-medium">Edit</Label>
+        <Switch checked={edit} onCheckedChange={toggleEdit} />
       </div>
-      <Banner url={page.image} preview={preview} page/>
+      <Banner banner={page.banner} isPage/>
       <div className="w-full  px-24">
 
-      <PageToolbar page={page} preview={preview}>
+      <PageToolbar page={page} >
         {(creator && page.type === "PROFILE") && (
           <>
            <RequestMeeting creator={creator}/>
@@ -99,7 +108,7 @@ export default function PagePage({ params }: { params: { slug: string } }) {
           )}
 
       </PageToolbar>
-      <CustomFields customFields={page.customFields} preview={preview} />
+      <FieldList fields={page.fields} isPage/>
       </div>
 
       <Separator className="w-full" />
@@ -109,8 +118,8 @@ export default function PagePage({ params }: { params: { slug: string } }) {
        
         <Editor
           onChange={onChange}
-          initialContent={page.customContent}
-          editable={!preview}
+          initialContent={page.content}
+          editable={edit}
         />
       </div>
     </div>

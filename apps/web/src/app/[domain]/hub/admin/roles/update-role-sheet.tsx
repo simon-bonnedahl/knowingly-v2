@@ -17,7 +17,7 @@ import {
 } from "@knowingly/ui/sheet";
 import { Switch } from "@knowingly/ui/switch";
 
-import { IconPicker } from "~/components/custom-field/icon-picker";
+import { IconPicker } from "~/components/field/icon-picker";
 import { toast } from "sonner";
 
 

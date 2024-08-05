@@ -1460,12 +1460,14 @@ export const Icons = {
   
 };
 
+export type IconKey = keyof typeof Icons;
+
+
 export const Icon = ({
   name,
   ...props
-}: { name: keyof typeof Icons } & IconProps) => {
-  const Component = Icons[name] || Icons.logo;
+}: { name: string } & IconProps) => {
+
+  const Component = Icons[name] ?? Icons.logo;
   return <Component {...props} />;
 };
-
-export type IconKey = keyof typeof Icons;

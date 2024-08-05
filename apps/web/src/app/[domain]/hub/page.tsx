@@ -1,29 +1,33 @@
 "use client";
 
-import { api } from "@knowingly/backend/convex/_generated/api";
-import { useMutation, useQuery } from "convex/react";
 import { useMemo } from "react";
 import dynamic from "next/dynamic";
-import { Banner } from "~/components/banner";
-import { HubToolbar } from "./toolbar";
-import { usePreview } from "~/lib/hooks/usePreview";
-import { Switch } from "@knowingly/ui/switch";
-import { Label } from "@knowingly/ui/label";
-import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { useSearchParams } from "next/navigation";
+import { useMutation, useQuery } from "convex/react";
+
+import { api } from "@knowingly/backend/convex/_generated/api";
+import { Label } from "@knowingly/ui/label";
+import { Separator } from "@knowingly/ui/separator";
+import { Switch } from "@knowingly/ui/switch";
+
+import { Banner } from "~/components/banner";
+import { FieldList } from "~/components/field/field-list";
 import { InviteModal } from "~/components/modals/invite-modal";
+import { useSubdomain } from "~/lib/hooks/useSubdomain";
+import { HubToolbar } from "./toolbar";
+import { useEdit } from "~/lib/hooks/useEdit";
 
 export default function HubPage() {
   const subdomain = useSubdomain();
   const searchParams = useSearchParams();
 
-  const hub = useQuery(api.hubs.getHub, {subdomain});
+  const hub = useQuery(api.hubs.getHub, { subdomain });
   const updateHub = useMutation(api.hubs.update);
-  const { preview, togglePreview } = usePreview();
+  const { edit, toggleEdit } = useEdit();
 
   const Editor = useMemo(
     () => dynamic(() => import("~/components/editor/editor"), { ssr: false }),
-    []
+    [],
   );
 
   if (!hub) {
@@ -33,35 +37,34 @@ export default function HubPage() {
   const onChange = async (content: any) => {
     await updateHub({
       subdomain: hub.subdomain,
-      field: "customContent",
+      field: "content",
       value: JSON.stringify(content),
     });
   };
 
-
   return (
     <>
-    <InviteModal  inviteToken={searchParams.get("invite")}/>
-    <div className="flex flex-col w-full items-center relative">
-      <div className="absolute top-[21rem] right-2 z-20 flex items-center gap-2">
-        <Label className="font-medium">Preview</Label>
-          <Switch
-            
-            checked={preview}
-            onCheckedChange={togglePreview}
-          />
-      </div>
-      <Banner url={hub.banner} preview={preview} />
+      <InviteModal inviteToken={searchParams.get("invite")} />
+      <div className="relative flex w-full flex-col items-center">
+        <div className="absolute right-2 top-[21rem] z-20 flex items-center gap-2">
+          <Label className="font-medium">Edit</Label>
+          <Switch checked={edit} onCheckedChange={toggleEdit} />
+        </div>
+        <Banner banner={hub.banner} />
+        <div className="w-full  px-24">
+          <HubToolbar hub={hub}  />
+          <FieldList fields={hub.fields} />
+        </div>
 
-      <HubToolbar initialData={hub} preview={preview} />
-      <div className="p-4 w-full pb-[400px]" >
-        <Editor
-          onChange={onChange}
-          initialContent={hub.customContent}
-          editable={!preview}
-        />
+        <Separator className="w-full" />
+        <div className="w-full p-4 pb-96">
+          <Editor
+            onChange={onChange}
+            initialContent={hub.content}
+            editable={edit}
+          />
+        </div>
       </div>
-    </div>
     </>
   );
 }

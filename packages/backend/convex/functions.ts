@@ -20,6 +20,7 @@ import {
 } from "./_generated/server";
 import { getEntDefinitionsWithRules, getUserId } from "./rules";
 import { entDefinitions } from "./schema";
+import { Ent, Permissions } from "./types";
 
 export const query = customQuery(
   baseQuery,
@@ -102,7 +103,7 @@ async function mutationCtx(baseCtx: MutationCtx) {
     return ent;
   };
   (ctx as any).userX = userX;
-  const permissions = async (hubId: Id<"hubs">) => {
+  const permissions = async (hubId: Id<"hubs">): Promise<Permissions & { canDoAnything: boolean}> => {
     const hub = await table("hubs").getX(hubId);
     const user = await userX();
     const membership = user
@@ -118,11 +119,12 @@ async function mutationCtx(baseCtx: MutationCtx) {
 
 async function actionCtx(baseCtx: ActionCtx) {
   const tokenIdentifier = (await baseCtx.auth.getUserIdentity())?.subject;
-  const user = async () => {
+  const user = async () : Promise<Ent<"users">| null> => {
     if (!tokenIdentifier) return null;
-    return await baseCtx.runQuery(api.users.getByTokenIdentifier, {
+    const u = await baseCtx.runQuery(api.users.getByTokenIdentifier, {
       tokenIdentifier,
     });
+    return u;
   };
 
   const userX = async () => {
@@ -132,7 +134,7 @@ async function actionCtx(baseCtx: ActionCtx) {
     }
     return ent;
   };
-  const permissions = async (hubId: Id<"hubs">) => {
+  const permissions = async (hubId: Id<"hubs">) : Promise<Permissions & { canDoAnything: boolean}> => {
     const hub = await baseCtx.runQuery(api.hubs.getHub, { id: hubId });
     if(!hub) throw new Error("Hub not found");
     const user = await userX();

@@ -54,6 +54,7 @@ export const createUser = internalMutation({
       imageUrl,
       role: "USER",
       uploads: [],
+      pageVisits: [],
     });
     // fetch all hub invites for this email and create notifications
     const hubInvites = await ctx.table("hubInvites").filter((q) =>
@@ -61,11 +62,7 @@ export const createUser = internalMutation({
     );
     await Promise.all(
       hubInvites.map(async (invite) => {
-        await ctx.table("members").insert({
-          userId: user,
-          hubId: invite.hubId,
-          roleId: invite.roleId,
-        });
+        await invite.patch({ user });
         const inviter = await invite.edge("inviter");
         const title = `${inviter.name} has invited you to join a hub`;
         const body = `You have been invited to join a hub. Click here to view the invite`;
@@ -114,14 +111,26 @@ export const getUploads = query({
             return []
         }
 
-
-        return await Promise.all(user.uploads.map(async (upload) => {
+        const uploads =  await Promise.all(user.uploads.map(async (upload) => {
             return await ctx.storage.getUrl(upload)
         }
         ))
+        return uploads.filter((u) => u !== null)
         }
 
     });
+export const getMyProfile = query({
+    args: {subdomain: v.string()},
+    handler: async (ctx, args) => {
+      const hub = await ctx.table("hubs").get("subdomain", args.subdomain)
+        const user =  await ctx.user()
+        const membership = await user?.edge("memberships").filter((q) => q.eq(q.field("hubId"), hub?._id)).first()
+        if (!membership) {
+            return null
+        }
+        return await membership.edge("pages").filter((q) => q.eq(q.field("type"), "PROFILE")).first()
+    }
+})
 
 // export const updateSubscription = internalMutation({
 //   args: { subscriptionId: v.string(), userId: v.string(), endsOn: v.number() },

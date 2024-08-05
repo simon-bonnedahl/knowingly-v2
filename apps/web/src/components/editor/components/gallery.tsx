@@ -3,15 +3,15 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
-import {
-  createReactBlockSpec,
-} from "@blocknote/react";
-import { useMutation, useQuery } from "convex/react";
+import { createReactBlockSpec } from "@blocknote/react";
+import { NodeViewWrapper } from "@tiptap/react";
+import { useAction, useMutation, useQuery } from "convex/react";
+import { FunctionReturnType } from "convex/server";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
-import { Ent } from "@knowingly/backend/convex/types";
-import { Icons } from "@knowingly/icons";
+import { getOrCreate } from "@knowingly/backend/convex/collections";
+import { Ent, PageType } from "@knowingly/backend/convex/types";
+import { Icon, Icons } from "@knowingly/icons";
 import { Button } from "@knowingly/ui/button";
 import { Input } from "@knowingly/ui/input";
 import { Label } from "@knowingly/ui/label";
@@ -31,12 +31,20 @@ import {
 import { Separator } from "@knowingly/ui/separator";
 import { capitalizeFirstLetter } from "@knowingly/utils";
 
+import { useDebounce } from "~/lib/hooks/useDebounce";
+import { useEdit } from "~/lib/hooks/useEdit";
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
+import { Id } from "@knowingly/backend/convex/_generated/dataModel";
+import Image from "next/image";
 
 export const BlocknoteGallery = createReactBlockSpec(
   {
     type: "gallery",
     propSchema: {
+      collectionId: {
+        default: "",
+        values: [],
+      },
       columns: {
         default: 2,
         values: [2, 3, 4, 5],
@@ -46,17 +54,49 @@ export const BlocknoteGallery = createReactBlockSpec(
         values: ["PROFILE", "EVENT"],
       },
     },
-    content: "none",
+    content: "inline",
   },
   {
     render: (props) => {
       const Gallery = () => {
         const subdomain = useSubdomain();
+        const { edit } = useEdit();
         const [columns, setColumns] = useState(props.block.props.columns);
         const [type, setType] = useState(props.block.props.type);
-        const [search, setSearch] = useState("");
-        const pages = useQuery(api.pages.getPagesByHub, { subdomain, type });
+        const [name, setName] = useState<string>("");
+        const debouncedName = useDebounce(name, 1000);
+        const [search, setSearch] = useState<string>("");
+        const getOrCreateCollection = useAction(api.collections.getOrCreate);
+        const updateCollection = useMutation(api.collections.update);
+        const [collection, setCollection] =
+          useState<FunctionReturnType<typeof api.collections.get>>();
+        const [isFetching, setIsFetching] = useState(false);
+
+        useEffect(() => {
+          async function getOrCreate() {
+            setIsFetching(true);
+            const collection = await getOrCreateCollection({
+              subdomain,
+              id: props.block.props.collectionId,
+            });
+            setCollection(collection);
+            setName(collection.name);
+          }
+          if (!isFetching) {
+            void getOrCreate();
+          }
+        }, []);
+
         const [filteredPages, setFilteredPages] = useState<Ent<"pages">[]>();
+
+        useEffect(() => {
+          if (!collection || debouncedName === collection.name) return;
+          void updateCollection({
+            id: collection._id,
+            field: "name",
+            value: name,
+          });
+        }, [debouncedName]);
 
         useEffect(() => {
           void props.editor.updateBlock(props.block, {
@@ -73,56 +113,73 @@ export const BlocknoteGallery = createReactBlockSpec(
         }, [type]);
 
         useEffect(() => {
-          if (pages) {
-            setFilteredPages(pages);
+          if (collection && collection._id !== props.block.props.collectionId) {
+            void props.editor.updateBlock(props.block, {
+              type: "gallery",
+              props: { collectionId: collection._id },
+            });
           }
-        }, [pages]);
+          if (collection) setFilteredPages(collection.pages);
+
+        }, [collection]);
 
         useEffect(() => {
           if (search) {
             setFilteredPages(
-              pages?.filter((page) =>
+              collection.pages?.filter((page) =>
                 page.name.toLowerCase().includes(search.toLowerCase()),
               ),
             );
           } else {
-            setFilteredPages(pages);
+            setFilteredPages(collection?.pages ?? []);
           }
         }, [search]);
 
         return (
-          <div
-            className="z-10 flex w-full flex-col gap-2 p-4"
-            ref={props.contentRef}
-          >
+          <NodeViewWrapper className="z-10 flex w-full select-none flex-col  gap-2">
             <div className="flex  w-full items-center   ">
               <div className="flex flex-row items-center gap-2">
-                <Label>Columns:</Label>
-                <Select defaultValue={columns.toString()} onValueChange={setColumns}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select columns" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {[2, 3, 4, 5].map((value) => (
-                      <SelectItem key={value} value={value.toString()}>
-                        {value}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Label>Type:</Label>
-                <Select defaultValue={type} onValueChange={setType}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {["PROFILE", "EVENT"].map((value) => (
-                      <SelectItem key={value} value={value}>
-                        {capitalizeFirstLetter(value)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.currentTarget.value)}
+                  type="text"
+                  placeholder="Untitled..."
+                  disabled={!edit}
+                  className="w-full  bg-transparent text-2xl  font-bold leading-none text-foreground  focus:outline-none"
+                />
+                {edit && (
+                  <>
+                    <Label>Columns:</Label>
+                    <Select
+                      defaultValue={columns.toString()}
+                      onValueChange={setColumns}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select columns" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {[2, 3, 4, 5].map((value) => (
+                          <SelectItem key={value} value={value.toString()}>
+                            {value}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Label>Type:</Label>
+                    <Select defaultValue={type} onValueChange={setType}>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {["PROFILE", "EVENT"].map((value) => (
+                          <SelectItem key={value} value={value}>
+                            {capitalizeFirstLetter(value)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </>
+                )}
               </div>
               <div className="relative ml-auto flex-1 md:grow-0">
                 <Icons.search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -147,24 +204,50 @@ export const BlocknoteGallery = createReactBlockSpec(
               {filteredPages?.map((page) => (
                 <Link
                   key={page._id}
-                  href={`/${page.slug}`}
-                  className="hover:cursor-pointer"
+                  href={`/${page._id}`}
+                  className="z-50 hover:cursor-pointer"
                 >
                   <MinimalCard>
-                    <MinimalCardImage
-                      src={page.image ?? "/placeholder-profile.jpeg"}
-                      alt={page.name}
-                    />
-                    <MinimalCardTitle> {page.name}</MinimalCardTitle>
+                    <div className="relative">
+
+                    <MinimalCardImage src={page.banner.value} alt={page.name} />
+                      <div className="absolute -bottom-6 left-4 size-[3.5rem] ">
+                        {page.icon.type === "URL" && (
+                          <Image
+                            src={page.icon.value}
+                            width={50}
+                            height={50}
+                            alt="icon"
+                            className="size-full rounded-full object-cover"
+                          />
+                        )}
+                        {page.icon.type === "EMOJI" && (
+                          <span className=" select-none text-[3.5rem] leading-[3.5rem]">
+                            {page.icon.value}
+                          </span>
+                        )}
+                        {page.icon.type === "ICON" && (
+                          <Icon name={page.icon.value} className="size-full" />
+                        )}
+
+                      </div>
+                    </div>
+                        <span className="text-xl font-medium px-5">
+                          {page.name}
+                        </span>
+                    {/* <MinimalCardTitle> {page.name}</MinimalCardTitle> */}
                     {/* <MinimalCardDescription>
                   {page.description}
                 </MinimalCardDescription> */}
                   </MinimalCard>
                 </Link>
               ))}
-              <CreateNewPageModal type={type} />
+              {(collection && edit) && (
+              <CreateNewPageModal type={type} collectionId={collection._id} />
+
+              )}
             </div>
-          </div>
+          </NodeViewWrapper>
         );
       };
 
@@ -173,15 +256,15 @@ export const BlocknoteGallery = createReactBlockSpec(
   },
 );
 
-const CreateNewPageModal = ({type} : {type : string}) => {
+const CreateNewPageModal = ({ type, collectionId }: { type: PageType, collectionId : Id<"collections"> }) => {
   const subdomain = useSubdomain();
-  const createPage = useMutation(api.pages.createPage);
+  const createPage = useMutation(api.pages.create);
   const router = useRouter();
   const [name, setName] = useState("");
 
   const onCreate = async () => {
-    const newPage = await createPage({ name, subdomain, type });
-    router.push(`/${newPage.slug}`);
+    const newPage = await createPage({ name, subdomain, type, collectionId });
+    router.push(`/${newPage._id}`);
   };
   return (
     <Modal>
@@ -195,7 +278,9 @@ const CreateNewPageModal = ({type} : {type : string}) => {
       </ModalTrigger>
       <ModalContent className="min-w-fit">
         <div className="flex flex-col gap-2 ">
-          <h1 className="text-3xl font-bold">Create New {capitalizeFirstLetter(type)}</h1>
+          <h1 className="text-3xl font-bold">
+            Create New {capitalizeFirstLetter(type)}
+          </h1>
           <Input
             placeholder="Name"
             value={name}
