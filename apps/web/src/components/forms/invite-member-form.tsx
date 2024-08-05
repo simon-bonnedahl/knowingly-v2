@@ -29,6 +29,7 @@ import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { capitalizeFirstLetter } from "@knowingly/utils";
 import type { IconKey } from "@knowingly/icons";
 import { Icon } from "@knowingly/icons";
+import { RenderIcon } from "../icon-picker/render-icon";
 
 interface InviteMemberFormProps
   extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
@@ -84,11 +85,7 @@ export function InviteMemberForm({
                     {roles?.map((role) => (
                       <SelectItem key={role._id} value={role._id}>
                         <div className="flex w-[6.25rem] items-center">
-                          <Icon
-                            name={role.icon as IconKey  }
-                            className="mr-2 size-4 text-muted-foreground"
-                            aria-hidden="true"
-                          />
+                        <RenderIcon icon={role.icon} size={1} className="mr-2 text-muted-foreground" />
                           <span className="capitalize">
                             {capitalizeFirstLetter(role.name)}
                           </span>

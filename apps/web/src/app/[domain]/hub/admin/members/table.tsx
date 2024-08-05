@@ -3,10 +3,8 @@
 
 import * as React from "react";
 import { Preloaded, usePreloadedQuery } from "convex/react";
-import { FunctionReturnType } from "convex/server";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
-import { IconKey } from "@knowingly/icons";
 
 import { DataTable } from "~/components/data-table/data-table";
 import { DataTableSkeleton } from "~/components/data-table/data-table-skeleton";
