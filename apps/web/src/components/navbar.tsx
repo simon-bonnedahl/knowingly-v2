@@ -169,7 +169,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
     if (!color || !document) return;
     const colorHSL = hexToHSL(color);
     const adjustedColor =
-      theme === "dark" ? adjustLightness(colorHSL, 25) : colorHSL;
+      theme === "dark" ? adjustLightness(colorHSL, 15) : colorHSL;
     document.documentElement.style.setProperty("--primary", adjustedColor);
     const shades = generateShades(colorHSL, 5);
     if (theme === "dark") shades.reverse();
@@ -195,7 +195,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
           <Skeleton className="h-12 w-full bg-card " />
         )}
 
-        <div className="mt-2 flex h-full flex-col justify-between border-t pt-2">
+        <div className="mt-2 flex h-full flex-col justify-between  pt-2">
           <div className="flex flex-col gap-2">
             {subdomain !== "app" && <Search />}
             {tabs.top.map(({ name, href, isActive, icon, visible, count }) => (

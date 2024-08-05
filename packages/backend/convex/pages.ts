@@ -6,21 +6,18 @@ import { v4 as uuid } from "uuid";
 
 import { api } from "./_generated/api";
 import {  internalAction } from "./_generated/server";
-import { customContentToMarkdown } from "./blocknote";
 import { action, internalMutation, mutation, query } from "./functions";
-import { pageTypes } from "./schema";
-import { defaultBanner, defaultCustomContent, defaultPageContent, defaultPageIcon } from "./constants";
+import { defaultBanner, defaultPageContent, defaultPageIcon } from "./constants";
+import { Ent, pageType } from "./types";
+import { blockContentToMarkdown } from "./blocknote";
 
-export const createPage = mutation({
-  args: { name: v.string(), subdomain: v.string(), type: pageTypes },
+export const create = mutation({
+  args: { name: v.string(), subdomain: v.string(), type: pageType, collectionId: v.optional(v.id("collections")) },
   handler: async (ctx, args) => {
     if (!ctx.userId) throw new ConvexError("Unauthorized");
     const { name, subdomain, type } = args;
     const hub = await ctx.table("hubs").getX("subdomain", subdomain);
-    let slug = name.toLowerCase().replace(/\s/g, "-");
 
-    const pageExists = await ctx.table("pages").get("slug", slug);
-    if (pageExists) slug = `${slug}-${uuid()}`;
 
     const member = await ctx
       .table("users")
@@ -34,39 +31,38 @@ export const createPage = mutation({
       .table("pages")
       .insert({
         name,
-        slug,
         hubId: hub._id,
         type,
         isPublic: true,
         isLocked: false,
-        image: hub.banner,
+        banner: hub.banner,
         icon: defaultPageIcon(type),
-        customFields: [],
-        customContent: defaultPageContent(type), //TODO: should be replaced by templates later on
+        fields: [],
+        content: defaultPageContent(type), //TODO: should be replaced by templates later on
         memberId: member._id,
-        updatedEmbedding: false,
+        updatedAt: Date.now(),
+        collections: args.collectionId ? [args.collectionId] : [],
       })
       .get();
     return page;
   },
 });
 export const getPage = query({
-  args: { slug: v.string() },
+  args: { id: v.id("pages") },
   handler: async (ctx, args) => {
-    const page = ctx.table("pages").get("slug", args.slug);
+    const page = ctx.table("pages").get(args.id);
     return page;
   },
 });
-export const getPages = query({
-  args: { ids: v.array(v.id("pages")) },
+export const list = query({
+  args: { ids: v.optional(v.array(v.id("pages"))) },
   handler: async (ctx, args) => {
-    const pages = await ctx.table("pages");
-    const filteredPages = pages.filter((page) => args.ids.includes(page._id));
-    return filteredPages;
+    if (!args.ids) return await ctx.table("pages")
+    return (await ctx.table("pages").getMany(args.ids)).filter((p) => !!p);
   },
 });
 export const getPagesByHub = query({
-  args: { subdomain: v.string(), type: v.optional(v.string()) },
+  args: { subdomain: v.string(), type: v.optional(pageType) },
   handler: async (ctx, args) => {
     const pages = await ctx
       .table("hubs")
@@ -80,80 +76,80 @@ export const getPagesByHub = query({
   },
 });
 
-export const update = mutation({
-  args: { slug: v.string(), field: v.string(), value: v.any() },
+export const getPagesByHubTest = query({
+  args: { subdomain: v.string(), type: v.optional(pageType) },
   handler: async (ctx, args) => {
-    const { slug, field, value } = args;
+    const pages = await ctx
+      .table("hubs")
+      .get("subdomain", args.subdomain)
+      .edge("pages");
+    if(!pages) return []
+    if (args.type) {
+      return pages.filter((page) => page.type === args.type);
+    }
+    return pages;
+  },
+});
+
+
+export const update = mutation({
+  args: { id:v.id("pages"), field: v.string(), value: v.any() },
+  handler: async (ctx, args) => {
+    const { id, field, value } = args;
     return await ctx
       .table("pages")
-      .getX("slug", slug)
+      .getX(id)
       .patch({
         [field]: value,
-        updatedEmbedding: field === "embedding" ? true : false,
+        updatedAt: Date.now(),
       });
   },
 });
 
-export const addCustomField = mutation({
-  args: { slug: v.string() },
-  handler: async (ctx, args) => {
-    const slug = `text-${uuid().slice(0, 3)}`;
-    const customField = await ctx
-      .table("customFields")
-      .insert({
-        name: "New Field",
-        slug,
-        icon: "alignLeft",
-        type: "text",
-        isLocked: false,
-        isSuggested: false,
-      })
-      .get();
-    return customField;
-  },
-});
+
 
 export const getCreator = query({
-  args: { slug: v.string() },
+  args: { id: v.id("pages") },
   handler: async (ctx, args) => {
     const user = await ctx
       .table("pages")
-      .get("slug", args.slug)
-      .edge("member")
+      .get(args.id)
+      .edge("creator")
       .edge("user");
     return user;
   },
 });
 export const getPagesToEmbed = query({
-  args: {},
-  handler: async (ctx) => {
+  args: {updateInterval : v.number()},
+  handler: async (ctx, args) => {
+    const ms = args.updateInterval * 60 * 1000; // minutes to milliseconds
     const pages = await ctx
       .table("pages")
-      .filter((q) => q.eq(q.field("updatedEmbedding"), false));
+      .filter((q) => q.gte(q.field("updatedAt"), Date.now() - ms));
     return pages;
   },
 });
 
 export const updateEmbeddings = internalAction({
-  args: {},
-  handler: async (ctx) => {
-    const pagesToEmbed = await ctx.runQuery(api.pages.getPagesToEmbed);
+  args: {updateInterval : v.number()},
+  handler: async (ctx, args) => {
+    const pagesToEmbed = await ctx.runQuery(api.pages.getPagesToEmbed, {updateInterval: args.updateInterval});
     for (const page of pagesToEmbed) {
       let markdown = "## " + page.name + "\n\n";
 
-      for (const field of page.customFields) {
-        const f = await ctx.runQuery(api.customFields.get, { id: field.id });
+      for (const field of page.fields) {
+        const f = await ctx.runQuery(api.fields.get, { id: field.id });
         if (!f) continue;
         markdown += `- ${f.name} : ${field.value}\n\n`;
       }
-      markdown += customContentToMarkdown(page.customContent);
+      markdown += blockContentToMarkdown(page.content);
 
       const { embedding } = await embed({
         model: openai.embedding("text-embedding-3-small"),
         value: markdown,
       });
       await ctx.runMutation(api.pages.update, {
-        slug: page.slug,
+        id: page._id,
         field: "embedding",
         value: embedding,
       });
@@ -165,7 +161,7 @@ export const updateEmbeddings = internalAction({
 
 export const vectorSearch = action({
   args: { query: v.string(), subdomain: v.string() },
-  handler: async (ctx, args) => {
+  handler: async (ctx, args) :  Promise<Ent<"pages">[]>=> {
     let res = [];
     const { query, subdomain } = args;
 
@@ -183,14 +179,9 @@ export const vectorSearch = action({
       filter: (q) => q.eq("hubId", hub._id),
     });
     const filteredResults = results.filter((r) => r._score > 0.2);
-    const pages = await ctx.runQuery(api.pages.getPages, {
+    const pages = await ctx.runQuery(api.pages.list, {
       ids: filteredResults.map((r) => r._id),
     });
-   return pages.sort((a, b) => {
-      return (
-        filteredResults.find((r) => r._id === a._id)._score -
-        filteredResults.find((r) => r._id === b._id)._score
-      );
-    });
+   return pages; //TODO: Sort?
   },
 });

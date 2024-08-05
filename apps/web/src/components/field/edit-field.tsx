@@ -2,20 +2,22 @@ import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@knowingly/ui/button";
 
-import type { CustomFieldTypeKey } from "./types";
-import { CustomFieldTypes } from "./types";
-import { usePreview } from "~/lib/hooks/usePreview";
-import type { Ent } from "@knowingly/backend/convex/types";
+import type { Ent, FieldValue } from "@knowingly/backend/convex/types";
+import { Id } from "@knowingly/backend/convex/_generated/dataModel";
+import { Fields } from "./types";
+import { useDebounce } from "~/lib/hooks/useDebounce";
+import { useEdit } from "~/lib/hooks/useEdit";
 
 interface EditFieldProps {
-  field: Ent<"customFields">;
-  fieldValue: any;
-  onEditValue: (id: string, value: any) => void;
+  field: Ent<"fields">;
+  fieldValue: FieldValue;
+  onEditValue: (id: Id<"fields">, value: FieldValue) => void;
 }
 export const EditField = ({ field, fieldValue, onEditValue }: EditFieldProps) => {
   const [value, setValue] = useState(fieldValue);
+  const debouncedValue = useDebounce(value, 3000);
   const [active, setActive] = useState(false);
-  const {preview} = usePreview();
+  const {edit} = useEdit();
 
   const ref = useRef(null);
 
@@ -33,28 +35,25 @@ export const EditField = ({ field, fieldValue, onEditValue }: EditFieldProps) =>
   }, []);
 
   useEffect(() => {
-    const debounce = setTimeout(() => {
-      onEditValue(field._id, value);
-    }, 1000);
-    return () => clearTimeout(debounce);
-  }, [value]);
+      onEditValue(field._id, debouncedValue);
+  }, [debouncedValue]);
 
 
-  const CustomFieldValueInput = CustomFieldTypes[field.type as CustomFieldTypeKey].valueInput;
-  const CustomFieldButton = CustomFieldTypes[field.type as CustomFieldTypeKey].button;
-  if(preview) {
+  const FieldValueInput = Fields[field.type].valueInput;
+  const FieldButton = Fields[field.type].button;
+  if(!edit) {
     return(
         <div
           className=" w-full items-center justify-start truncate px-4 inline-flex whitespace-nowrap rounded-md text-sm font-medium  py-2"
         >
-        <CustomFieldButton value={value} options={field.options} />
+        <FieldButton value={value} options={field.options} />
         </div>
     )
   }
   return (
     <div className="w-full" ref={ref}>
       {active ? (
-        <CustomFieldValueInput
+        <FieldValueInput
           value={value}
           setValue={setValue}
         />
@@ -62,11 +61,11 @@ export const EditField = ({ field, fieldValue, onEditValue }: EditFieldProps) =>
         <Button
           variant="ghost"
           className="flex w-full items-center justify-start truncate h-fit"
-          disabled={preview}
+          disabled={!edit}
           onClick={() => setActive(true)}
         >   
             {value ? (
-          <CustomFieldButton value={value} options={field.options} />
+          <FieldButton value={value} options={field.options} />
 
                 
             ): 

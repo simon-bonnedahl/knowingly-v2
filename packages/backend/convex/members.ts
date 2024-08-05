@@ -3,7 +3,7 @@ import slugify from "slugify";
 import { v4 as uuid } from "uuid";
 
 import { mutation } from "./functions";
-import { defaultCustomContent, defaultPageContent } from "./constants";
+import { defaultcontent, defaultPageContent } from "./constants";
 
 export const update = mutation({
   args: { id: v.id("members"), field: v.string(), value: v.any() },
@@ -43,9 +43,9 @@ export const create = mutation({
         memberId: member._id,
         hubId,
         isPublic: true,
-        customContent: defaultPageContent("PROFILE"),
+        content: defaultPageContent("PROFILE"),
         updatedEmbedding: false,
-        customFields: [],
+        fields: [],
         isLocked: false,
       })
       .get();

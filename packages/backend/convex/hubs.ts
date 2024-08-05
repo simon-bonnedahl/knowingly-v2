@@ -1,14 +1,20 @@
 import { PaginationOptions } from "convex/server";
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 
 import {
   defaultBanner,
   defaultColor,
-  defaultCustomContent,
-  defaultLogo,
+  defaultContent,
+  defaultIcon,
   defaultRoles,
 } from "./constants";
-import { mutation, query } from "./functions";
+import { action, mutation, query } from "./functions";
+import { Ent, tier } from "./types";
+import { internalAction } from "./_generated/server";
+import { api } from "./_generated/api";
+import { blockContentToMarkdown } from "./blocknote";
+import { embed } from "ai";
+import { openai } from "@ai-sdk/openai";
 
 export const create = mutation({
   args: {
@@ -16,7 +22,7 @@ export const create = mutation({
     subdomain: v.string(),
     description: v.optional(v.string()),
     isPublic: v.boolean(),
-    tier: v.union(v.literal("FREE"), v.literal("PRO"), v.literal("ENTERPRISE")),
+    tier: tier,
   },
   handler: async (ctx, args) => {
     const { name, subdomain, description, isPublic, tier } = args;
@@ -26,13 +32,15 @@ export const create = mutation({
       .insert({
         name,
         subdomain,
+        fields: [],
         description,
         isPublic,
         tier,
-        customContent: defaultCustomContent,
+        content: defaultContent,
         banner: defaultBanner,
         brandingColor: defaultColor,
-        logo: defaultLogo,
+        icon: defaultIcon,
+        updatedAt: Date.now(),
       })
       .get();
     //create default roles
@@ -56,17 +64,17 @@ export const getHub = query({
   args: { subdomain: v.optional(v.string()), id: v.optional(v.id("hubs")) },
   handler: async (ctx, args) => {
     if (!args.id && !args.subdomain)
-      throw new Error("id or subdomain is required");
+      throw new ConvexError("Required parameter missing");
     if (args.id) return await ctx.table("hubs").get(args.id);
     if (args.subdomain)
       return await ctx.table("hubs").get("subdomain", args.subdomain);
   },
 });
 export const list = query({
-  args: {},
-  handler: async (ctx) => {
-    const hubs = await ctx.table("hubs");
-    return hubs;
+  args: {ids: v.optional(v.array(v.id("hubs"))) },
+  handler: async (ctx, args) => {
+    if(args.ids) return (await ctx.table("hubs").getMany(args.ids)).filter((h) => !!h);
+    return await ctx.table("hubs");
   },
 });
 
@@ -99,14 +107,22 @@ export const getPublicHubs = query({
 });
 
 export const update = mutation({
-  args: { subdomain: v.string(), field: v.string(), value: v.any() },
+  args: { subdomain: v.optional(v.string()), id: v.optional(v.id("hubs")), field: v.string(), value: v.any() },
   handler: async (ctx, args) => {
-    const { subdomain, field, value } = args;
-    const hub = await ctx
-      .table("hubs")
-      .getX("subdomain", subdomain)
-      .patch({ [field]: value });
-    return hub;
+    const { subdomain, id, field, value } = args;
+    if (!id && !subdomain) throw new ConvexError("Required parameter missing");
+
+    if(id)  await ctx
+    .table("hubs")
+    .getX(id)
+    .patch({ [field]: value, updatedAt: Date.now() });
+    if(subdomain) await ctx
+    .table("hubs")
+    .getX("subdomain", subdomain)
+    .patch({ [field]: value, updatedAt: Date.now() });
+
+    return;
+
   },
 });
 
@@ -188,5 +204,72 @@ export const isAvailable = query({
     const { subdomain } = args;
     if (!subdomain || subdomain.length < 2) return false;
     return !(await ctx.table("hubs").get("subdomain", subdomain));
+  },
+});
+
+
+//AI features
+
+export const getHubsToEmbed = query({
+  args: {updateInterval : v.number()},
+  handler: async (ctx, args) => {
+    const ms = args.updateInterval * 60 * 1000; // minutes to milliseconds
+    const hubs = await ctx
+      .table("hubs")
+      .filter((q) => q.gte(q.field("updatedAt"), Date.now() - ms));
+    return hubs;
+  },
+});
+
+export const updateEmbeddings = internalAction({
+  args: {updateInterval : v.number()},
+  handler: async (ctx, args) => {
+    const hubsToEmbed = await ctx.runQuery(api.hubs.getHubsToEmbed, {updateInterval: args.updateInterval});
+    for (const hub of hubsToEmbed) {
+      let markdown = "## " + hub.name + "\n\n";
+
+      for (const field of hub.fields) {
+        const f = await ctx.runQuery(api.fields.get, { id: field.id });
+        if (!f) continue;
+        markdown += `- ${f.name} : ${field.value}\n\n`;
+      }
+      markdown += blockContentToMarkdown(hub.content);
+
+      const { embedding } = await embed({
+        model: openai.embedding("text-embedding-3-small"),
+        value: markdown,
+      });
+      await ctx.runMutation(api.hubs.update, {
+        id: hub._id,
+        field: "embedding",
+        value: embedding,
+      });
+    }
+
+    return;
+  },
+});
+
+export const vectorSearch = action({
+  args: { query: v.string()},
+  handler: async (ctx, args) : Promise<Ent<"hubs">[]> => {
+    const { query } = args;
+
+    const { embedding } = await embed({
+      model: openai.embedding("text-embedding-3-small"),
+      value: query,
+    });
+
+    const results = await ctx.vectorSearch("hubs", "by_embedding", {
+      vector: embedding,
+      limit: 16,
+      filter: (q) => q.eq("isPublic", true),
+    });
+    const filteredResults = results.filter((r) => r._score > 0.2);
+    if(filteredResults.length === 0) return [];
+    const hubs = await ctx.runQuery(api.hubs.list, {
+      ids: filteredResults.map((r) => r._id),
+    });
+    return hubs; // TODO: Sort?
   },
 });

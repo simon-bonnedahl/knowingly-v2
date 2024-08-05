@@ -23,12 +23,11 @@ import {
   DynamicIslandProvider,
   DynamicTitle,
   useDynamicIslandSize,
-  useScheduledAnimations,
 } from "~/components/dynamic-island";
 
 const DynamicAction = () => {
   const { state: blobState, setSize } = useDynamicIslandSize();
-  const blobStates: SizePresets[] = ["compact", "large", "tall"];
+  const blobStates: SizePresets[] = ["empty", "large", "tall"];
 
   const [compactIndex, setCompactIndex] = useState(0);
   const [savedIds, setSavedIds] = useState<string[]>([]);
@@ -73,7 +72,7 @@ const DynamicAction = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setBlobState("compact")
+      setBlobState("empty")
     }, 10000);
 
     return () => clearInterval(interval);
@@ -149,12 +148,12 @@ const DynamicAction = () => {
           {latestMessage?.body}
         </span>
       </DynamicDiv>
-      <Separator horizontal />
+      <Separator  />
       <div className="flex w-full items-center gap-1">
         <Button
           variant={"outline"}
           className="w-full"
-          onClick={() => setBlobState("compact")}
+          onClick={() => setBlobState("empty")}
         >
           Dismiss
         </Button>
@@ -187,9 +186,11 @@ const DynamicAction = () => {
         return renderLargeState();
       case "tall":
         return renderTallState();
+      case "empty":
+        return null
 
       default:
-        return renderCompactState();
+        return null
     }
   }
 
@@ -198,7 +199,7 @@ const DynamicAction = () => {
       <DynamicIsland id="dynamic-blob">
         <button
           onClick={() => {
-            setSize("compact");
+            setSize("empty");
             setCompactIndex((prevIndex) => (prevIndex + 1) % 3);
           }}
         >
@@ -211,7 +212,7 @@ const DynamicAction = () => {
 
 export function DynamicIslandDemo() {
   return (
-    <DynamicIslandProvider initialSize={"compact"}>
+    <DynamicIslandProvider initialSize={"empty"}>
       <DynamicAction />
     </DynamicIslandProvider>
   );

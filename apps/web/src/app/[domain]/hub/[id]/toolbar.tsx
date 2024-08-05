@@ -1,48 +1,42 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { useMutation } from "convex/react";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
-import { Ent, Icon as IconType } from "@knowingly/backend/convex/types";
-import { Icon } from "@knowingly/icons";
 import { Avatar, AvatarImage } from "@knowingly/ui/avatar";
-import { Button } from "@knowingly/ui/button";
 
 import { IconPicker } from "~/components/icon-picker";
-import { useOnborda } from "~/components/onborda";
-import { useEdit } from "~/lib/hooks/useEdit";
-import { useSubdomain } from "~/lib/hooks/useSubdomain";
-import { toast } from "sonner";
+import { Ent, Icon as IconType } from "@knowingly/backend/convex/types";
 import { useDebounce } from "~/lib/hooks/useDebounce";
+import { toast } from "sonner";
+import { Icon } from "@knowingly/icons";
+import { useEdit } from "~/lib/hooks/useEdit";
+import Image from "next/image";
 
-interface HubToolbarProps {
-  hub: Ent<"hubs">;
+interface ToolbarProps {
+  page: Ent<"pages">;
+  children?: React.ReactNode;
 }
 
-export const HubToolbar = ({ hub }: HubToolbarProps) => {
-  const subdomain = useSubdomain();
-  const { edit } = useEdit();
-
-  const [name, setName] = useState(hub.name);
+export const PageToolbar = ({
+  page,
+  children,
+}: ToolbarProps) => {
+  const { edit} = useEdit();
+  const [name, setName] = useState(page.name);
   const debouncedName = useDebounce(name, 1000);
-  const [description, setDescription] = useState(hub.description);
-  const debouncedDescription = useDebounce(description, 1000);
-  const [icon, setIcon] = useState(hub.icon);
+  const [icon, setIcon] = useState(page.icon);
 
-  const updateHub = useMutation(api.hubs.update);
+  const updatePage = useMutation(api.pages.update);
 
-  const { startOnborda } = useOnborda();
-  const handleStartOnborda = () => {
-    startOnborda();
-  };
 
   const onIconSelect = (icon: IconType) => {
     setIcon(icon);
+
     toast.promise(
-      updateHub({
-        subdomain,
+      updatePage({
+        id: page._id,
         field: "icon",
         value: icon,
       }),
@@ -52,48 +46,29 @@ export const HubToolbar = ({ hub }: HubToolbarProps) => {
         error: (error) => `Error: ${error.data}`,
       }
     );
+
   };
 
+
   useEffect(() => {
-    if (debouncedName === hub.name) return;
-
+    if (debouncedName === page.name) return;
     toast.promise(
-      updateHub({
-        subdomain,
-        field: "name",
-        value: name,
-      }),
-      {
-        loading: "Updating name",
-        success: "Success: Updated name",
-        error: (error) => `Error: ${error.data}`,
-      }
+     updatePage({
+      id: page._id,
+      field: "name",
+      value: name,
+    }),
+    {
+      loading: "Updating name",
+      success: "Success: Updated name",
+      error: (error) => `Error: ${error.data}`,
+    }
     );
-
   }, [debouncedName]);
 
-  useEffect(() => {
-    if (debouncedDescription === hub.description) return;
-
-    toast.promise(
-      updateHub({
-        subdomain,
-        field: "description",
-        value: description,
-      }),
-      {
-        loading: "Updating description",
-        success: "Success: Updated description",
-        error: (error) => `Error: ${error.data}`,
-      }
-    );
-
-  }, [debouncedDescription]);
-
   return (
-    <div className=" group relative w-3/4">
-      <div className="group/icon absolute -top-8  left-4 items-center gap-x-2 rounded-xl hover:bg-white/10 ">
-        {edit ? (
+    <div className=" group relative w-full py-4">
+       {edit ? (
           <div className="absolute -top-14 size-fit">
             <IconPicker onChange={onIconSelect}>
               <div className="size-[6rem]">
@@ -138,27 +113,16 @@ export const HubToolbar = ({ hub }: HubToolbarProps) => {
                 )}
               </div>
         )}
-      </div>
-      <div className="mt-10">
+   
+      <div className="flex w-full items-end justify-between mt-4">
         <input
           type="text"
-          placeholder="Hub name..."
           disabled={!edit}
           value={name}
           onChange={(e) => setName(e.currentTarget.value)}
-          className="mt-4 w-full bg-transparent text-4xl  font-bold text-foreground focus:outline-none "
+          className="mt-4 w-full bg-transparent text-4xl  font-bold focus:outline-none text-foreground"
         />
-        <input
-          type="text"
-          placeholder="Description..."
-          disabled={!edit}
-          value={description}
-          onChange={(e) => setDescription(e.currentTarget.value)}
-          className="text-md  w-full bg-transparent  font-bold text-foreground focus:outline-none "
-        />
-        {/* <Button onClick={handleStartOnborda}>
-          start
-        </Button> */}
+        <div className="flex items-center gap-2">{children}</div>
       </div>
     </div>
   );

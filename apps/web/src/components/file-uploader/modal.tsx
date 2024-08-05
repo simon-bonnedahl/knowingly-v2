@@ -49,14 +49,14 @@ export const FileUploadModal = ({
 
         <ModalDescription>Uploads</ModalDescription>
 
-        {uploads?.length ? (
+        {uploads ? (
           <div className="grid w-full grid-cols-6 gap-1">
             {uploads?.map((upload) => (
               <Button
                 variant={"ringHover"}
                 className="h-fit w-fit p-0"
                 onClick={() => {
-                  setUpload(upload as string);
+                  setUpload(upload);
                   setOpen(false);
                 }}
                 key={upload}

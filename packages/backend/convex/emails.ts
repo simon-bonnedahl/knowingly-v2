@@ -91,13 +91,12 @@ export const createTemplate = mutation({
     handler: async (ctx, args) => {
       const hub = await ctx.table("hubs").get("subdomain", args.subdomain);
         if(!hub) throw new Error("Hub not found");
-      const logo = (isFile(hub.logo) || isUrl(hub.logo)) ? hub.logo : "/logo-small-black.svg";
       const user = await ctx.userX();
       const from = `${user.name} <${hub.subdomain}@knowingly.ai>`;
       const replyTo = `${user.name} <${user.email}>`;
       const template = await ctx.table("emailTemplates").insert({
         title: "New Template",
-        content: defaultEmailContent(logo),
+        content: defaultEmailContent(hub.icon),
         from,
         replyTo,
         hubId: hub._id

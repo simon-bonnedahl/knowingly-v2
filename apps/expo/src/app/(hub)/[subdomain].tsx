@@ -22,7 +22,7 @@ export default function HubPage() {
     if(!hub) return;
     await updateHub({
       subdomain: hub.subdomain,
-      field: "customContent",
+      field: "content",
       value: JSON.stringify(content),
     });
   };
@@ -33,9 +33,9 @@ export default function HubPage() {
       <SignedIn>
         <Text>Hello this is {hub?.name}</Text>
 
-        {hub?.customContent && (
+        {hub?.content && (
            <View className="w-full h-full p-4">
-           <Editor initialContent={hub?.customContent} onChange={onChange}  />
+           <Editor initialContent={hub?.content} onChange={onChange}  />
    
            </View>
         )}

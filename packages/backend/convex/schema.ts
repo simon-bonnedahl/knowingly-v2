@@ -1,19 +1,26 @@
 import { defineEnt, defineEntSchema, getEntDefinitions } from "convex-ents";
 import { v } from "convex/values";
 
-export const pageTypes = v.union(
-  v.literal("PROFILE"),
-  v.literal("EVENT"),
-  v.literal("TEMPLATE"),
-  v.literal("CUSTOM"),
-);
+import {
+  banner,
+  field,
+  fieldOptions,
+  fieldType,
+  icon,
+  inviteStatus,
+  pageType,
+  permissions,
+  role,
+  tier,
+} from "./types";
 
 const schema = defineEntSchema({
   users: defineEnt({
     name: v.string(),
     imageUrl: v.string(),
-    role: v.union(v.literal("USER"), v.literal("SUPERUSER")),
+    role: role,
     uploads: v.array(v.id("_storage")),
+    pageVisits: v.array(v.id("pages")),
   })
     .field("email", v.string(), { unique: true })
     .field("tokenIdentifier", v.string(), { unique: true })
@@ -28,21 +35,24 @@ const schema = defineEntSchema({
   hubs: defineEnt({
     name: v.string(),
     description: v.optional(v.string()),
-    logo: v.string(), // Can be URL or emoji
-    banner: v.string(),
+    icon: icon,
+    banner: banner,
+    fields: v.array(field),
     brandingColor: v.string(),
-    customContent: v.string(), // JSON stringified object (blockquote json structure for markdown)
+    content: v.string(), // JSON stringified object (blockquote json structure for markdown)
     isPublic: v.boolean(),
     subscriptionId: v.optional(v.string()),
     endsOn: v.optional(v.number()),
     credits: v.optional(v.number()),
-    tier: v.union(v.literal("FREE"), v.literal("PRO"), v.literal("ENTERPRISE")),
+    tier: tier,
     features: v.optional(
       v.object({
         customRoles: v.boolean(),
         customBranding: v.boolean(),
       }),
     ),
+    updatedAt: v.number(),
+    embedding: v.optional(v.array(v.float64())),
   })
     .field("subdomain", v.string(), { unique: true })
     .field("customDomain", v.optional(v.string()))
@@ -50,27 +60,19 @@ const schema = defineEntSchema({
     .edges("hubInvites", { ref: true })
     .edges("roles", { ref: true })
     .edges("pages", { ref: true })
-    .edges("customFields")
-    .edges("emailTemplates", { ref: true }),
+    .edges("collections", { ref: true })
+    .edges("emailTemplates", { ref: true })
+    .vectorIndex("by_embedding", {
+      vectorField: "embedding",
+      dimensions: 1536,
+      filterFields: ["isPublic"],
+    }),
 
   roles: defineEnt({
     name: v.string(),
     isLocked: v.boolean(),
-    icon: v.optional(v.string()),
-    permissions: v.object({
-      canCreatePage: v.boolean(),
-      canEditPage: v.boolean(),
-      canDeletePage: v.boolean(),
-      canCreateCustomField: v.boolean(),
-      canEditCustomField: v.boolean(),
-      canDeleteCustomField: v.boolean(),
-      canInviteMember: v.boolean(),
-      canRemoveMember: v.boolean(),
-      canEditRole: v.boolean(),
-      canSeeAdminPanel: v.boolean(),
-      canEditHub: v.boolean(),
-      canDeleteHub: v.boolean(),
-    }),
+    icon: icon,
+    permissions: permissions,
   })
     .edge("hub")
     .edges("members", { ref: true })
@@ -78,12 +80,7 @@ const schema = defineEntSchema({
   hubInvites: defineEnt({
     user: v.optional(v.id("users")),
     message: v.optional(v.string()),
-    status: v.union(
-      v.literal("PENDING"),
-      v.literal("ACCEPTED"),
-      v.literal("DECLINED"),
-      v.literal("EXPIRED"),
-    ),
+    status: inviteStatus,
     expiresAt: v.number(),
   })
     .field("inviteToken", v.string(), { unique: true })
@@ -99,53 +96,42 @@ const schema = defineEntSchema({
     .edges("pages", { ref: true }),
   pages: defineEnt({
     name: v.string(),
-    type: pageTypes,
-    image: v.optional(v.string()),
-    icon: v.optional(v.string()), // Can be URL or emoji
-    customFields: v.array(
-      v.object({
-        id: v.id("customFields"),
-        value: v.union(
-          v.string(),
-          v.number(),
-          v.boolean(),
-          v.array(v.string()),
-        ),
-      }),
-    ),
-    customContent: v.string(), // JSON stringified object (blockquote json structure for markdown)
+    type: pageType,
+    banner: banner,
+    icon: icon,
+    fields: v.array(field),
+    content: v.string(), // JSON stringified object (blockquote json structure for markdown)
     isPublic: v.boolean(),
     isLocked: v.boolean(),
+    updatedAt: v.number(),
     embedding: v.optional(v.array(v.float64())),
-    updatedEmbedding: v.boolean(),
   })
-    .field("slug", v.string(), { unique: true })
-    .edge("member")
+    .edge("creator", { to: "members", field: "memberId" })
+    .edges("collections")
     .edge("hub")
     .vectorIndex("by_embedding", {
       vectorField: "embedding",
       dimensions: 1536,
       filterFields: ["type", "hubId"],
     }),
-  customFields: defineEnt({
+  collections: defineEnt({
     name: v.string(),
-    icon: v.optional(v.string()),
-    type: v.string(), //  text, number, status, select, multi-select, image, file etc..
+    banner: banner,
+    icon: icon,
+    description: v.optional(v.string()),
+    parentPage: v.optional(v.id("pages")),
+  })
+    .edge("hub")
+    .edges("pages"),
+
+  fields: defineEnt({
+    name: v.string(),
+    icon: icon,
+    type: fieldType,
     isLocked: v.boolean(),
     isSuggested: v.boolean(),
-    options: v.optional(
-      v.object({
-        suggestions: v.optional(v.array(v.string())),
-        format: v.optional(v.string()),
-        showAs: v.optional(v.string()),
-      }),
-    ), //  JSON stringified object (own rules) ex. { "format": any, "suggestions": any,  }
-  })
-    .field("slug", v.string()) //Remove this? What is it used for?
-    .searchIndex("search_slug", {
-      searchField: "slug",
-    })
-    .edges("hubs"),
+    options: fieldOptions,
+  }),
   messages: defineEnt({
     body: v.string(),
     readBy: v.array(v.id("users")),
@@ -172,11 +158,7 @@ const schema = defineEntSchema({
     .edges("participants", { to: "users" })
     .edges("meetingInvites", { ref: true }),
   meetingInvites: defineEnt({
-    status: v.union(
-      v.literal("PENDING"),
-      v.literal("ACCEPTED"),
-      v.literal("DECLINED"),
-    ),
+    status: inviteStatus,
     expiresAt: v.number(),
   })
     .edge("meeting")
@@ -190,7 +172,7 @@ const schema = defineEntSchema({
   }).edge("hub"),
   blogPosts: defineEnt({
     title: v.string(),
-    banner: v.string(),
+    banner: banner,
     content: v.string(),
     isPublished: v.boolean(),
     publishedAt: v.optional(v.number()),

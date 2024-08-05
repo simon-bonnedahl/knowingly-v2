@@ -18,7 +18,7 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from "@knowingly/ui/command";
-import { capitalizeFirstLetter, isUrl } from "@knowingly/utils";
+import { capitalizeFirstLetter } from "@knowingly/utils";
 
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import type { Ent } from "@knowingly/backend/convex/types";
@@ -27,7 +27,7 @@ export function Search() {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const subdomain = useSubdomain();
-  const pages = useQuery(api.pages.getPagesByHub, { subdomain });
+  const pages = useQuery(api.pages.getPagesByHub, open ? { subdomain } : "skip");
   const getPages = useAction(api.pages.vectorSearch);
   const [search, setSearch] = React.useState("");
   const [searchResults, setSearchResults] = React.useState<Ent<"pages">[]>();
@@ -103,7 +103,7 @@ export function Search() {
     <>
       <button
         className={cn(
-          "flex items-center gap-3 rounded-md bg-transparent px-4  py-2 text-sm font-normal text-foreground transition-all duration-150 ease-in-out hover:bg-card",
+          "flex items-center gap-3 rounded-md bg-transparent px-4  py-2 text-sm font-normal text-foreground transition-all duration-150 ease-in-out hover:bg-card ",
         )}
         onClick={() => setOpen(true)}
       >
@@ -127,21 +127,21 @@ export function Search() {
                   <CommandItem
                     className="flex items-center gap-1 hover:cursor-pointer"
                     key={page._id}
-                    value={page.name}
+                    value={page._id}
                     onSelect={() => {
-                      runCommand(() => router.push(`/${page.slug}`));
+                      runCommand(() => router.push(`/${page._id}`));
                     }}
                   >
                     <Avatar className="mr-2 h-8 w-8 rounded-sm">
-                      {isUrl(page?.icon) ? (
+                      {page.icon.type === "URL" ? (
                         <AvatarImage
-                          src={page.icon}
+                          src={page.icon.value}
                           alt={page.name}
                           className="h-full w-full rounded-full"
                         />
                       ) : (
                         <AvatarFallback className="h-full w-full border bg-transparent">
-                          <p className="text-xl">{page?.icon}</p>
+                          <p className="text-xl">{page.icon.value}</p>
                         </AvatarFallback>
                       )}
                     </Avatar>
