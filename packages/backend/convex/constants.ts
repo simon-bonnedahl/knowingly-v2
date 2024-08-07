@@ -133,3 +133,11 @@ export const defaultCollections : Record<string, Omit<WithoutSystemFields<Doc<"c
     icon: defaultIcon,
   }
 };
+
+
+export const unAvailableSubdomains = [
+  "admin",
+  "api",
+  "app",
+  "knowingly"
+];

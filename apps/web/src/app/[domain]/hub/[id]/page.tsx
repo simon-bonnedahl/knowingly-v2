@@ -23,6 +23,7 @@ import { RequestMeeting } from "./request-meeting";
 import { SendMessage } from "./send-message";
 import { PageToolbar } from "./toolbar";
 import { stringify } from "querystring";
+import { useSingleQuery } from "~/lib/hooks/useSingleQuery";
 
 // export async function generateStaticParams() {
 //   const allHubs = await db.hub.findMany({
@@ -48,7 +49,7 @@ import { stringify } from "querystring";
 
 export default function PagePage({ params }: { params: { id: string } }) {
   const id = params.id as Id<"pages">;
-  const page = useQuery(api.pages.getPage, { id });
+  const page = useSingleQuery(api.pages.getPage, { id });
   const creator = useQuery(api.pages.getCreator, { id });
   const updatePage = useMutation(api.pages.update);
 

@@ -36,12 +36,12 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
   const router = useRouter();
   const { isMobile } = useWindowSize();
   const user = useQuery(api.users.getMe);
-  const hubs = useQuery(api.users.getMyHubs);
+  const hubs = useQuery(api.users.getHubs);
   const unreadMessages = useQuery(api.messages.getUnreadCount);
   const { signOut } = useClerk();
 
   const [currentHub, setCurrentHub] =
-    useState<FunctionReturnType<typeof api.users.getMyHubs>[number]>();
+    useState<FunctionReturnType<typeof api.users.getHubs>[number]>();
 
   const isAdminVisible = useMemo(() => {
     if (subdomain === "app") return false;
@@ -143,7 +143,8 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
     const [hue, saturation, lightness] = hsl.split(" ");
     let newLightness = parseInt(lightness!) + amount;
     newLightness = Math.max(0, Math.min(100, newLightness)); // Clamp lightness value between 0 and 100
-    return `${hue} ${saturation} ${newLightness}%`;
+    const adjustedColor = `${hue} ${saturation} ${newLightness}%`;
+    return { adjustedColor, lightness: newLightness };
   };
 
   const generateShades = (hsl: string, steps: number) => {
@@ -168,9 +169,14 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
   ) => {
     if (!color || !document) return;
     const colorHSL = hexToHSL(color);
-    const adjustedColor =
-      theme === "dark" ? adjustLightness(colorHSL, 15) : colorHSL;
+    const {adjustedColor, lightness} =
+      theme === "dark" ? adjustLightness(colorHSL, 10) : adjustLightness(colorHSL, 0);
+    // Set the primary color
     document.documentElement.style.setProperty("--primary", adjustedColor);
+    // Determine lightness from adjustedColor and set primaryForeground
+    const primaryForeground = lightness < 50 ? "0 0 100%" : "0 0 0%";
+    document.documentElement.style.setProperty("--primary-foreground", primaryForeground);
+    // Generate shades and set them
     const shades = generateShades(colorHSL, 5);
     if (theme === "dark") shades.reverse();
     shades.forEach((shade, index) => {

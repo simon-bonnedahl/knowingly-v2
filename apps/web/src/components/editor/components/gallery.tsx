@@ -48,7 +48,6 @@ import { useEdit } from "~/lib/hooks/useEdit";
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { Id } from "@knowingly/backend/convex/_generated/dataModel";
 import Image from "next/image";
-import { cn } from "@knowingly/ui";
 
 export const BlocknoteGallery = createReactBlockSpec(
   {

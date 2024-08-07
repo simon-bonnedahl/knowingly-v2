@@ -5,8 +5,8 @@ import * as React from "react"
 
 import { MembersTable } from "./table";
 import { api } from "@knowingly/backend/convex/_generated/api";
-import { useParams } from "next/navigation";
 import { preloadQuery } from "convex/nextjs";
+import { notFound } from "next/navigation";
 
 
 
@@ -14,7 +14,8 @@ import { preloadQuery } from "convex/nextjs";
 
 export default async function AdminMembersPage({params} : {params: {domain: string}}) {
   const subdomain = params.domain.split(".")[0];
-  const preloadedMembers = await preloadQuery(api.hubs.getMembers, { subdomain: subdomain as string});
+  if(!subdomain) return notFound();
+  const preloadedMembers = await preloadQuery(api.hubs.getMembers, { subdomain});
 
   
 

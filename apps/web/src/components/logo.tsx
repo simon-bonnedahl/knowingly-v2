@@ -6,7 +6,7 @@ import Image from "next/image"
 interface LogoProps {
     size: "small" | "full"
     className ?: string
-    theme: "light" | "dark"
+    theme: string
     }
 export const Logo = ({size, className, theme} : LogoProps) => {
 

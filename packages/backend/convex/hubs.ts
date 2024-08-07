@@ -7,6 +7,7 @@ import {
   defaultContent,
   defaultIcon,
   defaultRoles,
+  unAvailableSubdomains,
 } from "./constants";
 import { action, mutation, query } from "./functions";
 import { Ent, tier } from "./types";
@@ -203,6 +204,7 @@ export const isAvailable = query({
   handler: async (ctx, args) => {
     const { subdomain } = args;
     if (!subdomain || subdomain.length < 2) return false;
+    if(unAvailableSubdomains.includes(subdomain)) return false;
     return !(await ctx.table("hubs").get("subdomain", subdomain));
   },
 });

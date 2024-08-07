@@ -1,21 +1,17 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { useMutation } from "convex/react";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { Ent, Icon as IconType } from "@knowingly/backend/convex/types";
 import { Icon } from "@knowingly/icons";
-import { Avatar, AvatarImage } from "@knowingly/ui/avatar";
-import { Button } from "@knowingly/ui/button";
 
 import { IconPicker } from "~/components/icon-picker";
-import { useOnborda } from "~/components/onborda";
 import { useEdit } from "~/lib/hooks/useEdit";
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { toast } from "sonner";
-import { useDebounce } from "~/lib/hooks/useDebounce";
 import { Input } from "@knowingly/ui/input";
 
 interface HubToolbarProps {
@@ -32,10 +28,10 @@ export const HubToolbar = ({ hub }: HubToolbarProps) => {
 
   const updateHub = useMutation(api.hubs.update);
 
-  const { startOnborda } = useOnborda();
-  const handleStartOnborda = () => {
-    startOnborda();
-  };
+  // const { startOnborda } = useOnborda();
+  // const handleStartOnborda = () => {
+  //   startOnborda();
+  // };
 
   const onIconSelect = (icon: IconType) => {
     setIcon(icon);
@@ -146,7 +142,7 @@ export const HubToolbar = ({ hub }: HubToolbarProps) => {
         />
         <Input
           minimal
-          placeholder="Description..."
+          placeholder={edit ? "Description..." : ""}
           disabled={!edit}
           value={description}
           onChange={(e) => setDescription(e.currentTarget.value)}

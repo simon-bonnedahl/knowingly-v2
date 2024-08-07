@@ -26,8 +26,7 @@ import { uploadFile } from "./upload-file";
 import { BlocknoteAlert } from "./components/alert";
 import { BlocknoteGallery } from "./components/gallery";
 import {  Icons } from "@knowingly/icons";
-import { useEffect, useState } from "react";
-import { FunctionReturnType } from "convex/server";
+import { useSingleQuery } from "~/lib/hooks/useSingleQuery";
 
 
 
@@ -42,17 +41,9 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
   const subdomain = useSubdomain();
   // const members = useQuery(api.hubs.getMembers, { subdomain });
   const getUploadUrl = useMutation(api.files.generateUploadUrl)
-  const [pages, setPages] = useState<FunctionReturnType<typeof api.pages.getPagesByHub>>();
 
-  const hubPages = useQuery(api.pages.getPagesByHub, !pages ?  { subdomain } : "skip");
+  const hubPages = useSingleQuery(api.pages.getPagesByHub, { subdomain });
 
-
-  useEffect(() => {
-    if (!hubPages) return;
-    setPages(hubPages);
-  }
-  , [hubPages]
-  );
 
 
 
@@ -145,7 +136,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
 ): DefaultReactSuggestionItem[] => {
 
  
-  return pages?.map((page) => ({
+  return hubPages?.map((page) => ({
     title: page.name,
     onItemClick: () => {
       editor.insertInlineContent([

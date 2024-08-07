@@ -80,18 +80,36 @@ export const createUser = internalMutation({
   },
 });
 
-export const getMyHubs = query({
-  args: {},
-  handler: async (ctx) => {
-    return await ctx
-      .table("members")
-      .filter((q) => q.eq(q.field("userId"), ctx.userId))
-      .map(async (member) => {
-        return {
-          ...(await member.edge("hub")),
-          role: await member.edge("role"),
-        };
-      });
+// export const getMyHubs = query({
+//   args: {userId : v.optional(v.id("users"))},
+//   handler: async (ctxm ) => {
+//     return await ctx
+//       .table("members")
+//       .filter((q) => q.eq(q.field("userId"), ctx.userId))
+//       .map(async (member) => {
+//         return {
+//           ...(await member.edge("hub")),
+//           role: await member.edge("role"),
+//         };
+//       });
+//   },
+// });
+export const getHubs = query({
+  args: {userId : v.optional(v.id("users"))},
+  handler: async (ctx, args) => {
+    const user = args.userId ? await ctx.table("users").get(args.userId) : await ctx.user()
+    const memberships = await user?.edge("memberships")
+    if (!memberships) {
+      return []
+    }
+    return await Promise.all(memberships.map(async (membership) => {
+      return {
+        ... await membership.edge("hub"),
+        role: await membership.edge("role")
+
+      }
+    }
+    ))
   },
 });
 export const addUpload = mutation({
