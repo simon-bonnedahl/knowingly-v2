@@ -6,7 +6,7 @@ import { Separator } from "@knowingly/ui/separator";
 import { formatDate, formatCountdown, formatTime } from "@knowingly/utils";
 import AvatarCircles from "@knowingly/ui/avatar-circles";
 import type { FunctionReturnType } from "convex/server";
-import type { api } from "@knowingly/backend/convex/_generated/api";
+import { api } from "@knowingly/backend/convex/_generated/api";
 import Link from "next/link";
 import { buttonVariants } from "@knowingly/ui/button";
 import { cn } from "@knowingly/ui";

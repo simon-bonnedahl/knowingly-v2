@@ -1,8 +1,9 @@
 import {withSentryConfig} from "@sentry/nextjs";
+import  withNextBundleAnalyzer from '@next/bundle-analyzer'
 
 /** @type {import("next").NextConfig} */
 const config = {
-  reactStrictMode: true,
+  reactStrictMode: false, // could be good to have on to debug but it takes 2x bandwidth
   transpilePackages: [
     "@knowingly/backend",
     "@knowingly/ui",
@@ -31,6 +32,8 @@ const config = {
 };
 
 export default config;
+
+// export default withNextBundleAnalyzer()(config);
 
 // export default  withSentryConfig(config, {
 //   // Sentry configuration options

@@ -16,6 +16,7 @@ import { useEdit } from "~/lib/hooks/useEdit";
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { toast } from "sonner";
 import { useDebounce } from "~/lib/hooks/useDebounce";
+import { Input } from "@knowingly/ui/input";
 
 interface HubToolbarProps {
   hub: Ent<"hubs">;
@@ -26,9 +27,7 @@ export const HubToolbar = ({ hub }: HubToolbarProps) => {
   const { edit } = useEdit();
 
   const [name, setName] = useState(hub.name);
-  const debouncedName = useDebounce(name, 1000);
   const [description, setDescription] = useState(hub.description);
-  const debouncedDescription = useDebounce(description, 1000);
   const [icon, setIcon] = useState(hub.icon);
 
   const updateHub = useMutation(api.hubs.update);
@@ -54,9 +53,8 @@ export const HubToolbar = ({ hub }: HubToolbarProps) => {
     );
   };
 
-  useEffect(() => {
-    if (debouncedName === hub.name) return;
-
+  const onSaveName = () => {
+    if (!name || name === hub.name) return
     toast.promise(
       updateHub({
         subdomain,
@@ -67,14 +65,12 @@ export const HubToolbar = ({ hub }: HubToolbarProps) => {
         loading: "Updating name",
         success: "Success: Updated name",
         error: (error) => `Error: ${error.data}`,
-      }
+      },
     );
+  };
 
-  }, [debouncedName]);
-
-  useEffect(() => {
-    if (debouncedDescription === hub.description) return;
-
+  const onSaveDescription = () => {
+    if (!description || description === hub.description) return
     toast.promise(
       updateHub({
         subdomain,
@@ -85,10 +81,9 @@ export const HubToolbar = ({ hub }: HubToolbarProps) => {
         loading: "Updating description",
         success: "Success: Updated description",
         error: (error) => `Error: ${error.data}`,
-      }
+      },
     );
-
-  }, [debouncedDescription]);
+  };
 
   return (
     <div className=" group relative w-3/4">
@@ -140,21 +135,23 @@ export const HubToolbar = ({ hub }: HubToolbarProps) => {
         )}
       </div>
       <div className="mt-10">
-        <input
-          type="text"
+        <Input
+          minimal
           placeholder="Hub name..."
           disabled={!edit}
           value={name}
           onChange={(e) => setName(e.currentTarget.value)}
-          className="mt-4 w-full bg-transparent text-4xl  font-bold text-foreground focus:outline-none "
+          onBlur={onSaveName}
+          className="mt-4 w-full text-4xl font-bold bg-transparent"
         />
-        <input
-          type="text"
+        <Input
+          minimal
           placeholder="Description..."
           disabled={!edit}
           value={description}
           onChange={(e) => setDescription(e.currentTarget.value)}
-          className="text-md  w-full bg-transparent  font-bold text-foreground focus:outline-none "
+          onBlur={onSaveDescription}
+          className="text-md  w-full bg-transparent  font-bold text-foreground"
         />
         {/* <Button onClick={handleStartOnborda}>
           start

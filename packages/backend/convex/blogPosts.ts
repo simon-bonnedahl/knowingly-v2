@@ -41,7 +41,6 @@ export const getBySlug = query({
     };
   },
 });
-
 export const create = mutation({
   args: {},
   handler: async (ctx, args) => {

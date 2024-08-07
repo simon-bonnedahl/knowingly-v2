@@ -100,7 +100,7 @@ export function GaugeCircle({
          {showNumber && (
             <span
             data-current-value={currentPercent}
-            className="animate-in fade-in absolute inset-0 m-auto size-fit text-sm  delay-[var(--delay)] duration-[var(--transition-length)] ease-linear"
+            className="animate-in fade-in absolute inset-0 m-auto size-fit text-sm delay-150 duration-200 ease-linear"
          >
             {currentPercent}
          </span>

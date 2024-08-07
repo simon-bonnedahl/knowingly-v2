@@ -1,13 +1,14 @@
 import { useState } from "react";
 import Link from "next/link";
+import { fetch } from "fetch-opengraph";
 
-import type { Tag } from "@knowingly/ui/tag-input";
 import type {
   FieldOptions,
   FieldType,
   FieldValue,
   Icon,
 } from "@knowingly/backend/convex/types";
+import type { Tag } from "@knowingly/ui/tag-input";
 import { Icons } from "@knowingly/icons";
 import { cn } from "@knowingly/ui";
 import { Badge } from "@knowingly/ui/badge";
@@ -283,15 +284,13 @@ export const Fields: FieldTypes = {
     },
     defaultValue: "",
     renderSettings: ({ options, setOptions }) => <div className="w-full"></div>,
-    valueInput: ({
-      value,
-      setValue,
-    }) => (
-      <Input value={value as string} onChange={(e) => setValue(e.currentTarget.value)} />
+    valueInput: ({ value, setValue }) => (
+      <Input
+        value={value as string}
+        onChange={(e) => setValue(e.currentTarget.value)}
+      />
     ),
-    button: ({ value, options }) => (
-      <a href={"tel:" + value}>{value}</a>
-    ),
+    button: ({ value, options }) => <a href={"tel:" + value}>{value}</a>,
   },
   URL: {
     name: "URL",
@@ -300,19 +299,17 @@ export const Fields: FieldTypes = {
       value: "link",
     },
     defaultValue: "",
-    renderSettings: ({
-      options,
-      setOptions,
-    }) => <div className="w-full"></div>,
-    valueInput: ({
-      value,
-      setValue,
-    }) => (
-      <Input value={value as string} onChange={(e) => setValue(e.currentTarget.value)} />
+    renderSettings: ({ options, setOptions }) => <div className="w-full"></div>,
+    valueInput: ({ value, setValue }) => (
+      <Input
+        value={value as string}
+        onChange={(e) => setValue(e.currentTarget.value)}
+      />
     ),
-    button: ({ value, options }) => (
-      <Link href={value}>{value.replace("https://", "")}</Link>
-    ),
+    button: ({ value, options }) => {
+      if (typeof value !== "string") throw new Error("Value must be a string");
+      return <Link href={value}>{value.replace("https://", "")}</Link>;
+    },
   },
   FILE: {
     name: "File",
@@ -321,14 +318,8 @@ export const Fields: FieldTypes = {
       value: "paperclip",
     },
     defaultValue: "",
-    renderSettings: ({
-      options,
-      setOptions,
-    }) => <div className="w-full"></div>,
-    valueInput: ({
-      value,
-      setValue,
-    }) => {
+    renderSettings: ({ options, setOptions }) => <div className="w-full"></div>,
+    valueInput: ({ value, setValue }) => {
       const [fileUploaderOpen, setFileUploaderOpen] = useState(false);
       const onUpload = (upload: string) => {
         setValue(upload);
@@ -353,9 +344,7 @@ export const Fields: FieldTypes = {
         </div>
       );
     },
-    button: ({ value, options }) => (
-      <div>{value}</div>
-    ),
+    button: ({ value, options }) => <div>{value}</div>,
   },
   MEDIA_EMBEDDING: {
     name: "Media Embedding",
@@ -364,12 +353,9 @@ export const Fields: FieldTypes = {
       value: "music",
     },
     defaultValue: "",
-    renderSettings: ({
-      options,
-      setOptions,
-    }) => {
+    renderSettings: ({ options, setOptions }) => {
       const onValueChange = (value: string) => {
-        setOptions(({ ...options, format: value }));
+        setOptions({ ...options, format: value });
       };
       return (
         <div>
@@ -412,11 +398,11 @@ export const Fields: FieldTypes = {
         </div>
       );
     },
-    valueInput: ({
-      value,
-      setValue,
-    }) => (
-      <Input value={value as string} onChange={(e) => setValue(e.currentTarget.value)} />
+    valueInput: ({ value, setValue }) => (
+      <Input
+        value={value as string}
+        onChange={(e) => setValue(e.currentTarget.value)}
+      />
     ),
     button: ({ value, options }) => {
       if (typeof value !== "string") throw new Error("Value must be a string");

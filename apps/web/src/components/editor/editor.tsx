@@ -26,6 +26,8 @@ import { uploadFile } from "./upload-file";
 import { BlocknoteAlert } from "./components/alert";
 import { BlocknoteGallery } from "./components/gallery";
 import {  Icons } from "@knowingly/icons";
+import { useEffect, useState } from "react";
+import { FunctionReturnType } from "convex/server";
 
 
 
@@ -39,8 +41,18 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
   const { resolvedTheme } = useTheme()
   const subdomain = useSubdomain();
   // const members = useQuery(api.hubs.getMembers, { subdomain });
-  const pages = useQuery(api.pages.getPagesByHubTest, { subdomain });
-  const getUploadUrl = useMutation(api.files.generateUploadUrl);
+  const getUploadUrl = useMutation(api.files.generateUploadUrl)
+  const [pages, setPages] = useState<FunctionReturnType<typeof api.pages.getPagesByHub>>();
+
+  const hubPages = useQuery(api.pages.getPagesByHub, !pages ?  { subdomain } : "skip");
+
+
+  useEffect(() => {
+    if (!hubPages) return;
+    setPages(hubPages);
+  }
+  , [hubPages]
+  );
 
 
 
@@ -131,6 +143,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
   const getMentionMenuItems = (
   editor: typeof schema.BlockNoteEditor
 ): DefaultReactSuggestionItem[] => {
+
  
   return pages?.map((page) => ({
     title: page.name,
@@ -162,7 +175,8 @@ const editor = useCreateBlockNote({
       <BlockNoteView
         editor={editor}
         editable={editable}
-        onChange={() => onChange(editor.document)}
+        // onChange={() => onChange(editor.document)}
+        onBlur={() => onChange(editor.document)}
       
         className="w-full "
         slashMenu={false} // Disables the default slash menu

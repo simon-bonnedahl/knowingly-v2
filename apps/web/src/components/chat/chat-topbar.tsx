@@ -4,7 +4,7 @@ import { Avatar, AvatarImage } from '@knowingly/ui/avatar';
 import { cn } from '@knowingly/ui';
 import { buttonVariants } from '@knowingly/ui/button';
 import type { FunctionReturnType } from 'convex/server';
-import type { api } from '@knowingly/backend/convex/_generated/api';
+import { api } from '@knowingly/backend/convex/_generated/api';
 
 interface ChatTopbarProps {
     user: FunctionReturnType<typeof api.users.get>;

@@ -1,6 +1,4 @@
-
-
-
+import animate from "tailwindcss-animate";
 module.exports = {
   
   darkMode: ["class"],
@@ -8,7 +6,6 @@ module.exports = {
     "./src/components/**/*.{ts,tsx}",
     "./src/app/**/*.{ts,tsx}",
     "./node_modules/@knowingly/ui/**/*.{js,ts,jsx,tsx}",
-    '../../node_modules/onborda/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     container: {
@@ -130,6 +127,6 @@ module.exports = {
     },
   },
   plugins: [
-    require('tailwindcss-animate'),
+    animate,
   ]
 };

@@ -140,7 +140,7 @@ export function CreateHubForm({
                   />
 
                   <div className="absolute right-2.5 top-2.5">
-                    {subdomainAvailable === undefined ? (
+                    {(subdomainAvailable === undefined && subdomain.length > 0) ? (
                       <div className="flex items-center gap-1 text-xs text-muted-foreground ">
                         <Icons.loader className="size-4 animate-spin " />
                         Checking

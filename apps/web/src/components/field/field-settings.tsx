@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { useMutation } from "convex/react";
 import { toast } from "sonner";
 
@@ -9,7 +8,7 @@ import type { Ent, FieldValue } from "@knowingly/backend/convex/types";
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { Id } from "@knowingly/backend/convex/_generated/dataModel";
 import { Icon, Icons } from "@knowingly/icons";
-import { Button } from "@knowingly/ui/button";
+import { Button, buttonVariants } from "@knowingly/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,10 +22,11 @@ import {
 } from "@knowingly/ui/dropdown-menu";
 import { Input } from "@knowingly/ui/input";
 
-import { useDebounce } from "~/lib/hooks/useDebounce";
 import { useEdit } from "~/lib/hooks/useEdit";
 import { IconPicker } from "../icon-picker";
+import { RenderIcon } from "../icon-picker/render-icon";
 import { Fields } from "./types";
+import { cn } from "@knowingly/ui";
 
 interface EditFieldProps {
   field: Ent<"fields">;
@@ -43,12 +43,11 @@ export function FieldSettings({
   const [name, setName] = useState(field.name);
   const [icon, setIcon] = useState(field.icon);
   const [options, setOptions] = useState(field.options);
-  const debouncedName = useDebounce(name, 1000);
 
   const updateField = useMutation(api.fields.update);
 
   useEffect(() => {
-    if (icon === field.icon) return;
+    if (!icon || icon === field.icon) return;
     toast.promise(
       updateField({
         id: field._id,
@@ -63,9 +62,8 @@ export function FieldSettings({
     );
   }, [icon]);
 
-  useEffect(() => {
-    if (debouncedName === field.name) return;
-
+  const onSaveName = () => {
+    if (!name || name === field.name) return
     toast.promise(
       updateField({
         id: field._id,
@@ -78,10 +76,10 @@ export function FieldSettings({
         error: (error) => `Error: ${error.data}`,
       },
     );
-  }, [debouncedName]);
+  };
 
   useEffect(() => {
-    if (options === field.options) return;
+    if (!options || options === field.options) return;
 
     toast.promise(
       updateField({
@@ -100,25 +98,7 @@ export function FieldSettings({
   if (!edit)
     return (
       <div className="flex w-64 items-center justify-start gap-1 truncate whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium text-muted-foreground ">
-        <div className="size-[1.25rem]">
-          {icon.type === "URL" && (
-            <Image
-              src={icon.value}
-              width={50}
-              height={50}
-              alt="icon"
-              className="size-full rounded-full object-cover"
-            />
-          )}
-          {icon.type === "EMOJI" && (
-            <span className=" select-none text-[1.25rem] leading-[1.25rem]">
-              {icon.value}
-            </span>
-          )}
-          {icon.type === "ICON" && (
-            <Icon name={icon.value} className="size-full" />
-          )}
-        </div>
+        <RenderIcon icon={icon} size={1.25} />
         <span className=" max-w-32 truncate">{field.name}</span>
       </div>
     );
@@ -127,60 +107,25 @@ export function FieldSettings({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size={"sm"}
-          className="flex w-64 items-center justify-start gap-1 truncate text-muted-foreground hover:text-muted-foreground  focus-visible:ring-0"
-          disabled={!edit}
+        <div
+          className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "flex w-64 items-center justify-start gap-1 truncate text-muted-foreground hover:text-muted-foreground  focus-visible:ring-0 hover:cursor-pointer")}
         >
-          <div className="size-[1.25rem]">
-            {icon.type === "URL" && (
-              <Image
-                src={icon.value}
-                width={50}
-                height={50}
-                alt="icon"
-                className="size-full rounded-full object-cover"
-              />
-            )}
-            {icon.type === "EMOJI" && (
-              <span className=" select-none text-[1.25rem] leading-[1.25rem]">
-                {icon.value}
-              </span>
-            )}
-            {icon.type === "ICON" && (
-              <Icon name={icon.value} className="size-full" />
-            )}
-          </div>
+          <RenderIcon icon={icon} size={1.25} />
           <span className=" max-w-32  truncate">{field.name}</span>
-        </Button>
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <div className="flex gap-1">
           <IconPicker onChange={setIcon}>
             <Button variant="outline" className="h-9 w-9 px-2">
-              <div className="size-[1.25rem]">
-                {icon.type === "URL" && (
-                  <Image
-                    src={icon.value}
-                    width={50}
-                    height={50}
-                    alt="icon"
-                    className="size-full rounded-full object-cover"
-                  />
-                )}
-                {icon.type === "EMOJI" && (
-                  <span className=" select-none text-[1.25rem] leading-[1.25rem]">
-                    {icon.value}
-                  </span>
-                )}
-                {icon.type === "ICON" && (
-                  <Icon name={icon.value} className="size-full" />
-                )}
-              </div>
+              <RenderIcon icon={icon} size={1.25} />
             </Button>
           </IconPicker>
-          <Input value={name} onChange={(e) => setName(e.target.value)} />
+          <Input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            onBlur={onSaveName}
+          />
         </div>
 
         <DropdownMenuSeparator />

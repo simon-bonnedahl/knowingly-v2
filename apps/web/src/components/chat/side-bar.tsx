@@ -11,7 +11,7 @@ import {
 } from "@knowingly/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@knowingly/ui/avatar";
 import type { FunctionReturnType } from "convex/server";
-import type { api } from "@knowingly/backend/convex/_generated/api";
+import { api } from "@knowingly/backend/convex/_generated/api";
 import { useSearchParams } from "next/navigation";
 import { Icons } from "@knowingly/icons";
 

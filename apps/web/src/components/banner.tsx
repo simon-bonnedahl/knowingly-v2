@@ -63,20 +63,26 @@ export const Banner = ({ banner, isPage = false }: BannerProps) => {
     );
   };
 
+
   return (
     <div
       className={cn(
         "group relative h-[30vh] w-full overflow-clip rounded-tl-3xl",
-        !banner && "h-[12vh]",
-        banner && "bg-muted",
       )}
     >
-      <Image
+      {banner.type === "URL"  && (
+        <Image
         src={banner.value}
         fill
         alt="Cover"
         className="rounded-tl-3xl object-cover "
       />
+      )}
+      {banner.type === "COLOR"  && (
+        <div
+        className={`rounded-tl-3xl size-full  `} style={{ backgroundColor: banner.value }}
+      ></div>
+      )}
       {edit && (
         <div className="absolute bottom-5 right-5 flex items-center gap-x-2 opacity-0 group-hover:opacity-100">
           <FileUploadModal

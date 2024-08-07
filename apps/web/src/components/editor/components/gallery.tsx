@@ -5,11 +5,23 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createReactBlockSpec } from "@blocknote/react";
 import { NodeViewWrapper } from "@tiptap/react";
-import { useAction, useMutation, useQuery } from "convex/react";
+import { useAction, useMutation } from "convex/react";
 import { FunctionReturnType } from "convex/server";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@knowingly/ui/dropdown-menu"
 
 import { api } from "@knowingly/backend/convex/_generated/api";
-import { getOrCreate } from "@knowingly/backend/convex/collections";
 import { Ent, PageType } from "@knowingly/backend/convex/types";
 import { Icon, Icons } from "@knowingly/icons";
 import { Button } from "@knowingly/ui/button";
@@ -36,6 +48,7 @@ import { useEdit } from "~/lib/hooks/useEdit";
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { Id } from "@knowingly/backend/convex/_generated/dataModel";
 import Image from "next/image";
+import { cn } from "@knowingly/ui";
 
 export const BlocknoteGallery = createReactBlockSpec(
   {
@@ -60,6 +73,7 @@ export const BlocknoteGallery = createReactBlockSpec(
     render: (props) => {
       const Gallery = () => {
         const subdomain = useSubdomain();
+        const router = useRouter();
         const { edit } = useEdit();
         const [columns, setColumns] = useState(props.block.props.columns);
         const [type, setType] = useState(props.block.props.type);
@@ -135,19 +149,25 @@ export const BlocknoteGallery = createReactBlockSpec(
           }
         }, [search]);
 
+        if(!collection) return null
+
         return (
-          <NodeViewWrapper className="z-10 flex w-full select-none flex-col  gap-2">
-            <div className="flex  w-full items-center   ">
-              <div className="flex flex-row items-center gap-2">
+          <NodeViewWrapper className="z-10 flex w-full select-none flex-col  gap-2 border p-4 rounded-lg hover:cursor-default select-none ">
+            <div className="flex  w-full items-center gap-2  ">
+              <div className="flex flex-row  gap-2 ">
                 <input
                   value={name}
+                  ref={props.contentRef}
                   onChange={(e) => setName(e.currentTarget.value)}
                   type="text"
                   placeholder="Untitled..."
                   disabled={!edit}
-                  className="w-full  bg-transparent text-2xl  font-bold leading-none text-foreground  focus:outline-none"
+                  className=" bg-transparent text-2xl  font-bold  text-foreground  focus:outline-none  flex-grow "
                 />
-                {edit && (
+                <Button variant={"ghost"} className="p-2" size="sm" onClick={() => router.push("/c/" + collection._id)}>
+                    <Icons.arrowUpRight className="h-5 w-5" />
+                  </Button>
+                {false && (
                   <>
                     <Label>Columns:</Label>
                     <Select
@@ -191,7 +211,59 @@ export const BlocknoteGallery = createReactBlockSpec(
                   className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
                 />
               </div>
-              <Icons.dots className="ml-2 h-5 w-5" />
+              {edit && (
+                <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                <Button variant={"ghost"} className="p-2" size="sm">
+                    <Icons.settings className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-40">
+                <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>Columns</DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent>
+                      <DropdownMenuRadioGroup
+                        value={columns}
+                        onValueChange={setColumns}
+                      >
+                        {[ 2, 3, 4, 5].map((columns) => (
+                          <DropdownMenuRadioItem
+                            key={columns}
+                            value={columns}
+                          >
+                            {columns}
+                          </DropdownMenuRadioItem>
+                        ))}
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>Type</DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent>
+                      <DropdownMenuRadioGroup
+                        value={type}
+                        onValueChange={setType}
+                      >
+                        {["PROFILE", "EVENT", "CUSTOM"].map((columns) => (
+                          <DropdownMenuRadioItem
+                            key={columns}
+                            value={columns}
+                          >
+                            {capitalizeFirstLetter(columns)}
+                          </DropdownMenuRadioItem>
+                        ))}
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                  >
+                    Delete
+                    <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              )}
             </div>
             <Separator />
             <div
@@ -209,7 +281,6 @@ export const BlocknoteGallery = createReactBlockSpec(
                 >
                   <MinimalCard>
                     <div className="relative">
-
                     <MinimalCardImage src={page.banner.value} alt={page.name} />
                       <div className="absolute -bottom-6 left-4 size-[3.5rem] ">
                         {page.icon.type === "URL" && (
@@ -222,7 +293,7 @@ export const BlocknoteGallery = createReactBlockSpec(
                           />
                         )}
                         {page.icon.type === "EMOJI" && (
-                          <span className=" select-none text-[3.5rem] leading-[3.5rem]">
+                          <span className=" select-none text-[3rem] leading-[3rem]">
                             {page.icon.value}
                           </span>
                         )}
@@ -235,10 +306,6 @@ export const BlocknoteGallery = createReactBlockSpec(
                         <span className="text-xl font-medium px-5">
                           {page.name}
                         </span>
-                    {/* <MinimalCardTitle> {page.name}</MinimalCardTitle> */}
-                    {/* <MinimalCardDescription>
-                  {page.description}
-                </MinimalCardDescription> */}
                   </MinimalCard>
                 </Link>
               ))}

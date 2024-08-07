@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useMutation, useQuery } from "convex/react";
 
@@ -16,13 +15,15 @@ import { formatDate } from "@knowingly/utils";
 import Editor from "~/components/editor/editor";
 import { FileUploadModal } from "~/components/file-uploader/modal";
 import { useDebounce } from "~/lib/hooks/useDebounce";
+import { Banner } from "@knowingly/backend/convex/types";
+import { toast } from "sonner";
 
 export default function AdminBlogpostPage() {
   const { id } = useParams();
   const blogPost = useQuery(api.blogPosts.get, { id: id as Id<"blogPosts"> });
   const [title, setTitle] = useState<string>();
   const [content, setContent] = useState<string>();
-  const [banner, setBanner] = useState<string>();
+  const [banner, setBanner] = useState<Banner | undefined>();
   const [fileUploaderOpen, setFileUploaderOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const debouncedContent = useDebounce(content, 1000);
@@ -32,6 +33,10 @@ export default function AdminBlogpostPage() {
     window.history.back();
   };
   const updateBlogpost = useMutation(api.blogPosts.update);
+
+  const onChangeBanner = (upload: string) => {
+    setBanner({ type: "URL", value: upload });
+  }
 
   const onChange = async (content: any) => {
     setIsSaving(true);
@@ -69,12 +74,18 @@ export default function AdminBlogpostPage() {
 
   useEffect(() => {
     if (!banner || !blogPost || banner === blogPost.banner) return;
-    void updateBlogpost({
-      id: blogPost._id,
-      field: "banner",
-      value: banner,
-    });
-    setIsSaving(false);
+    toast.promise(
+      updateBlogpost({
+        id: blogPost._id,
+        field: "banner",
+        value: banner,
+      }),
+      {
+        loading: "Updating banner",
+        success: "Success: Updated banner",
+        error: (error) => `Error: ${error.data}`,
+      },
+    );
   }
     , [banner]);
 
@@ -108,7 +119,7 @@ export default function AdminBlogpostPage() {
           <div className="h-5 w-0.5 rounded-lg bg-neutral-200 dark:bg-neutral-700" />
           {blogPost.isPublished ? (
             <span className="text-sm text-foreground">
-              {formatDate(blogPost.publishedAt!)}
+              {formatDate(blogPost.publishedAt )}
             </span>
           ) : (
             <Badge variant={"pending"}>Draft</Badge>
@@ -123,7 +134,7 @@ export default function AdminBlogpostPage() {
       </div>
       <div className="group relative  max-w-4xl px-4 mx-auto">
         <Image
-          src={blogPost.banner}
+          src={blogPost.banner.value}
           height="800"
           width="800"
           className="aspect-square h-64 w-full rounded-3xl object-cover md:h-96"
@@ -132,7 +143,7 @@ export default function AdminBlogpostPage() {
         <FileUploadModal
           open={fileUploaderOpen}
           setOpen={setFileUploaderOpen}
-          setFile={setBanner}
+          setUpload={onChangeBanner}
           recommendedAspect={16/9}
         />
         <Button
