@@ -17,6 +17,7 @@ import { Skeleton } from "@knowingly/ui/skeleton";
 import { useEdit } from "~/lib/hooks/useEdit";
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { FileUploadModal } from "./file-uploader/modal";
+import { set } from "zod";
 
 interface BannerProps {
   banner: BannerType;
@@ -29,8 +30,10 @@ export const Banner = ({ banner, isPage = false }: BannerProps) => {
   const { edit } = useEdit();
   const updateHub = useMutation(api.hubs.update);
   const updatePage = useMutation(api.pages.update);
+  const [_banner, setBanner] = useState(banner);
   const [fileUploaderOpen, setFileUploaderOpen] = useState(false);
   const onUpload = (upload: string) => {
+    setBanner({ type: "URL", value: upload });
     if (isPage) {
       return toast.promise(
         updatePage({
@@ -67,20 +70,20 @@ export const Banner = ({ banner, isPage = false }: BannerProps) => {
   return (
     <div
       className={cn(
-        "group relative h-[30vh] w-full overflow-clip rounded-tl-3xl",
+        "group relative h-[30vh] w-full overflow-clip ",
       )}
     >
-      {banner.type === "URL"  && (
+      {_banner.type === "URL"  && (
         <Image
-        src={banner.value}
+        src={_banner.value}
         fill
         alt="Cover"
-        className="rounded-tl-3xl object-cover "
+        className="object-cover "
       />
       )}
-      {banner.type === "COLOR"  && (
+      {_banner.type === "COLOR"  && (
         <div
-        className={`rounded-tl-3xl size-full  `} style={{ backgroundColor: banner.value }}
+        className={`size-full  `} style={{ backgroundColor: _banner.value }}
       ></div>
       )}
       {edit && (
@@ -89,7 +92,7 @@ export const Banner = ({ banner, isPage = false }: BannerProps) => {
             open={fileUploaderOpen}
             setOpen={setFileUploaderOpen}
             setUpload={onUpload}
-            recommendedAspect={16 / 9}
+            recommendedAspect={3.5}
           />
           <Button
             variant={"ringHover"}

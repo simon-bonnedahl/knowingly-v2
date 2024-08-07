@@ -19,8 +19,8 @@ type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 
 
 interface HubSwitcherProps extends PopoverTriggerProps {
-  currentHub: FunctionReturnType<typeof api.users.getMyHubs>[number]
-  hubs: FunctionReturnType<typeof api.users.getMyHubs>
+  currentHub: FunctionReturnType<typeof api.users.getHubs>[number]
+  hubs: FunctionReturnType<typeof api.users.getHubs>
 
 }
 
@@ -28,6 +28,7 @@ export default function HubSwitcher({ className, currentHub, hubs }: HubSwitcher
 
   const user = useQuery (api.users.getMe)
   const router = useRouter()
+  const createHubFlag = useQuery(api.flags.get, { key: "feature_create_hub" })
 
   const [open, setOpen] = useState(false)
   const subdomain = useSubdomain()
@@ -120,18 +121,22 @@ export default function HubSwitcher({ className, currentHub, hubs }: HubSwitcher
                   )}
                 </CommandGroup>
             </CommandList>
-            <CommandSeparator />
-            <CommandList>
-              <CommandGroup>
-                  <CommandItem
-                    className="text-sm hover:cursor-pointer"
-                  >
-                    <>
-                    <CreateHubModal/>
-                    </>
-                  </CommandItem>
-              </CommandGroup>
-            </CommandList>
+            {!!createHubFlag  && (
+              <>
+              <CommandSeparator />
+              <CommandList>
+                <CommandGroup>
+                    <CommandItem
+                      className="text-sm hover:cursor-pointer"
+                    >
+                      <>
+                      <CreateHubModal/>
+                      </>
+                    </CommandItem>
+                </CommandGroup>
+              </CommandList>
+              </>
+            )}
           </Command>
         </PopoverContent>
       </Popover>

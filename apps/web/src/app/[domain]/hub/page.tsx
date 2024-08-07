@@ -16,12 +16,13 @@ import { InviteModal } from "~/components/modals/invite-modal";
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { HubToolbar } from "./toolbar";
 import { useEdit } from "~/lib/hooks/useEdit";
+import { useSingleQuery } from "~/lib/hooks/useSingleQuery";
 
 export default function HubPage() {
   const subdomain = useSubdomain();
   const searchParams = useSearchParams();
 
-  const hub = useQuery(api.hubs.getHub, { subdomain });
+  const hub = useSingleQuery(api.hubs.getHub, { subdomain });
   const updateHub = useMutation(api.hubs.update);
   const { edit, toggleEdit } = useEdit();
 

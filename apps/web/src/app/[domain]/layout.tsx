@@ -1,20 +1,20 @@
-import type { ReactNode } from "react";
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
 import { fetchQuery } from "convex/nextjs";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
 
+import { Onborda, OnbordaProvider } from "~/components/onborda";
+import OnbordaCard from "~/components/onborda/onborda-card";
+import { steps } from "~/components/onborda/steps-hub";
 import { env } from "~/env";
 import Navbar from "../../components/navbar";
 import { AIAssistantProvider } from "./AIAssistantProvider";
 import { DynamicIslandDemo } from "./dynamic-island-demo";
-import { Onborda, OnbordaProvider } from "~/components/onborda";
-import { steps } from "~/components/onborda/steps-hub";
-import OnbordaCard from "~/components/onborda/onborda-card";
-
 
 export async function generateMetadata({
   params,
@@ -42,7 +42,8 @@ export async function generateMetadata({
 
   if (!hub) return null;
 
-  const icon = hub.icon.type === "URL" ? hub.icon.value : "/logo-small-black.svg";
+  const icon =
+    hub.icon.type === "URL" ? hub.icon.value : "/logo-small-black.svg";
 
   return {
     title: hub.name + " | Knowingly",
@@ -71,11 +72,11 @@ export default async function Layout({
   params: { domain: string };
   children: ReactNode;
 }) {
-  // const {userId} = auth()
+  const { userId } = auth();
   const domain = decodeURIComponent(params.domain);
   const subdomain = domain.split(".")[0];
-  if(!subdomain) {
-    return notFound()
+  if (!subdomain) {
+    return notFound();
   }
 
   // if(!userId ) {
@@ -88,26 +89,27 @@ export default async function Layout({
   //     </div>
   //   )
   // }
-
+  if (!userId) {
     return (
-      <>
-      <OnbordaProvider>
-      <Onborda
-      steps={steps}
-      cardComponent={OnbordaCard}
-      shadowOpacity="0.8"
-    >
-        <AIAssistantProvider>
-          <Navbar subdomain={subdomain} />
-          <DynamicIslandDemo />
-          <div className="fixed right-0 top-4 flex min-h-screen justify-center overflow-hidden rounded-tl-3xl bg-card shadow-2xl border md:w-[70vw]  lg:w-[76vw] xl:w-[82vw]">
-            {children}
-          </div>
-        </AIAssistantProvider>
-        </Onborda>
-        </OnbordaProvider>
-      </>
+      <div className=" w-full flex min-h-screen justify-center  overflow-hidden bg-card">
+        {children}
+      </div>
     );
+  }
+
+  return (
+    <>
+      <OnbordaProvider>
+        <Onborda steps={steps} cardComponent={OnbordaCard} shadowOpacity="0.8">
+            <Navbar subdomain={subdomain} />
+            <DynamicIslandDemo />
+            <div className="fixed right-0 top-4 flex min-h-screen justify-center overflow-hidden rounded-tl-3xl border bg-card shadow-2xl md:w-[70vw]  lg:w-[76vw] xl:w-[82vw]">
+              {children}
+            </div>
+        </Onborda>
+      </OnbordaProvider>
+    </>
+  );
   const hub = await fetchQuery(api.hubs.getHub, { subdomain });
   if (!hub) return notFound();
 

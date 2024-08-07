@@ -86,11 +86,17 @@ export const Sidebar = () => {
           <Icons.users className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="#" label="Analytics">
+        <NavItem href="/analytics" label="Analytics">
           <Icons.chartLine className="h-5 w-5" />
         </NavItem>
         <NavItem href="/blog" label="Blog">
           <Icons.notebook className="h-5 w-5" />
+        </NavItem>
+        <NavItem href="/flags" label="Flags">
+          <Icons.flag className="h-5 w-5" />
+        </NavItem>
+        <NavItem href="/support" label="Support">
+          <Icons.heartHandshake className="h-5 w-5" />
         </NavItem>
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">

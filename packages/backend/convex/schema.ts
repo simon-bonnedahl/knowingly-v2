@@ -11,8 +11,10 @@ import {
   pageType,
   permissions,
   role,
+  supportTicketStatus,
   tier,
 } from "./types";
+import { flagKey } from "./seed/flags";
 
 const schema = defineEntSchema({
   users: defineEnt({
@@ -31,7 +33,8 @@ const schema = defineEntSchema({
     .edges("meetings")
     .edges("meetingInvites", { ref: true })
     .edges("blogPosts", { ref: true })
-    .edges("hubInvites", { ref: true }),
+    .edges("hubInvites", { ref: true })
+    .edges("supportTickets", { ref: true }),
   hubs: defineEnt({
     name: v.string(),
     description: v.optional(v.string()),
@@ -179,6 +182,17 @@ const schema = defineEntSchema({
   })
     .field("slug", v.string(), { unique: true })
     .edge("author", { to: "users", field: "userId" }),
+  supportTickets: defineEnt({
+    title: v.string(),
+    body: v.string(),
+    status: supportTicketStatus,
+    response: v.optional(v.string()),
+  }).edge("user"),
+  flags: defineEnt({
+    name: v.string(),
+    description: v.string(),
+    value : v.boolean(),
+  }).field("key", flagKey, { unique: true }),
 });
 
 export default schema;

@@ -50,11 +50,11 @@ export const FileUploadModal = ({
         <ModalDescription>Uploads</ModalDescription>
 
         {uploads ? (
-          <div className="grid w-full grid-cols-6 gap-1">
+          <div className="flex w-full flex-wrap gap-2">
             {uploads?.map((upload) => (
               <Button
                 variant={"ringHover"}
-                className="h-fit w-fit p-0"
+                className=" p-0 flex transform items-center justify-center rounded-md transition-all duration-200 hover:scale-110 border-none"
                 onClick={() => {
                   setUpload(upload);
                   setOpen(false);
@@ -66,7 +66,7 @@ export const FileUploadModal = ({
                   alt={upload ?? ""}
                   width={100}
                   height={100}
-                  className="w-full rounded-md "
+                  className="size-full object-cover rounded-md"
                 />
               </Button>
             ))}
