@@ -42,10 +42,7 @@ export async function generateMetadata({
 
   if (!hub) return null;
 
-  const urlPattern = /^(http|https):\/\/([\w-]+(\.[\w-]+)+)(\/[\w-./?%&=]*)?$/;
-  const icon = urlPattern.test(hub.logo)
-    ? (hub.logo)
-    : "/logo-small-black.svg";
+  const icon = hub.icon.type === "URL" ? hub.icon.value : "/logo-small-black.svg";
 
   return {
     title: hub.name + " | Knowingly",

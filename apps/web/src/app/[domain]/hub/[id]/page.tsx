@@ -7,23 +7,22 @@ import "@blocknote/core/fonts/inter.css";
 import { useMemo } from "react";
 import dynamic from "next/dynamic";
 import { useMutation, useQuery } from "convex/react";
+import { toast } from "sonner";
 
+import { Id } from "@knowingly/backend/convex/_generated/dataModel";
+import { Icons } from "@knowingly/icons";
+import { Button } from "@knowingly/ui/button";
 import { Label } from "@knowingly/ui/label";
+import { Separator } from "@knowingly/ui/separator";
 import { Switch } from "@knowingly/ui/switch";
 
 import { Banner } from "~/components/banner";
-import { usePreview } from "~/lib/hooks/usePreview";
-import { PageToolbar } from "./toolbar";
-import { Separator } from "@knowingly/ui/separator";
+import { FieldList } from "~/components/field/field-list";
+import { useEdit } from "~/lib/hooks/useEdit";
 import { RequestMeeting } from "./request-meeting";
 import { SendMessage } from "./send-message";
-import { Button } from "@knowingly/ui/button";
-import { Icons } from "@knowingly/icons";
-import { FieldList } from "~/components/field/field-list";
-import { Id } from "@knowingly/backend/convex/_generated/dataModel";
-import { JSONContent } from "@tiptap/core";
-import { toast } from "sonner";
-import { useEdit } from "~/lib/hooks/useEdit";
+import { PageToolbar } from "./toolbar";
+import { stringify } from "querystring";
 
 // export async function generateStaticParams() {
 //   const allHubs = await db.hub.findMany({
@@ -50,7 +49,7 @@ import { useEdit } from "~/lib/hooks/useEdit";
 export default function PagePage({ params }: { params: { id: string } }) {
   const id = params.id as Id<"pages">;
   const page = useQuery(api.pages.getPage, { id });
-  const creator = useQuery(api.pages.getCreator, { id});
+  const creator = useQuery(api.pages.getCreator, { id });
   const updatePage = useMutation(api.pages.update);
 
   const { edit, toggleEdit } = useEdit();
@@ -64,30 +63,32 @@ export default function PagePage({ params }: { params: { id: string } }) {
     return null;
   }
 
-  const onChange = async (content: any) => {
-    try {
-      await updatePage({
+  const onChange =  (content: any) => {
+    if(!content || JSON.stringify(content) === page.content) return;
+    toast.promise(
+      updatePage({
         id,
         field: "content",
         value: JSON.stringify(content),
-      });
-    } catch (error: any) {
-      toast.error(`Error: ${error.data}`);
-    }
-   
+      }),
+      {
+        loading: "Updating",
+        success: "Success: Updated content",
+        error: (error) => `Error: ${error.data}`,
+      }
+    );
   };
 
-  const goBack = () => {  //TODO: Change to static href?
+  const goBack = () => {
+    //TODO: Change to static href?
     window.history.back();
   };
-
 
   return (
     <div className="relative flex w-full flex-col items-center">
       <Button
         variant={"ringHover"}
-
-        className="hover:none absolute left-2 top-2  z-30 rounded-full w-10 h-10 p-1"
+        className="hover:none absolute left-2 top-2  z-30 h-10 w-10 rounded-full p-1"
         onClick={goBack}
       >
         <Icons.arrowLeft className="size-5" />
@@ -96,26 +97,22 @@ export default function PagePage({ params }: { params: { id: string } }) {
         <Label className="font-medium">Edit</Label>
         <Switch checked={edit} onCheckedChange={toggleEdit} />
       </div>
-      <Banner banner={page.banner} isPage/>
+      <Banner banner={page.banner} isPage />
       <div className="w-full  px-24">
-
-      <PageToolbar page={page} >
-        {(creator && page.type === "PROFILE") && (
-          <>
-           <RequestMeeting creator={creator}/>
-           <SendMessage creator={creator} />
-           </>
+        <PageToolbar page={page}>
+          {creator && page.type === "PROFILE" && (
+            <>
+              <RequestMeeting creator={creator} />
+              <SendMessage creator={creator} />
+            </>
           )}
-
-      </PageToolbar>
-      <FieldList fields={page.fields} isPage/>
+        </PageToolbar>
+        <FieldList fields={page.fields} isPage />
       </div>
 
       <Separator className="w-full" />
-      
 
       <div className="w-full p-4 pb-96">
-       
         <Editor
           onChange={onChange}
           initialContent={page.content}

@@ -198,7 +198,6 @@ export default function AdminSettingsPage() {
             <p className="text-center text-sm text-muted-foreground">
               This action is irreversible. Please proceed with caution.
             </p>
-            <div className="w-32">
               <Button
                 variant={"destructive"}
                 size={"sm"}
@@ -207,7 +206,6 @@ export default function AdminSettingsPage() {
               >
                 Delete
               </Button>
-            </div>
           </div>
         </form>
       </div>

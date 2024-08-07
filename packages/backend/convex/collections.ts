@@ -21,7 +21,7 @@ export const create = mutation({
     handler: async (ctx, args) => {
         const hub = await ctx.table("hubs").getX("subdomain", args.subdomain);
         
-        const collection =  await ctx.table("collections").insert({...defaultCollections.gallery, hubId: hub._id, }).get();
+        const collection =  await ctx.table("collections").insert({...defaultCollections.gallery, banner: hub.banner, hubId: hub._id, }).get();
         return {
             ...collection,
             pages: []

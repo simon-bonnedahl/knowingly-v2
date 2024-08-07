@@ -20,7 +20,6 @@ import {
   DropdownMenuTrigger,
 } from "@knowingly/ui/dropdown-menu"
 import { DataTableColumnHeader } from "~/components/data-table/data-table-column-header"
-import type { IconKey } from "@knowingly/icons";
 import { Icon } from "@knowingly/icons"
 import { capitalizeFirstLetter } from "@knowingly/utils"
 import { useSubdomain } from "~/lib/hooks/useSubdomain"
@@ -30,18 +29,13 @@ import type { Id } from "@knowingly/backend/convex/_generated/dataModel"
 import { formatDate } from "@knowingly/utils"
 import { Icons } from "@knowingly/icons";
 import { RenderIcon } from "~/components/icon-picker/render-icon";
+import { Ent } from "@knowingly/backend/convex/types";
 
 export interface DataTableInvite {
     id: string
     email: string
-    roleId: string
-    role: {
-      id: string
-      name: string
-      icon: IconKey
-    }
+    role: Ent<"roles">
     status: string
-
     _creationTime: number
     }
 
@@ -199,7 +193,7 @@ export function getColumns(): ColumnDef<DataTableInvite>[]{
                   <DropdownMenuSubTrigger>Edit role</DropdownMenuSubTrigger>
                   <DropdownMenuSubContent>
                     <DropdownMenuRadioGroup
-                      value={row.original.role.id}
+                      value={row.original.role._id}
                       onValueChange={(value) => {
                         startUpdateTransition(() => {
                           toast.promise(

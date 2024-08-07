@@ -71,7 +71,7 @@ export const Sidebar = () => {
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
         <Link href={"https://app.simbo.casa"} className=" ml-1">
-          <Logo size="small" theme={"light"} className="h-5 w-5" />
+          <Icons.logo className="h-6 w-6" />
         </Link>
 
         <NavItem href="/" label="Dashboard">

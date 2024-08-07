@@ -131,7 +131,7 @@ const UserMessage: FC = () => {
         </ActionBarPrimitive.Edit>
       </ActionBarPrimitive.Root>
 
-      <div className="bg-primary text-primary-foreground col-start-2 row-start-1 max-w-xl break-words rounded-3xl px-3 py-1 text-sm">
+      <div className="bg-primary text-primary-foreground col-start-2 row-start-1 max-w-xl break-words rounded-3xl px-3.5 py-1.5 text-sm">
         <MessagePrimitive.Content />
       </div>
 
@@ -162,7 +162,7 @@ const AssistantMessage: FC = () => {
     <MessagePrimitive.Root className="relative grid w-full max-w-2xl grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] py-4">
       <Avatar className="col-start-1 row-span-full row-start-1  size-7 mr-2 ">
         <AvatarFallback>
-          <Icons.messageChatbot className="size-4" />
+          <Icons.messageChatbot className="size-4 text-primary" />
         </AvatarFallback>
       </Avatar>
 

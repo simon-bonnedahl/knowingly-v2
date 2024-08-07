@@ -51,8 +51,8 @@ export const PagePreview = ({
     <>
 
       <HoverCardPrimitive.Root
+      
         openDelay={50}
-        closeDelay={100}
         onOpenChange={(open) => {
           setOpen(open);
         }}
@@ -93,7 +93,7 @@ export const PagePreview = ({
               >
                 <Link
                   href={url}
-                  className="flex flex-col shadow rounded-xl"
+                  className="flex flex-col shadow rounded-xl bg-card"
                 >
                   <div className="z-20 w-56">
              

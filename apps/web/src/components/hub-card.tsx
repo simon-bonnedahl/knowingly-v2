@@ -21,7 +21,7 @@ export default function HubCard({
             width={500}
             height={400}
             className="aspect-video w-full  rounded-md object-cover"
-            src={hub.banner ?? "/placeholder-banner.svg"}
+            src={hub.banner.value}
           />
         </div>
       </Link>

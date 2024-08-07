@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useAction, useMutation, useQuery } from "convex/react";
+import {  useMutation, useQuery } from "convex/react";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { Icons } from "@knowingly/icons";
@@ -11,13 +11,11 @@ import { Button, buttonVariants } from "@knowingly/ui/button";
 import { Separator } from "@knowingly/ui/separator";
 
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
-import { useEditorContext } from "./editor-provider";
 import { EmailPreviewModal } from "./email-preview-modal";
 import { Id } from "@knowingly/backend/convex/_generated/dataModel";
 
 export const EditorSidebar = () => {
   const subdomain = useSubdomain();
-  const { json } = useEditorContext((s) => s);
 
   const createTemplate = useMutation(api.emails.createTemplate);
   const deleteTemplate = useMutation(api.emails.deleteTemplate);

@@ -2,7 +2,7 @@ import { Icon } from "@knowingly/backend/convex/types"
 
 export interface Option {
     label: string
-    value: string
+    value: any
     icon?: Icon
     withCount?: boolean
   }

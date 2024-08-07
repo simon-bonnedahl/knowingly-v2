@@ -185,11 +185,11 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
       <div
         className={`fixed left-0 top-0 z-0 flex h-full flex-col bg-background p-4  md:w-[30vw] lg:w-[24vw] xl:w-[18vw] `}
       >
-        {hubs ? (
+        {hubs  ? (
           <HubSwitcher
             currentHub={currentHub}
             hubs={hubs}
-            className=" h-12 w-full bg-card"
+            className=" h-[3.25rem] w-full bg-card"
           />
         ) : (
           <Skeleton className="h-12 w-full bg-card " />

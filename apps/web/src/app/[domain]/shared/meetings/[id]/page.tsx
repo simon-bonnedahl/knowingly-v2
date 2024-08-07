@@ -202,7 +202,7 @@ function MeetingRoom() {
   return <FlexibleCallLayout />;
 }
 
-export const DisabledVideoPreview = () => {
+const DisabledVideoPreview = () => {
   const connectedUser = useConnectedUser();
   if (!connectedUser) return null;
 

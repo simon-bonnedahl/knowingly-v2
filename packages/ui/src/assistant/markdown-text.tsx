@@ -1,27 +1,24 @@
 "use client";
 
 import {
-  CodeHeaderProps,
   MarkdownTextPrimitive,
-  useIsMarkdownCodeBlock,
+  useIsMarkdownCodeBlock
 } from "@assistant-ui/react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeKatex from "rehype-katex";
-import remarkMath from "remark-math";
-import { FC, memo, useState } from "react";
-import { CheckIcon, CopyIcon } from "lucide-react";
-import { SyntaxHighlighter } from "./syntax-highlighter";
+// import remarkGfm from "remark-gfm";
+// import rehypeKatex from "rehype-katex";
+// import remarkMath from "remark-math";
+import { memo, useState } from "react";
+// import { SyntaxHighlighter } from "./syntax-highlighter";
 
 
-import "katex/dist/katex.min.css";
+// import "katex/dist/katex.min.css";
 import { cn } from "..";
-import { TooltipIconButton } from "./tooltip-icon-button";
 
 const MarkdownTextImpl = () => {
   return (
     <MarkdownTextPrimitive
-      remarkPlugins={[remarkGfm, remarkMath]}
-      rehypePlugins={[rehypeKatex]}
+      // remarkPlugins={[remarkGfm, remarkMath]}
+      // rehypePlugins={[rehypeKatex]}
       components={{
         h1: ({ node, className, ...props }) => (
           <h1
@@ -177,8 +174,8 @@ const MarkdownTextImpl = () => {
             />
           );
         },
-        CodeHeader,
-        SyntaxHighlighter,
+        // CodeHeader,
+        // SyntaxHighlighter,
       }}
     />
   );
@@ -186,39 +183,39 @@ const MarkdownTextImpl = () => {
 
 export const MarkdownText = memo(MarkdownTextImpl);
 
-const CodeHeader: FC<CodeHeaderProps> = ({ language, code }) => {
-  const { isCopied, copyToClipboard } = useCopyToClipboard();
-  const onCopy = () => {
-    if (!code || isCopied) return;
-    copyToClipboard(code);
-  };
+// const CodeHeader: FC<CodeHeaderProps> = ({ language, code }) => {
+//   const { isCopied, copyToClipboard } = useCopyToClipboard();
+//   const onCopy = () => {
+//     if (!code || isCopied) return;
+//     copyToClipboard(code);
+//   };
 
-  return (
-    <div className="flex items-center justify-between gap-4 rounded-t-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white">
-      <span className="lowercase [&>span]:text-xs">{language}</span>
-      <TooltipIconButton tooltip="Copy" onClick={onCopy}>
-        {!isCopied && <CopyIcon />}
-        {isCopied && <CheckIcon />}
-      </TooltipIconButton>
-    </div>
-  );
-};
+//   return (
+//     <div className="flex items-center justify-between gap-4 rounded-t-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white">
+//       <span className="lowercase [&>span]:text-xs">{language}</span>
+//       <TooltipIconButton tooltip="Copy" onClick={onCopy}>
+//         {!isCopied && <CopyIcon />}
+//         {isCopied && <CheckIcon />}
+//       </TooltipIconButton>
+//     </div>
+//   );
+// };
 
-const useCopyToClipboard = ({
-  copiedDuration = 3000,
-}: {
-  copiedDuration?: number;
-} = {}) => {
-  const [isCopied, setIsCopied] = useState<boolean>(false);
+// const useCopyToClipboard = ({
+//   copiedDuration = 3000,
+// }: {
+//   copiedDuration?: number;
+// } = {}) => {
+//   const [isCopied, setIsCopied] = useState<boolean>(false);
 
-  const copyToClipboard = (value: string) => {
-    if (!value) return;
+//   const copyToClipboard = (value: string) => {
+//     if (!value) return;
 
-    // void navigator.clipboard.writeText(value).then(() => {
-    //   setIsCopied(true);
-    //   setTimeout(() => setIsCopied(false), copiedDuration);
-    // });
-  };
+//     // void navigator.clipboard.writeText(value).then(() => {
+//     //   setIsCopied(true);
+//     //   setTimeout(() => setIsCopied(false), copiedDuration);
+//     // });
+//   };
 
-  return { isCopied, copyToClipboard };
-};
+//   return { isCopied, copyToClipboard };
+// };
