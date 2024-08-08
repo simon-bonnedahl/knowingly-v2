@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
 import { fetchQuery } from "convex/nextjs";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
@@ -15,6 +14,7 @@ import { env } from "~/env";
 import Navbar from "../../components/navbar";
 import { AIAssistantProvider } from "./AIAssistantProvider";
 import { DynamicIslandDemo } from "./dynamic-island-demo";
+import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 
 export async function generateMetadata({
   params,
@@ -51,7 +51,7 @@ export async function generateMetadata({
     openGraph: {
       title: hub.name + " | Knowingly",
       description: hub.description,
-      images: [hub.banner || "/banner.png"],
+      images: [hub.banner.value || "/banner.png"],
     },
     icons: [icon],
     metadataBase: new URL(`${env.NEXT_PUBLIC_PROTOCOL}://${domain}`),
@@ -72,7 +72,8 @@ export default async function Layout({
   params: { domain: string };
   children: ReactNode;
 }) {
-  const { userId } = auth();
+  const authToken = convexAuthNextjsToken();
+  console.log(authToken);
   const domain = decodeURIComponent(params.domain);
   const subdomain = domain.split(".")[0];
   if (!subdomain) {
@@ -89,7 +90,7 @@ export default async function Layout({
   //     </div>
   //   )
   // }
-  if (!userId) {
+  if (!authToken) {
     return (
       <div className=" w-full flex min-h-screen justify-center  overflow-hidden bg-card">
         {children}

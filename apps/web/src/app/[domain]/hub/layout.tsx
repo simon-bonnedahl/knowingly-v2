@@ -4,9 +4,8 @@ import { AssistantModal } from "@knowingly/ui/assistant/assistant-modal";
 import { fetchQuery } from "convex/nextjs";
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { AIAssistantProvider } from "../AIAssistantProvider";
-import { auth } from "@clerk/nextjs/server";
 import { DesktopNavbar } from "./desktop-navbar";
-
+import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 
 
 export default async function HubLayout({
@@ -16,14 +15,14 @@ export default async function HubLayout({
   params: { domain: string };
   children: ReactNode;
 }) {
-  const {userId} = auth();
+  const authToken = convexAuthNextjsToken();
   const aiChatFlag = await fetchQuery(api.flags.get, {key: "feature_ai_chat"})
   return (
     <AIAssistantProvider>
 
     <div className="relative flex h-screen  w-full flex-col overflow-y-scroll ">
-        {(aiChatFlag && userId) && <AssistantModal />}
-      {!userId && (
+        {(aiChatFlag && authToken) && <AssistantModal />}
+      {!authToken && (
        <DesktopNavbar />
 
       )}
