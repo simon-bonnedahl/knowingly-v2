@@ -9,12 +9,7 @@ export const get = query({
   },
 });
 
-export const getByTokenIdentifier = query({
-  args: { tokenIdentifier: v.string() },
-  handler: async (ctx, args) => {
-    return await ctx.table("users").get("tokenIdentifier", args.tokenIdentifier);
-  },
-});
+
 
 export const getMe = query({
   args: {},
@@ -48,7 +43,6 @@ export const createUser = internalMutation({
   handler: async (ctx, args) => {
     const { tokenIdentifier, email, name, imageUrl } = args;
     const user = await ctx.table("users").insert({
-      tokenIdentifier,
       email,
       name,
       imageUrl,

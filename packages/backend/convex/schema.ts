@@ -1,5 +1,6 @@
-import { defineEnt, defineEntSchema, getEntDefinitions } from "convex-ents";
+import { defineEnt, defineEntSchema, defineEntsFromTables, getEntDefinitions } from "convex-ents";
 import { v } from "convex/values";
+import { authTables } from "@convex-dev/auth/server";
 
 import {
   banner,
@@ -17,6 +18,8 @@ import {
 import { flagKey } from "./seed/flags";
 
 const schema = defineEntSchema({
+  ...defineEntsFromTables(authTables),
+
   users: defineEnt({
     name: v.string(),
     imageUrl: v.string(),
@@ -25,7 +28,6 @@ const schema = defineEntSchema({
     pageVisits: v.array(v.id("pages")),
   })
     .field("email", v.string(), { unique: true })
-    .field("tokenIdentifier", v.string(), { unique: true })
     .edges("memberships", { to: "members", ref: true })
     .edges("sentMessages", { to: "messages", ref: "senderId" })
     .edges("receivedMessages", { to: "messages", ref: "receiverId" })
