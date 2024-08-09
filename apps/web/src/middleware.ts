@@ -4,8 +4,6 @@ import {
 } from "@clerk/nextjs/server";
 
 import { env } from "./env";
-import { fetchQuery } from "convex/nextjs";
-import { api } from "@knowingly/backend/convex/_generated/api";
 
 // This example protects all routes including api/trpc routes
 // Please edit this to allow other routes to be public as needed.
@@ -16,16 +14,14 @@ export default clerkMiddleware(async (auth, req) => {
   const url = req.nextUrl;
   const sharedPages = ["meetings", "conversations", "settings"];
   const tokenIdentifier = userId
-  let user = undefined;
-  let hubs = []
-  if(tokenIdentifier)
-    user = await fetchQuery(api.users.getByTokenIdentifier, { tokenIdentifier });
+  // let user = undefined;
+  // let hubs = []
+  // if(tokenIdentifier)
+  //   user = await fetchQuery(api.users.getByTokenIdentifier, { tokenIdentifier });
 
   // if (user) {
   //   hubs = await fetchQuery(api.users.getHubs, { userId: user._id });
   // }
-
-
 
   let hostname = req.headers
     .get("host")!
@@ -62,7 +58,7 @@ export default clerkMiddleware(async (auth, req) => {
   console.log(hostname)
 
   if (hostname === `auth.${env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
-    if (user) {
+    if (tokenIdentifier) {
       if (req.nextUrl.searchParams.get("redirect"))
         return NextResponse.redirect(
           new URL(
@@ -105,7 +101,7 @@ export default clerkMiddleware(async (auth, req) => {
   }
   // if(!userId)
   //   return redirectToSignIn({ returnBackUrl: `${env.NEXT_PUBLIC_PROTOCOL}://${hostname}/` });
-  if(!user && path.length > 1) return redirectToSignIn({ returnBackUrl: `${env.NEXT_PUBLIC_PROTOCOL}://${hostname}${path}` });
+  if(!tokenIdentifier && path.length > 1) return redirectToSignIn({ returnBackUrl: `${env.NEXT_PUBLIC_PROTOCOL}://${hostname}${path}` });
   return NextResponse.rewrite(new URL(`/${hostname}/hub${path}`, req.url));
 });
 
