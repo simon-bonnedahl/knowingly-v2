@@ -35,8 +35,8 @@ export const RenderIcon = ({ icon, className, size=1 }: RenderIconProps) => {
             )}
             {icon.type === "EMOJI" && (
               <span className={`select-none`} style={{
-                fontSize: size + "rem",
-                lineHeight: size + "rem"
+                fontSize: size*0.9 + "rem",
+                lineHeight: size*0.9 + "rem"
               }}>
                 {icon.value}
               </span>

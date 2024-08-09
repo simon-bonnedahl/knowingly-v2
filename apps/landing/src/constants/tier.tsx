@@ -21,17 +21,19 @@ export const tiers: Tier[] = [
     priceYearly: "$0/yr",
     description: "Good option for a small hub",
     features: [
-      "50 user seats",
+      "50 members",
       "Access to AI queries",
       "Integrated video calls",
       "Customization options",
       "Basic analytics",
-      "Basic WYSIWYG editor",
+      'Basic "Rich Text" editor',
       "Community support",
     ],
     featured: false,
     cta: "Get started",
-    onClick: () => {},
+    onClick: () => {
+      window.location.href = "https://app.simbo.casa"
+    },
   },
   {
     name: "Professional",
@@ -42,15 +44,17 @@ export const tiers: Tier[] = [
     description: "Ideal small to mid range organizations.",
     features: [
       "Everything in Starter, plus",
-      "500 user seats",
+      "300 members",
       "Advanced Analytics",
-      "AI-powered WYSIWYG editor",
+      'AI-powered "Rich Text" editor',
       "AI assistant",
       "Email support within 12 hours",
     ],
     featured: true,
     cta: "Buy Now",
-    onClick: () => {},
+    onClick: () => {
+      window.location.href = "https://app.simbo.casa"
+    },
   },
 
   {
@@ -62,7 +66,7 @@ export const tiers: Tier[] = [
     description: "If you need the best of the best.",
     features: [
       "Everything in professional, plus",
-      "Unlimited user seats",
+      "Unlimited members",
       "24/7 support",
       "Custom domain",
       "Custom integrations",
@@ -71,6 +75,8 @@ export const tiers: Tier[] = [
     ],
     featured: false,
     cta: "Contact Us",
-    onClick: () => {},
+    onClick: () => {
+      window.location.href = "https://simbo.casa/contact"
+    },
   },
 ];

@@ -50,7 +50,7 @@ export const FileUploadModal = ({
         <ModalDescription>Uploads</ModalDescription>
 
         {uploads ? (
-          <div className="flex w-full flex-wrap gap-2">
+          <div className="flex w-full flex-wrap gap-4">
             {uploads?.map((upload) => (
               <Button
                 variant={"ringHover"}

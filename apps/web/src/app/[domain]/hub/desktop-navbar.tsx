@@ -59,7 +59,7 @@ export const DesktopNavbar = () => {
           )}
         </AnimatePresence>
         <div className="flex flex-row items-center gap-2">
-          <Link href={env.NEXT_PUBLIC_PROTOCOL + "://" + env.NEXT_PUBLIC_ROOT_DOMAIN}>
+          <Link href={"https://simbo.casa"}>
           <Icons.logo className="h-6 w-6" />
 
           </Link>

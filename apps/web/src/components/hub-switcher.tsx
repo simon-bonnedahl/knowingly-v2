@@ -48,7 +48,7 @@ export default function HubSwitcher({ className, currentHub, hubs }: HubSwitcher
             </div>
             <div className="flex flex-col w-full  items-start gap-0 ">
               <span className="text-xs  text-muted-foreground">{currentHub ? "Hub" : "Knowingly"}</span>
-              <span className="text-sm font-medium">{currentHub?.name || "App" }</span>
+              <span className="text-sm font-medium truncate">{currentHub?.name || "App" }</span>
             </div>
             <Icons.selector className="ml-auto size-5 shrink-0 opacity-50" />
           </Button>

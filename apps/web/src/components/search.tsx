@@ -2,12 +2,12 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { useAction, useQuery } from "convex/react";
+import { useAction } from "convex/react";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { Icons } from "@knowingly/icons";
 import { cn } from "@knowingly/ui";
-import { Avatar, AvatarFallback, AvatarImage } from "@knowingly/ui/avatar";
+import { Avatar } from "@knowingly/ui/avatar";
 import {
   CommandDialog,
   CommandEmpty,
@@ -22,12 +22,14 @@ import { capitalizeFirstLetter } from "@knowingly/utils";
 
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import type { Ent } from "@knowingly/backend/convex/types";
+import { useSingleQuery } from "~/lib/hooks/useSingleQuery";
+import { RenderIcon } from "./icon-picker/render-icon";
 
 export function Search() {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const subdomain = useSubdomain();
-  const pages = useQuery(api.pages.getPagesByHub, open ? { subdomain } : "skip");
+  const pages = useSingleQuery(api.pages.getPagesByHub,  { subdomain });
   const getPages = useAction(api.pages.vectorSearch);
   const [search, setSearch] = React.useState("");
   const [searchResults, setSearchResults] = React.useState<Ent<"pages">[]>();
@@ -132,18 +134,8 @@ export function Search() {
                       runCommand(() => router.push(`/${page._id}`));
                     }}
                   >
-                    <Avatar className="mr-2 h-8 w-8 rounded-sm">
-                      {page.icon.type === "URL" ? (
-                        <AvatarImage
-                          src={page.icon.value}
-                          alt={page.name}
-                          className="h-full w-full rounded-full"
-                        />
-                      ) : (
-                        <AvatarFallback className="h-full w-full border bg-transparent">
-                          <p className="text-xl">{page.icon.value}</p>
-                        </AvatarFallback>
-                      )}
+                    <Avatar className="mr-2 h-8 w-8  border flex items-center justify-center">
+                      <RenderIcon icon={page.icon} size={2.2} className="object-cover" />
                     </Avatar>
                     {page.name}
                   </CommandItem>
@@ -151,33 +143,6 @@ export function Search() {
               </CommandGroup>
             ),
           )}
-          {/* <CommandGroup heading="Profiles">
-            {searchResults?.map((profile) => (
-              <CommandItem
-                className=" flex items-center gap-1 hover:cursor-pointer "
-                key={profile._id}
-                value={profile.name}
-                onSelect={() => {
-                  runCommand(() => router.push(`/${profile.slug}`));
-                }}
-              >
-                <Avatar className="mr-2 h-8 w-8 rounded-sm">
-                  {isUrl(profile?.icon) ? (
-                    <AvatarImage
-                      src={profile.icon}
-                      alt={profile.name}
-                      className="h-full w-full rounded-full"
-                    />
-                  ) : (
-                    <AvatarFallback className="h-full w-full border bg-transparent">
-                      <p className="text-xl">{profile?.icon}</p>
-                    </AvatarFallback>
-                  )}
-                </Avatar>
-                {profile.name}
-              </CommandItem>
-            ))}
-          </CommandGroup> */}
           <CommandSeparator />
         </CommandList>
       </CommandDialog>

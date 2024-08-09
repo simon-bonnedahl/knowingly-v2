@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { useMutation, useQuery } from "convex/react";
@@ -17,6 +17,8 @@ import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { HubToolbar } from "./toolbar";
 import { useEdit } from "~/lib/hooks/useEdit";
 import { useSingleQuery } from "~/lib/hooks/useSingleQuery";
+import { useTheme } from "next-themes"
+import { adjustLightness, generateShades, hexToHSL } from "@knowingly/utils";
 
 export default function HubPage() {
   const subdomain = useSubdomain();
@@ -25,11 +27,38 @@ export default function HubPage() {
   const hub = useSingleQuery(api.hubs.getHub, { subdomain });
   const updateHub = useMutation(api.hubs.update);
   const { edit, toggleEdit } = useEdit();
+  const {theme } = useTheme();
 
   const Editor = useMemo(
     () => dynamic(() => import("~/components/editor/editor"), { ssr: false }),
     [],
   );
+
+  useEffect(() => {
+    if (hub?.brandingColor && theme)
+      setPrimaryColor(hub.brandingColor, theme);
+  }, [hub]);
+
+  const setPrimaryColor = (
+    color: string | undefined,
+    theme: string | undefined,
+  ) => {
+    if (!color || !document) return;
+    const colorHSL = hexToHSL(color);
+    const {adjustedColor, lightness} =
+      theme === "dark" ? adjustLightness(colorHSL, 10) : adjustLightness(colorHSL, 0);
+    // Set the primary color
+    document.documentElement.style.setProperty("--primary", adjustedColor);
+    // Determine lightness from adjustedColor and set primaryForeground
+    const primaryForeground = lightness < 50 ? "0 0 100%" : "0 0 0%";
+    document.documentElement.style.setProperty("--primary-foreground", primaryForeground);
+    // Generate shades and set them
+    const shades = generateShades(colorHSL, 5);
+    if (theme === "dark") shades.reverse();
+    shades.forEach((shade, index) => {
+      document.documentElement.style.setProperty(`--chart-${index + 1}`, shade);
+    });
+  };
 
   if (!hub) {
     return null;

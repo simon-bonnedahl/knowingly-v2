@@ -13,7 +13,7 @@ export function PricingTable({ pricing }: any) {
 
   const tableFeatures = [
     {
-      title: "User seats",
+      title: "Members",
       starter: "50",
       professional: "500",
       enterprise: "Unlimited",

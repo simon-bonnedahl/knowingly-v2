@@ -5,7 +5,6 @@ import { Button } from "@knowingly/ui/button";
 import type { Ent, FieldValue } from "@knowingly/backend/convex/types";
 import { Id } from "@knowingly/backend/convex/_generated/dataModel";
 import { Fields } from "./types";
-import { useDebounce } from "~/lib/hooks/useDebounce";
 import { useEdit } from "~/lib/hooks/useEdit";
 
 interface EditFieldProps {
@@ -15,7 +14,6 @@ interface EditFieldProps {
 }
 export const EditField = ({ field, fieldValue, onEditValue }: EditFieldProps) => {
   const [value, setValue] = useState(fieldValue);
-  const debouncedValue = useDebounce(value, 3000);
   const [active, setActive] = useState(false);
   const {edit} = useEdit();
 
@@ -34,9 +32,10 @@ export const EditField = ({ field, fieldValue, onEditValue }: EditFieldProps) =>
     };
   }, []);
 
-  useEffect(() => {
-      onEditValue(field._id, debouncedValue);
-  }, [debouncedValue]);
+  const onBlur = () => {
+    onEditValue(field._id, value);
+    setActive(false);
+  }
 
 
   const FieldValueInput = Fields[field.type].valueInput;
@@ -54,6 +53,7 @@ export const EditField = ({ field, fieldValue, onEditValue }: EditFieldProps) =>
     <div className="w-full" ref={ref}>
       {active ? (
         <FieldValueInput
+          onBlur={onBlur}
           value={value}
           setValue={setValue}
         />

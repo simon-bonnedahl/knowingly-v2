@@ -41,6 +41,7 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
   const subdomain = useSubdomain();
   // const members = useQuery(api.hubs.getMembers, { subdomain });
   const getUploadUrl = useMutation(api.files.generateUploadUrl)
+  const createCollection = useMutation(api.collections.create);
 
   const hubPages = useSingleQuery(api.pages.getPagesByHub, { subdomain });
 
@@ -77,9 +78,13 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
   });
   const insertGallery = (editor: typeof schema.BlockNoteEditor) => ({
     title: "Gallery",
-    onItemClick: () => {
+    onItemClick: async () => {
+      const collection = await createCollection({ subdomain });
       insertOrUpdateBlock(editor, {
         type: "gallery",
+        props: {
+          collectionId: collection._id,
+        },
       });
     },
     group: "Collection",

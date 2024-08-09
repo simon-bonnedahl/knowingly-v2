@@ -34,7 +34,7 @@ import { Ent } from "@knowingly/backend/convex/types";
 export interface DataTableInvite {
     id: string
     email: string
-    role: Ent<"roles">
+    role: Ent<"roles"> | null
     status: string
     _creationTime: number
     }
@@ -87,22 +87,6 @@ export function getColumns(): ColumnDef<DataTableInvite>[]{
           <div className="flex space-x-2">
             <span className="max-w-[31.25rem] truncate font-medium">
               {row.getValue("email")}
-            </span>
-          </div>
-        )
-      },
-    },
-    {
-      accessorKey: "roleId",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Role ID" />
-      ),
-      cell: ({ row }) => {
-
-        return (
-          <div className="flex space-x-2">
-            <span className="max-w-[31.25rem] truncate font-medium">
-              {row.getValue("roleId")}
             </span>
           </div>
         )

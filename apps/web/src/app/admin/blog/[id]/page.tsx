@@ -9,7 +9,7 @@ import { api } from "@knowingly/backend/convex/_generated/api";
 import { Id } from "@knowingly/backend/convex/_generated/dataModel";
 import { Icons } from "@knowingly/icons";
 import { Badge } from "@knowingly/ui/badge";
-import { Button } from "@knowingly/ui/button";
+import { Button, buttonVariants } from "@knowingly/ui/button";
 import { formatDate } from "@knowingly/utils";
 
 import Editor from "~/components/editor/editor";
@@ -17,6 +17,8 @@ import { FileUploadModal } from "~/components/file-uploader/modal";
 import { useDebounce } from "~/lib/hooks/useDebounce";
 import { Banner } from "@knowingly/backend/convex/types";
 import { toast } from "sonner";
+import Link from "next/link";
+import { cn } from "@knowingly/ui";
 
 export default function AdminBlogpostPage() {
   const { id } = useParams();
@@ -29,9 +31,6 @@ export default function AdminBlogpostPage() {
   const debouncedContent = useDebounce(content, 1000);
   const debouncedTitle = useDebounce(title, 1000);
 
-  const goBack = () => {
-    window.history.back();
-  };
   const updateBlogpost = useMutation(api.blogPosts.update);
 
   const onChangeBanner = (upload: string) => {
@@ -96,13 +95,12 @@ export default function AdminBlogpostPage() {
   return (
     <>
       <div className="flex items-center justify-between p-4">
-        <Button
-          variant={"ringHover"}
-          className="hover:none  z-30 h-10 w-10 rounded-full p-1"
-          onClick={goBack}
-        >
-          <Icons.arrowLeft className="size-5" />
-        </Button>
+      <Link href="/blog" className={cn(buttonVariants({
+        variant: "ringHover",
+        className: "absolute top-2 left-2 z-30 h-10 w-10 rounded-full p-1",
+      }))}>
+        <Icons.arrowLeft className="size-5" />
+      </Link>
         <div className="flex items-center space-x-2">
           <div className="flex items-center space-x-2 ">
             <Image

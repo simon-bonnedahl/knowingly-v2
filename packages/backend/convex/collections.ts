@@ -2,7 +2,6 @@ import { v } from "convex/values";
 import { action, mutation, query } from "./functions";
 import { defaultCollections } from "./constants";
 import { api } from "./_generated/api";
-import { Ent } from "./types";
 import { Id } from "./_generated/dataModel";
 
 export const get = query({
@@ -43,5 +42,11 @@ export const getOrCreate = action({
         const collection = await ctx.runQuery(api.collections.get, { id: args.id as Id<"collections"> });
         if (collection) return collection;
         return await ctx.runMutation(api.collections.create, { subdomain: args.subdomain });
+    },
+    });
+export const addPage = mutation({
+    args: { collectionId: v.id("collections"), pageId: v.id("pages") },
+    handler: async (ctx, args) => {
+        return await ctx.table("collections").getX(args.collectionId).patch({ pages: {add: [args.pageId]} });
     },
     });

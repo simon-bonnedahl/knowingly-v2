@@ -149,6 +149,48 @@ export const getMyProfile = query({
         return await membership.edge("pages").filter((q) => q.eq(q.field("type"), "PROFILE")).first()
     }
 })
+export const addPageVisit = mutation({
+    args: {pageId: v.id("pages")},
+    handler: async (ctx, args) => {
+        const user = await ctx.user()
+        if (!user) {
+            return
+        }
+        const pageVisits = [args.pageId, ...user.pageVisits.filter((pageId) => pageId !== args.pageId)]
+        await user.patch({"pageVisits": pageVisits})
+        return 
+    }
+})
+
+export const getLastVisitedPages = query({
+  args: {},
+  handler: async (ctx) => {
+      const user = await ctx.user();
+      if (!user || !user.pageVisits) {
+          return [];
+      }
+
+      // Get the pages
+      const pages = await Promise.all(
+          user.pageVisits.slice(0, 5).map(async (pageId) => {
+              return await ctx.table("pages").get(pageId);
+          })
+      ).then((pages) => pages.filter((p) => !!p));
+
+      const result = await Promise.all(
+          pages.map(async (page) => {
+              const subdomain = (await page.edge("hub")).subdomain;
+              return {
+                  ...page,
+                  subdomain
+              };
+          })
+      );
+
+      return result;
+  }
+});
+
 
 // export const updateSubscription = internalMutation({
 //   args: { subscriptionId: v.string(), userId: v.string(), endsOn: v.number() },

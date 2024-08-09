@@ -41,12 +41,13 @@ export function InvitesTable({
       label: "Role",
       value: "role",
       options: roles.map((role) => {
-        return{
-        label: role.name,
-        value: role,
-        icon: role.icon,
-        withCount: true,
-      }}),
+        return {
+          label: role.name,
+          value: role,
+          icon: role.icon,
+          withCount: true,
+        };
+      }),
     },
   ];
   const tableData = React.useMemo(

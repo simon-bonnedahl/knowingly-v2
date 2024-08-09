@@ -23,7 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@knowingly/ui/dropdown-menu";
 import { Skeleton } from "@knowingly/ui/skeleton";
-import { hexToHSL, truncate } from "@knowingly/utils";
+import { adjustLightness, generateShades, hexToHSL, truncate } from "@knowingly/utils";
 
 import useWindowSize from "~/lib/hooks/useWindowSize";
 import HubSwitcher from "./hub-switcher";
@@ -139,24 +139,6 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
     if (hubs) setCurrentHub(hubs.find((hub) => hub.subdomain === subdomain));
   }, [hubs]);
 
-  const adjustLightness = (hsl: string, amount: number) => {
-    const [hue, saturation, lightness] = hsl.split(" ");
-    let newLightness = parseInt(lightness!) + amount;
-    newLightness = Math.max(0, Math.min(100, newLightness)); // Clamp lightness value between 0 and 100
-    const adjustedColor = `${hue} ${saturation} ${newLightness}%`;
-    return { adjustedColor, lightness: newLightness };
-  };
-
-  const generateShades = (hsl: string, steps: number) => {
-    const [hue, saturation, lightness] = hsl.split(" ");
-    const shades = [];
-
-    for (let i = 1; i <= steps; i++) {
-      const newLightness = Math.min(20 + i * 11, 75); // Increase lightness by 10% for each step
-      shades.push(`${hue} ${saturation} ${newLightness}%`);
-    }
-    return shades;
-  };
 
   useEffect(() => {
     if (currentHub?.brandingColor && theme)

@@ -12,20 +12,19 @@ import { api } from "@knowingly/backend/convex/_generated/api";
 // See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your Middleware
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 export default clerkMiddleware(async (auth, req) => {
+  const {redirectToSignIn, userId} = auth()
   const url = req.nextUrl;
   const sharedPages = ["meetings", "conversations", "settings"];
-  const tokenIdentifier = auth().userId;
+  const tokenIdentifier = userId
   let user = undefined;
   let hubs = []
   if(tokenIdentifier)
     user = await fetchQuery(api.users.getByTokenIdentifier, { tokenIdentifier });
 
-  if (user) {
-    hubs = await fetchQuery(api.users.getHubs, { userId: user.id });
-  }
+  // if (user) {
+  //   hubs = await fetchQuery(api.users.getHubs, { userId: user._id });
+  // }
 
-  console.log("user", user);
-  console.log("hubs", hubs);
 
 
   let hostname = req.headers
@@ -85,10 +84,10 @@ export default clerkMiddleware(async (auth, req) => {
 
   // rewrites for app pages
   if (hostname === `app.${env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
-    // if (!auth.userId && !auth.isPublicRoute) {
-    //   const prefix = env.NODE_ENV === "development" ? "http://" : "https://";
-    //   return redirectToSignIn({ returnBackUrl: `${prefix}${hostname}/` });
-    // }
+    if (!tokenIdentifier) {
+      const prefix = env.NODE_ENV === "development" ? "http://" : "https://";
+      return redirectToSignIn({ returnBackUrl: `${prefix}${hostname}/` });
+    }
 
     return NextResponse.rewrite(
       new URL(`/${hostname}/app${path === "/" ? "" : path}`, req.url),
@@ -106,7 +105,7 @@ export default clerkMiddleware(async (auth, req) => {
   }
   // if(!userId)
   //   return redirectToSignIn({ returnBackUrl: `${env.NEXT_PUBLIC_PROTOCOL}://${hostname}/` });
-  if(!user) return NextResponse.rewrite(new URL(`/${hostname}/hub`, req.url));
+  if(!user && path.length > 1) return redirectToSignIn({ returnBackUrl: `${env.NEXT_PUBLIC_PROTOCOL}://${hostname}${path}` });
   return NextResponse.rewrite(new URL(`/${hostname}/hub${path}`, req.url));
 });
 

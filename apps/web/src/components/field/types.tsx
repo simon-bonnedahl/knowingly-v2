@@ -36,9 +36,11 @@ type FieldTypes = {
     valueInput: ({
       value,
       setValue,
+      onBlur,
     }: {
       value: FieldValue;
       setValue: (value: FieldValue) => void;
+      onBlur?: () => void;
     }) => JSX.Element;
     button: ({
       value,
@@ -58,8 +60,9 @@ export const Fields: FieldTypes = {
     },
     defaultValue: "",
     renderSettings: ({ options, setOptions }) => <div className="w-full"></div>,
-    valueInput: ({ value, setValue }) => (
+    valueInput: ({ value, setValue, onBlur }) => (
       <Input
+        onBlur={onBlur}
         value={value as string}
         onChange={(e) => setValue(e.currentTarget.value)}
       />
@@ -124,8 +127,9 @@ export const Fields: FieldTypes = {
         </div>
       );
     },
-    valueInput: ({ value, setValue }) => (
+    valueInput: ({ value, setValue, onBlur }) => (
       <Input
+        onBlur={onBlur}
         value={value as number}
         onChange={(e) => setValue(parseInt(e.currentTarget.value))}
       />
@@ -153,7 +157,7 @@ export const Fields: FieldTypes = {
     },
     defaultValue: "",
     renderSettings: ({ options, setOptions }) => <div className="w-full"></div>,
-    valueInput: ({ value, setValue }) => {
+    valueInput: ({ value, setValue, onBlur }) => {
       if (typeof value !== "string") throw new Error("Value must be a string");
       const tags: Tag[] = value ? [{ id: value, text: value }] : [];
       const onSetTags = (newTags: Tag[]) => {
@@ -163,6 +167,7 @@ export const Fields: FieldTypes = {
 
       return (
         <TagInput
+          onBlur={onBlur}
           tags={tags}
           setTags={(newTags) => onSetTags(newTags as Tag[])}
           placeholder="Add a tag"
@@ -199,7 +204,7 @@ export const Fields: FieldTypes = {
     },
     defaultValue: [],
     renderSettings: ({ options, setOptions }) => <div className="w-full"></div>,
-    valueInput: ({ value, setValue }) => {
+    valueInput: ({ value, setValue, onBlur }) => {
       if (!Array.isArray(value)) throw new Error("Value must be an array");
       const tags: Tag[] = value.map((tag) => {
         return {
@@ -214,6 +219,7 @@ export const Fields: FieldTypes = {
 
       return (
         <TagInput
+          onBlur={onBlur}
           tags={tags}
           setTags={(newTags) => onSetTags(newTags as Tag[])}
           placeholder="Add a tag"
@@ -251,9 +257,10 @@ export const Fields: FieldTypes = {
       value: "loader",
     },
     defaultValue: "",
-    renderSettings: ({ options, setOptions }) => <div className="w-full"></div>,
+    renderSettings: ({ options, setOptions, onBlur }) => <div className="w-full"></div>,
     valueInput: ({ value, setValue }) => (
       <Input
+        onBlur={onBlur}
         value={value as string}
         onChange={(e) => setValue(e.currentTarget.value)}
       />
@@ -267,9 +274,10 @@ export const Fields: FieldTypes = {
       value: "at",
     },
     defaultValue: "",
-    renderSettings: ({ options, setOptions }) => <div className="w-full"></div>,
+    renderSettings: ({ options, setOptions, onBlur }) => <div className="w-full"></div>,
     valueInput: ({ value, setValue }) => (
       <Input
+        onBlur={onBlur}
         value={value as string}
         onChange={(e) => setValue(e.currentTarget.value)}
       />
@@ -283,9 +291,10 @@ export const Fields: FieldTypes = {
       value: "phone",
     },
     defaultValue: "",
-    renderSettings: ({ options, setOptions }) => <div className="w-full"></div>,
+    renderSettings: ({ options, setOptions, onBlur }) => <div className="w-full"></div>,
     valueInput: ({ value, setValue }) => (
       <Input
+        onBlur={onBlur}
         value={value as string}
         onChange={(e) => setValue(e.currentTarget.value)}
       />
@@ -299,9 +308,10 @@ export const Fields: FieldTypes = {
       value: "link",
     },
     defaultValue: "",
-    renderSettings: ({ options, setOptions }) => <div className="w-full"></div>,
+    renderSettings: ({ options, setOptions, onBlur }) => <div className="w-full"></div>,
     valueInput: ({ value, setValue }) => (
       <Input
+        onBlur={onBlur}
         value={value as string}
         onChange={(e) => setValue(e.currentTarget.value)}
       />
