@@ -46,7 +46,7 @@ export const IconPicker = ({
   return (
     <Popover>
       <PopoverTrigger className=" site-fit hover:opacity-95" asChild={asChild}>{children}</PopoverTrigger>
-      <PopoverContent className="z-50 w-fit max-w-[370px] border  p-2 shadow-none ">
+      <PopoverContent className="z-50 w-[370px]  p-2 shadow-none ">
         <Tabs>
           <div className="flex w-full items-center gap-1">
             <TabsList className="grid w-full grid-cols-3">
@@ -65,14 +65,14 @@ export const IconPicker = ({
               theme={theme}
             />
           </TabsContent>
-          <TabsContent value="icon"  className="z-50">
+          <TabsContent value="icon"  className="z-50 w-full">
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search for an icon"
               className="mb-4"
             />
-            <div className="flex max-h-[24rem]  flex-wrap overflow-y-auto">
+            <div className="flex max-h-[24rem]  flex-wrap overflow-y-auto w-full">
               {Object.entries(filteredIcons).length === 0 && (
                 <p className="text-sm font-medium text-muted-foreground">
                   No icons found

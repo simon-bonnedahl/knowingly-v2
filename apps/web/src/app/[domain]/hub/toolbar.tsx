@@ -1,24 +1,24 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { useMutation } from "convex/react";
+import { toast } from "sonner";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { Ent, Icon as IconType } from "@knowingly/backend/convex/types";
-import { Icon } from "@knowingly/icons";
+import { Input } from "@knowingly/ui/input";
 
 import { IconPicker } from "~/components/icon-picker";
+import { RenderIcon } from "~/components/icon-picker/render-icon";
 import { useEdit } from "~/lib/hooks/useEdit";
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
-import { toast } from "sonner";
-import { Input } from "@knowingly/ui/input";
 
 interface HubToolbarProps {
   hub: Ent<"hubs">;
+  children?: React.ReactNode;
 }
 
-export const HubToolbar = ({ hub }: HubToolbarProps) => {
+export const HubToolbar = ({ hub, children }: HubToolbarProps) => {
   const subdomain = useSubdomain();
   const { edit } = useEdit();
 
@@ -45,12 +45,12 @@ export const HubToolbar = ({ hub }: HubToolbarProps) => {
         loading: "Updating icon",
         success: "Success: Updated icon",
         error: (error) => `Error: ${error.data}`,
-      }
+      },
     );
   };
 
   const onSaveName = () => {
-    if (!name || name === hub.name) return
+    if (!name || name === hub.name) return;
     toast.promise(
       updateHub({
         subdomain,
@@ -66,7 +66,7 @@ export const HubToolbar = ({ hub }: HubToolbarProps) => {
   };
 
   const onSaveDescription = () => {
-    if (!description || description === hub.description) return
+    if (!description || description === hub.description) return;
     toast.promise(
       updateHub({
         subdomain,
@@ -82,64 +82,30 @@ export const HubToolbar = ({ hub }: HubToolbarProps) => {
   };
 
   return (
-    <div className=" group relative w-3/4">
-      <div className="group/icon absolute -top-8  left-4 items-center gap-x-2 rounded-xl hover:bg-white/10 ">
+    <div className=" group relative">
         {edit ? (
-          <div className="absolute -top-14 size-fit">
+          <div className="absolute -top-12">
             <IconPicker onChange={onIconSelect}>
-              <div className="size-[6rem]">
-                {icon.type === "URL" && (
-                  <Image
-                    src={icon.value}
-                    width={400}
-                    height={400}
-                    alt="logo"
-                    className="size-full rounded-full object-cover"
-                  />
-                )}
-                {icon.type === "EMOJI" && (
-                  <span className="text-[6rem] leading-[6rem] select-none">
-                    {icon.value}
-                  </span>
-                )}
-                {icon.type === "ICON" && (
-                  <Icon name={icon.value} className="size-full" />
-                )}
-              </div>
+              <RenderIcon icon={icon} size={6} />
             </IconPicker>
           </div>
         ) : (
-            <div className="absolute -top-14  size-[6rem] ">
-                {icon.type === "URL" && (
-                  <Image
-                    src={icon.value}
-                    width={400}
-                    height={400}
-                    alt="logo"
-                    className="size-full rounded-full object-cover"
-                  />
-                )}
-                {icon.type === "EMOJI" && (
-                  <span className="text-[6rem] leading-[6rem] select-none">
-                    {icon.value}
-                  </span>
-                )}
-                {icon.type === "ICON" && (
-                  <Icon name={icon.value} className="size-full" />
-                )}
-              </div>
+          <RenderIcon icon={icon} size={6} className="absolute -top-12" />
         )}
-      </div>
-      <div className="mt-10">
-        <Input
-          minimal
-          placeholder="Hub name..."
-          disabled={!edit}
-          value={name}
-          onChange={(e) => setName(e.currentTarget.value)}
-          onBlur={onSaveName}
-          className="mt-4 w-full text-4xl font-bold bg-transparent"
-        />
+      <div className="pt-14 w-full ">
+        <div className="flex w-full items-center justify-between">
+          <Input
+            minimal
+            placeholder="Hub name..."
+            disabled={!edit}
+            value={name}
+            onChange={(e) => setName(e.currentTarget.value)}
+            onBlur={onSaveName}
+            className="w-full bg-transparent text-4xl font-bold" 
+          />
+          <div className="flex items-center gap-2">{children}</div>
+        </div>
+
         <Input
           minimal
           placeholder={edit ? "Description..." : ""}

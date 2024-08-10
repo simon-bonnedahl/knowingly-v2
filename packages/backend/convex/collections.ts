@@ -35,15 +35,6 @@ export const update = mutation({
     },
     });
 
-export const getOrCreate = action({
-    args: { id: v.string(), subdomain: v.string() },
-    handler: async (ctx, args) => {
-        if(!args.id) return await ctx.runMutation(api.collections.create, { subdomain: args.subdomain });
-        const collection = await ctx.runQuery(api.collections.get, { id: args.id as Id<"collections"> });
-        if (collection) return collection;
-        return await ctx.runMutation(api.collections.create, { subdomain: args.subdomain });
-    },
-    });
 export const addPage = mutation({
     args: { collectionId: v.id("collections"), pageId: v.id("pages") },
     handler: async (ctx, args) => {

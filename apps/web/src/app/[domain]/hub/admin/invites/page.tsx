@@ -11,7 +11,7 @@ import { preloadQuery } from "convex/nextjs";
 
 
 
-export default async function AdminMembersPage({params} : {params: {domain: string}}) {
+export default async function AdminInvitesPage({params} : {params: {domain: string}}) {
 
   const subdomain = params.domain.split(".")[0];
   if(!subdomain) return null;

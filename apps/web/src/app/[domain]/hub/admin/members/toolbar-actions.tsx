@@ -1,16 +1,17 @@
-"use client"
+"use client";
 
-import { Button } from "@knowingly/ui/button"
-import type { Table } from "@tanstack/react-table"
-import { exportTableToCSV } from "~/components/data-table/export"
-import { DataTableMember } from "./columns"
-import { InviteMemberModal } from "~/components/modals/invite-member-modal"
-import { Icons } from "@knowingly/icons"
+import type { Table } from "@tanstack/react-table";
 
+import { Icons } from "@knowingly/icons";
+import { cn } from "@knowingly/ui";
+import { Button, buttonVariants } from "@knowingly/ui/button";
 
+import { exportTableToCSV } from "~/components/data-table/export";
+import { InviteMemberModal } from "~/components/modals/invite-member-modal";
+import { DataTableMember } from "./columns";
 
 interface MembersTableToolbarActionsProps {
-  table: Table<DataTableMember>
+  table: Table<DataTableMember>;
 }
 
 export function MembersTableToolbarActions({
@@ -26,7 +27,17 @@ export function MembersTableToolbarActions({
           onSuccess={() => table.toggleAllRowsSelected(false)}
         />
       ) : null} */}
-      <InviteMemberModal />
+      <InviteMemberModal>
+        <div
+          className={cn(
+            buttonVariants({ variant: "ringHover", size: "sm" }),
+            "hover:cursor-pointer",
+          )}
+        >
+          <Icons.usersPlus className="mr-2 size-4" aria-hidden="true" />
+          Invite member
+        </div>
+      </InviteMemberModal>
       <Button
         variant="ringHover"
         size="sm"
@@ -45,5 +56,5 @@ export function MembersTableToolbarActions({
        * For example, import, view, etc.
        */}
     </div>
-  )
+  );
 }

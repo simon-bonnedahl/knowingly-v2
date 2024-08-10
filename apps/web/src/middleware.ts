@@ -93,6 +93,7 @@ export default clerkMiddleware(async (auth, req) => {
     //   const prefix = env.NODE_ENV === "development" ? "http://" : "https://";
     //   return redirectToSignIn({ returnBackUrl: `${prefix}${hostname}/` });
     // }
+    if(!tokenIdentifier) return redirectToSignIn({ returnBackUrl: `${env.NEXT_PUBLIC_PROTOCOL}://${hostname}/` });
 
     return NextResponse.rewrite(
       new URL(`/admin${path === "/" ? "" : path}`, req.url),
@@ -100,7 +101,11 @@ export default clerkMiddleware(async (auth, req) => {
   }
   // if(!userId)
   //   return redirectToSignIn({ returnBackUrl: `${env.NEXT_PUBLIC_PROTOCOL}://${hostname}/` });
-  if(!tokenIdentifier && path.length > 1) return redirectToSignIn({ returnBackUrl: `${env.NEXT_PUBLIC_PROTOCOL}://${hostname}${path}` });
+  if(!tokenIdentifier && path.length > 1) {
+    if(path === "/signin") redirectToSignIn({ returnBackUrl: `${env.NEXT_PUBLIC_PROTOCOL}://${hostname}` });
+    return redirectToSignIn({ returnBackUrl: `${env.NEXT_PUBLIC_PROTOCOL}://${hostname}${path}` });
+  }
+  
   return NextResponse.rewrite(new URL(`/${hostname}/hub${path}`, req.url));
 });
 

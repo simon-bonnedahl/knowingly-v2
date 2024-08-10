@@ -7,6 +7,7 @@ import slugify from "slugify";
 
 import type { CreateHubSchema } from "@knowingly/validators";
 import { api } from "@knowingly/backend/convex/_generated/api";
+import { Icons } from "@knowingly/icons";
 import { cn } from "@knowingly/ui";
 import {
   Form,
@@ -30,7 +31,6 @@ import { Switch } from "@knowingly/ui/switch";
 import { Textarea } from "@knowingly/ui/textarea";
 
 import { useDebounce } from "~/lib/hooks/useDebounce";
-import { Icons } from "@knowingly/icons";
 
 interface CreateHubFormProps
   extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
@@ -93,7 +93,7 @@ export function CreateHubForm({
                     {tiers?.map((tier, index) => (
                       <SelectItem key={index} value={tier.value}>
                         <div className="flex flex-row items-center gap-2">
-                          <span >{tier.label}</span>
+                          <span>{tier.label}</span>
                           <span className=" text-muted-foreground">
                             {tier.description}
                           </span>
@@ -138,23 +138,25 @@ export function CreateHubForm({
                     className="resize-none"
                     {...field}
                   />
-
-                  <div className="absolute right-2.5 top-2.5">
-                    {(subdomainAvailable === undefined && subdomain.length > 0) ? (
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground ">
-                        <Icons.loader className="size-4 animate-spin " />
-                        Checking
-                      </div>
-                    ) : subdomainAvailable ? (
-                      <div className="flex items-center gap-1 text-xs text-green-500">
-                        <Icons.check className="size-4 " /> Available
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-1 text-xs text-red-500">
-                        <Icons.x className="size-4 " /> Unavailable
-                      </div>
-                    )}
-                  </div>
+                  {subdomain && (
+                    <div className="absolute right-2.5 top-2.5">
+                      {subdomainAvailable === undefined &&
+                      subdomain.length > 0 ? (
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground ">
+                          <Icons.loader className="size-4 animate-spin " />
+                          Checking
+                        </div>
+                      ) : subdomainAvailable ? (
+                        <div className="flex items-center gap-1 text-xs text-green-500">
+                          <Icons.check className="size-4 " /> Available
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1 text-xs text-red-500">
+                          <Icons.x className="size-4 " /> Unavailable
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </FormControl>
 

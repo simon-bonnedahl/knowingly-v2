@@ -20,6 +20,7 @@ import { useSingleQuery } from "~/lib/hooks/useSingleQuery";
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { HubToolbar } from "./toolbar";
 import { toast } from "sonner";
+import { RequestInviteModal } from "~/components/modals/request-invite-modal";
 
 export default function HubPage() {
   const subdomain = useSubdomain();
@@ -37,7 +38,7 @@ export default function HubPage() {
   );
 
   useEffect(() => {
-    if (hub?.brandingColor && theme) setPrimaryColor(hub.brandingColor, theme);
+    if (hub && theme) setPrimaryColor(hub.brandingColor, theme);
   }, [hub]);
 
   const setPrimaryColor = (
@@ -96,7 +97,11 @@ export default function HubPage() {
 
         <Banner banner={hub.banner} />
         <div className="w-full  px-24">
-          <HubToolbar hub={hub} />
+          <HubToolbar hub={hub}>
+          {!myRole && (
+              <RequestInviteModal hub={hub} />
+          )}
+          </HubToolbar>
           <FieldList fields={hub.fields} />
         </div>
 

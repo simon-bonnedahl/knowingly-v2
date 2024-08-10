@@ -65,6 +65,9 @@ module.exports = {
       borderColor: {
         DEFAULT: "hsl(var(--border))",
       },
+      aspectRatio: {
+        'banner': '3 / 1', 
+      },
   
         
       keyframes: {

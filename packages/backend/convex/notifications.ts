@@ -27,7 +27,7 @@ export const list = query({
     args: {},
     handler: async (ctx, args) => {
         const user = await ctx.user();
-        const notifications = await user?.edge("notifications")
+        const notifications = await user?.edge("notifications").order("desc")
         return notifications;
     },
 });

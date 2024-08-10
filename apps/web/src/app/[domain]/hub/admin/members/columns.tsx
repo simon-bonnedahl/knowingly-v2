@@ -1,11 +1,16 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import type {ColumnDef} from "@tanstack/react-table";
-import { toast } from "sonner"
+import type { ColumnDef } from "@tanstack/react-table";
+import * as React from "react";
+import { useMutation, useQuery } from "convex/react";
+import { toast } from "sonner";
 
-import { Button } from "@knowingly/ui/button"
-import { Checkbox } from "@knowingly/ui/checkbox"
+import type { Id } from "@knowingly/backend/convex/_generated/dataModel";
+import { api } from "@knowingly/backend/convex/_generated/api";
+import type { Ent } from "@knowingly/backend/convex/types";
+import {  Icons } from "@knowingly/icons";
+import { Button } from "@knowingly/ui/button";
+import { Checkbox } from "@knowingly/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,29 +23,21 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@knowingly/ui/dropdown-menu"
-import { DataTableColumnHeader } from "~/components/data-table/data-table-column-header"
-import { Icon } from "@knowingly/icons"
-import { capitalizeFirstLetter } from "@knowingly/utils"
-import { useSubdomain } from "~/lib/hooks/useSubdomain"
-import { useMutation, useQuery } from "convex/react"
-import { api } from "@knowingly/backend/convex/_generated/api"
-import type { Id } from "@knowingly/backend/convex/_generated/dataModel"
-import { formatDate } from "@knowingly/utils"
-import { Icons } from "@knowingly/icons";
-import { Ent } from "@knowingly/backend/convex/types";
-import Image from "next/image";
+} from "@knowingly/ui/dropdown-menu";
+import { capitalizeFirstLetter, formatDate } from "@knowingly/utils";
+
+import { DataTableColumnHeader } from "~/components/data-table/data-table-column-header";
 import { RenderIcon } from "~/components/icon-picker/render-icon";
+import { useSubdomain } from "~/lib/hooks/useSubdomain";
 
 export interface DataTableMember {
-    id: string
-    name: string
-    role: Ent<"roles">
-    _creationTime: number
-    }
+  id: string;
+  name: string;
+  role: Ent<"roles">;
+  _creationTime: number;
+}
 
-
-export function getColumns(): ColumnDef<DataTableMember>[]{
+export function getColumns(): ColumnDef<DataTableMember>[] {
   return [
     {
       id: "select",
@@ -81,15 +78,13 @@ export function getColumns(): ColumnDef<DataTableMember>[]{
         <DataTableColumnHeader column={column} title="Name" />
       ),
       cell: ({ row }) => {
-        
-
         return (
           <div className="flex space-x-2">
             <span className="max-w-[31.25rem] truncate font-medium">
               {row.getValue("name")}
             </span>
           </div>
-        )
+        );
       },
     },
 
@@ -99,16 +94,20 @@ export function getColumns(): ColumnDef<DataTableMember>[]{
         <DataTableColumnHeader column={column} title="Role" />
       ),
       cell: ({ row }) => {
-
-        const role = row.original.role
+        const role = row.original.role;
 
         return (
           <div className="flex w-[6.25rem] items-center">
-           <RenderIcon icon={role.icon} size={1} className="mr-2 text-muted-foreground" />
-            <span className="capitalize">{capitalizeFirstLetter(role.name)}</span>
-
+            <RenderIcon
+              icon={role.icon}
+              size={1}
+              className="mr-2 text-muted-foreground"
+            />
+            <span className="capitalize">
+              {capitalizeFirstLetter(role.name)}
+            </span>
           </div>
-        )
+        );
       },
     },
     // {
@@ -139,8 +138,7 @@ export function getColumns(): ColumnDef<DataTableMember>[]{
     //     return Array.isArray(value) && value.includes(row.getValue(id))
     //   },
     // },
-    
-   
+
     {
       accessorKey: "_creationTime",
       header: ({ column }) => (
@@ -151,24 +149,13 @@ export function getColumns(): ColumnDef<DataTableMember>[]{
     {
       id: "actions",
       cell: function Cell({ row }) {
-        const [isUpdatePending, startUpdateTransition] = React.useTransition()
-        const [showDeleteTaskDialog, setShowDeleteTaskDialog] =
-          React.useState(false)
+        const subdomain = useSubdomain();
 
-        const subdomain = useSubdomain()
-
-        const roles = useQuery(api.hubs.getRoles, { subdomain })
-        const updateMember = useMutation(api.members.update)
-
+        const roles = useQuery(api.hubs.getRoles, { subdomain });
+        const updateMember = useMutation(api.members.update);
 
         return (
           <>
-             {/* <UpdateInvite
-              open={showUpdateTaskSheet}
-              onOpenChange={setShowUpdateTaskSheet}
-              task={row.original}
-            /> */}
-           
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -180,56 +167,51 @@ export function getColumns(): ColumnDef<DataTableMember>[]{
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40">
-                   <DropdownMenuSub>
-                   <DropdownMenuSubTrigger >Edit role</DropdownMenuSubTrigger>
-                   <DropdownMenuSubContent>
-                     <DropdownMenuRadioGroup
-                       value={row.original.role._id}
-                       onValueChange={(value) => {
-                         startUpdateTransition(() => {
-                           toast.promise(
-                              updateMember({
-                               id: row.original.id as Id<"members">,
-                               field: "roleId",
-                               value: value as Id<"roles">,
-                             }),
-                             {
-                               loading: "Updating",
-                               success: "Success: Member role updated",
-                               error(error) {
-                                console.log(error.data)
-                                  return `Error: ${error.data}`
-                               },
-                             }
-                           )
-                         })
-                       }}
-                     >
-                       {roles?.map((role) => (
-                         <DropdownMenuRadioItem
-                           key={role._id}
-                           value={role._id}
-                           className="capitalize"
-                           disabled={isUpdatePending}
-                         >
-                           {capitalizeFirstLetter(role.name)}
-                         </DropdownMenuRadioItem>
-                       ))}
-                     </DropdownMenuRadioGroup>
-                   </DropdownMenuSubContent>
-                 </DropdownMenuSub>
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>Edit role</DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent>
+                    <DropdownMenuRadioGroup
+                      value={row.original.role._id}
+                      onValueChange={(value) => {
+                        toast.promise(
+                          updateMember({
+                            id: row.original.id as Id<"members">,
+                            field: "roleId",
+                            value: value as Id<"roles">,
+                          }),
+                          {
+                            loading: "Updating",
+                            success: "Success: Member role updated",
+                            error(error) {
+                              console.log(error.data);
+                              return `Error: ${error.data}`;
+                            },
+                          },
+                        );
+                      }}
+                    >
+                      {roles?.map((role) => (
+                        <DropdownMenuRadioItem
+                          key={role._id}
+                          value={role._id}
+                          className="capitalize"
+                        >
+                          {capitalizeFirstLetter(role.name)}
+                        </DropdownMenuRadioItem>
+                      ))}
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onSelect={() => setShowDeleteTaskDialog(true)}
-                >
+                <DropdownMenuItem>
                   Delete
                   <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </>
-        )
+        );
       },
     },
-  ]
+  ];
 }

@@ -17,7 +17,6 @@ import { Skeleton } from "@knowingly/ui/skeleton";
 import { useEdit } from "~/lib/hooks/useEdit";
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { FileUploadModal } from "./file-uploader/modal";
-import { set } from "zod";
 
 interface BannerProps {
   banner: BannerType;
@@ -31,6 +30,7 @@ export const Banner = ({ banner, isPage = false }: BannerProps) => {
   const updateHub = useMutation(api.hubs.update);
   const updatePage = useMutation(api.pages.update);
   const [_banner, setBanner] = useState(banner);
+  const [isLoading, setLoading] = useState(true);
   const [fileUploaderOpen, setFileUploaderOpen] = useState(false);
   const onUpload = (upload: string) => {
     setBanner({ type: "URL", value: upload });
@@ -66,25 +66,30 @@ export const Banner = ({ banner, isPage = false }: BannerProps) => {
     );
   };
 
-
   return (
-    <div
-      className={cn(
-        "group relative h-[30vh] w-full overflow-clip ",
-      )}
-    >
-      {_banner.type === "URL"  && (
+    <div className={cn("group relative h-[30vh] w-full overflow-clip ")}>
+      {_banner.type === "URL" && (
         <Image
-        src={_banner.value}
-        fill
-        alt="Cover"
-        className="object-cover "
-      />
+          className={cn(
+            "transform transition duration-300",
+            isLoading ? "scale-105 blur-sm" : "scale-100 blur-0",
+            "size-full object-cover ",
+          )}
+          onLoadingComplete={() => setLoading(false)}
+          src={_banner.value}
+          width={600}
+          height={200}
+          priority
+          decoding="async"
+          blurDataURL={_banner.value}
+          alt="Banner"
+        />
       )}
-      {_banner.type === "COLOR"  && (
+      {_banner.type === "COLOR" && (
         <div
-        className={`size-full  `} style={{ backgroundColor: _banner.value }}
-      ></div>
+          className={`size-full  `}
+          style={{ backgroundColor: _banner.value }}
+        ></div>
       )}
       {edit && (
         <div className="absolute bottom-5 right-5 flex items-center gap-x-2 opacity-0 group-hover:opacity-100">

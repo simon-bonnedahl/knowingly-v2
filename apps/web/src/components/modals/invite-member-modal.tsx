@@ -26,7 +26,11 @@ import { inviteMemberSchema } from "@knowingly/validators";
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { InviteMemberForm } from "../forms/invite-member-form";
 
-export function InviteMemberModal() {
+interface InviteMemberModalProps {
+  children: React.ReactNode;
+  initialData?: InviteMemberSchema;
+}
+export function InviteMemberModal({children, initialData} : InviteMemberModalProps) {
   const [open, setOpen] = React.useState(false);
   const subdomain = useSubdomain();
 
@@ -35,7 +39,8 @@ export function InviteMemberModal() {
   const form = useForm<InviteMemberSchema>({
     resolver: zodResolver(inviteMemberSchema),
     defaultValues: {
-      email: "",
+      email: initialData?.email ?? "",
+      roleId: initialData?.roleId ?? "",
       message: "",
     },
   });
@@ -65,10 +70,8 @@ export function InviteMemberModal() {
   return (
     <Modal open={open} onOpenChange={setOpen}>
       <ModalTrigger asChild>
-        <Button variant="ringHover" size="sm">
-          <Icons.usersPlus className="mr-2 size-4" aria-hidden="true" />
-          Invite member
-        </Button>
+        {children}
+        
       </ModalTrigger>
       <ModalContent>
         <ModalHeader>

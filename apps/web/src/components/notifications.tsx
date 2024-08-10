@@ -5,14 +5,12 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@knowingly/ui/sheet";
 
 
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@knowingly/backend/convex/_generated/api";
 import type { Ent } from "@knowingly/backend/convex/types";
-import Link from "next/link";
 import { Avatar, AvatarImage } from "@knowingly/ui/avatar";
 import { formatDate } from "@knowingly/utils";
 import { Icons } from "@knowingly/icons";

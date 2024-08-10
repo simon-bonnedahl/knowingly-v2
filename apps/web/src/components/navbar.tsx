@@ -94,7 +94,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
         href: "/profile",
         isActive: segments[1] === "profile",
         icon: <Icons.userSquareRounded className="h-5 w-5" />,
-        visible: subdomain !== "app" && subdomain !== "admin",
+        visible: subdomain !== "app" && subdomain !== "admin" && currentHub,
       },
       {
         name: "Admin",
@@ -180,12 +180,12 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
             className=" h-[3.25rem] w-full bg-card"
           />
         ) : (
-          <Skeleton className="h-12 w-full bg-card " />
+          <Skeleton className="h-[3.25rem] w-full bg-card " />
         )}
 
         <div className="mt-2 flex h-full flex-col justify-between  pt-2">
           <div className="flex flex-col gap-2">
-            {subdomain !== "app" && <Search />}
+            {(subdomain !== "app" && currentHub) && <Search />}
             {tabs.top.map(({ name, href, isActive, icon, visible, count }) => (
               <Link
                 key={name}

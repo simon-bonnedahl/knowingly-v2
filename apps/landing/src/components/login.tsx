@@ -14,7 +14,6 @@ import {
 
 import Link from "next/link";
 import { cn } from "@knowingly/ui";
-import { useRouter } from "next/navigation";
 import Password from "./password";
 import { Button } from "./button";
 import { Logo } from "./Logo";

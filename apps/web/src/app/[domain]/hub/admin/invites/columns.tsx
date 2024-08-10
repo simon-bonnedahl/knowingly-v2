@@ -34,7 +34,7 @@ import { Ent } from "@knowingly/backend/convex/types";
 export interface DataTableInvite {
     id: string
     email: string
-    role: Ent<"roles"> | null
+    role: Ent<"roles">
     status: string
     _creationTime: number
     }

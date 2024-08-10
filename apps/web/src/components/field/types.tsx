@@ -16,6 +16,7 @@ import { Button } from "@knowingly/ui/button";
 import { GaugeCircle } from "@knowingly/ui/gauge-circle";
 import { Input } from "@knowingly/ui/input";
 import { Progress } from "@knowingly/ui/progress";
+import { Skeleton } from "@knowingly/ui/skeleton";
 import { Status } from "@knowingly/ui/status";
 import { TagInput } from "@knowingly/ui/tag-input";
 
@@ -257,7 +258,9 @@ export const Fields: FieldTypes = {
       value: "loader",
     },
     defaultValue: "",
-    renderSettings: ({ options, setOptions, onBlur }) => <div className="w-full"></div>,
+    renderSettings: ({ options, setOptions, onBlur }) => (
+      <div className="w-full"></div>
+    ),
     valueInput: ({ value, setValue }) => (
       <Input
         onBlur={onBlur}
@@ -274,7 +277,9 @@ export const Fields: FieldTypes = {
       value: "at",
     },
     defaultValue: "",
-    renderSettings: ({ options, setOptions, onBlur }) => <div className="w-full"></div>,
+    renderSettings: ({ options, setOptions, onBlur }) => (
+      <div className="w-full"></div>
+    ),
     valueInput: ({ value, setValue }) => (
       <Input
         onBlur={onBlur}
@@ -291,7 +296,9 @@ export const Fields: FieldTypes = {
       value: "phone",
     },
     defaultValue: "",
-    renderSettings: ({ options, setOptions, onBlur }) => <div className="w-full"></div>,
+    renderSettings: ({ options, setOptions, onBlur }) => (
+      <div className="w-full"></div>
+    ),
     valueInput: ({ value, setValue }) => (
       <Input
         onBlur={onBlur}
@@ -308,7 +315,9 @@ export const Fields: FieldTypes = {
       value: "link",
     },
     defaultValue: "",
-    renderSettings: ({ options, setOptions, onBlur }) => <div className="w-full"></div>,
+    renderSettings: ({ options, setOptions, onBlur }) => (
+      <div className="w-full"></div>
+    ),
     valueInput: ({ value, setValue }) => (
       <Input
         onBlur={onBlur}
@@ -414,21 +423,32 @@ export const Fields: FieldTypes = {
         onChange={(e) => setValue(e.currentTarget.value)}
       />
     ),
-    button: ({ value, options }) => {
+    button: function Button({ value, options }) {
       if (typeof value !== "string") throw new Error("Value must be a string");
       let src = value;
       const format = options.format ?? "spotify";
+      const [loading, setLoading] = useState(true);
       switch (format) {
         case "spotify":
           src = value.replace("open.spotify.com", "open.spotify.com/embed");
 
           return (
-            <iframe
-              className="h-20 w-full rounded-xl "
-              src={src}
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              loading="lazy"
-            ></iframe>
+            <div className="relative w-full">
+              {loading && (
+                <Skeleton className="absolute h-20 w-full rounded-xl" />
+              )}
+              <iframe
+                className={cn(
+                  loading
+                    ? "opacity-0"
+                    : "h-20 w-full rounded-xl opacity-100 transition-opacity duration-500",
+                )}
+                src={src}
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"
+                onLoad={() => setLoading(false)}
+              ></iframe>
+            </div>
           );
         case "soundcloud":
           // Transform SoundCloud link to embed format
@@ -437,31 +457,56 @@ export const Fields: FieldTypes = {
             "&url=" +
             encodeURIComponent(value);
           return (
-            <iframe
-              className="h-32 w-full rounded-xl"
-              allow="autoplay"
-              src={src}
-            ></iframe>
+            <div className="relative w-full">
+              {loading && (
+                <Skeleton className="absolute h-32 w-full rounded-xl" />
+              )}
+              <iframe
+                className={cn(
+                  loading
+                    ? "opacity-0"
+                    : "h-32 w-full rounded-xl opacity-100 transition-opacity duration-500",
+                )}
+                allow="autoplay"
+                src={src}
+                onLoad={() => setLoading(false)}
+              ></iframe>
+            </div>
           );
         case "youtube":
           src = value.replace("watch?v=", "embed/");
           return (
-            <iframe
-              className="aspect-video w-full rounded-xl"
-              src={src}
-              title="YouTube Audio player"
-              allow="accelerometer;  clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            ></iframe>
+            <div className="relative w-full">
+              {loading && (
+                <Skeleton className="absolute aspect-video w-full rounded-xl" />
+              )}
+              <iframe
+                className="aspect-video w-full rounded-xl"
+                src={src}
+                title="YouTube Audio player"
+                allow="accelerometer;  clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                onLoad={() => setLoading(false)}
+              ></iframe>
+            </div>
           );
         default:
           src = value.replace("open.spotify.com", "open.spotify.com/embed");
           return (
-            <iframe
-              className="h-20 w-full rounded-xl "
-              src={src}
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              loading="lazy"
-            ></iframe>
+            <div className="relative w-full">
+              {loading && (
+                <Skeleton className="absolute h-32 w-full rounded-xl" />
+              )}
+              <iframe
+                className={cn(
+                  loading
+                    ? "opacity-0"
+                    : "h-32 w-full rounded-xl opacity-100 transition-opacity duration-500",
+                )}
+                allow="autoplay"
+                src={src}
+                onLoad={() => setLoading(false)}
+              ></iframe>
+            </div>
           );
       }
     },

@@ -7,42 +7,43 @@ import { useQuery } from "convex/react";
 import type { InviteMemberSchema } from "@knowingly/validators";
 import { api } from "@knowingly/backend/convex/_generated/api";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@knowingly/ui/form";
 import { Input } from "@knowingly/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@knowingly/ui/select";
 import { Textarea } from "@knowingly/ui/textarea";
 
 import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { capitalizeFirstLetter } from "@knowingly/utils";
-import type { IconKey } from "@knowingly/icons";
-import { Icon } from "@knowingly/icons";
 import { RenderIcon } from "../icon-picker/render-icon";
+import { Ent } from "@knowingly/backend/convex/types";
 
-interface InviteMemberFormProps
+interface RequestInviteFormProps
   extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
   children: React.ReactNode;
   form: UseFormReturn<InviteMemberSchema>;
+  user: Ent<"users"> | undefined | null;
   onSubmit: (data: InviteMemberSchema) => void;
 }
 
-export function InviteMemberForm({
+export function RequestInviteForm({
   form,
   onSubmit,
+  user,
   children,
-}: InviteMemberFormProps) {
+}: RequestInviteFormProps) {
   const subdomain = useSubdomain();
   const roles = useQuery(api.hubs.getRoles, { subdomain });
   return (
@@ -53,6 +54,7 @@ export function InviteMemberForm({
       >
         <FormField
           control={form.control}
+          disabled={!!user}
           name="email"
           render={({ field }) => (
             <FormItem>
@@ -107,7 +109,7 @@ export function InviteMemberForm({
               <FormLabel>Message</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Hey, I'd like to invite you to join our hub."
+                  placeholder="Hey, I'd like to join your hub."
                   className="resize-none"
                   {...field}
                 />

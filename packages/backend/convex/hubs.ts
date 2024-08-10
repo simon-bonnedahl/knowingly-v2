@@ -61,6 +61,17 @@ export const create = mutation({
     return hub;
   },
 });
+export const get = query({
+  args: { subdomain: v.optional(v.string()), id: v.optional(v.id("hubs")) },
+  handler: async (ctx, args) => {
+    if (!args.id && !args.subdomain)
+      throw new ConvexError("Required parameter missing");
+    if (args.id) return await ctx.table("hubs").get(args.id);
+    if (args.subdomain)
+      return await ctx.table("hubs").get("subdomain", args.subdomain);
+  },
+});
+//TODO: remove eventually
 export const getHub = query({
   args: { subdomain: v.optional(v.string()), id: v.optional(v.id("hubs")) },
   handler: async (ctx, args) => {
@@ -71,6 +82,9 @@ export const getHub = query({
       return await ctx.table("hubs").get("subdomain", args.subdomain);
   },
 });
+
+
+
 export const list = query({
   args: {ids: v.optional(v.array(v.id("hubs"))) },
   handler: async (ctx, args) => {

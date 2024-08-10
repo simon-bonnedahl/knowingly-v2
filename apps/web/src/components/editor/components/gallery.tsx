@@ -1,18 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createReactBlockSpec } from "@blocknote/react";
 import { NodeViewWrapper } from "@tiptap/react";
-import { useAction, useMutation, useQuery } from "convex/react";
-import { FunctionReturnType } from "convex/server";
+import { useMutation, useQuery } from "convex/react";
 import { toast } from "sonner";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
+import { Id } from "@knowingly/backend/convex/_generated/dataModel";
 import { Ent } from "@knowingly/backend/convex/types";
-import { Icon, Icons } from "@knowingly/icons";
+import { Icons } from "@knowingly/icons";
 import { Button } from "@knowingly/ui/button";
 import {
   DropdownMenu,
@@ -34,19 +33,18 @@ import {
   MinimalCardTitle,
 } from "@knowingly/ui/minimal-card";
 import { Separator } from "@knowingly/ui/separator";
-import { capitalizeFirstLetter } from "@knowingly/utils";
+import { capitalizeFirstLetter, truncate } from "@knowingly/utils";
 
+import { RenderIcon } from "~/components/icon-picker/render-icon";
 import { AddPageModal } from "~/components/modals/add-page-modal";
-import { useDebounce } from "~/lib/hooks/useDebounce";
 import { useEdit } from "~/lib/hooks/useEdit";
-import { useSubdomain } from "~/lib/hooks/useSubdomain";
 
 export const BlocknoteGallery = createReactBlockSpec(
   {
     type: "gallery",
     propSchema: {
       collectionId: {
-        default: "",
+        default: "" as Id<"collections">,
         values: [],
       },
       columns: {
@@ -63,47 +61,25 @@ export const BlocknoteGallery = createReactBlockSpec(
   {
     render: (props) => {
       const Gallery = () => {
-        const subdomain = useSubdomain();
         const router = useRouter();
         const { edit } = useEdit();
         const [columns, setColumns] = useState(props.block.props.columns);
         const [type, setType] = useState(props.block.props.type);
         const [name, setName] = useState<string>("");
         const [search, setSearch] = useState<string>("");
-        const collection = useQuery(api.collections.get, { id: props.block.props.collectionId });
+        const collection = useQuery(api.collections.get, {
+          id: props.block.props.collectionId,
+        });
         const updateCollection = useMutation(api.collections.update);
-
 
         useEffect(() => {
           if (collection) setName(collection.name);
         }, [collection]);
 
-        
-        // const getOrCreateCollection = useAction(api.collections.getOrCreate);
-
-        // const [collection, setCollection] =
-        //   useState<FunctionReturnType<typeof api.collections.get>>();
-        // const [isFetching, setIsFetching] = useState(false);
-
-        // useEffect(() => {
-        //   async function getOrCreate() {
-        //     setIsFetching(true);
-        //     const collection = await getOrCreateCollection({
-        //       subdomain,
-        //       id: props.block.props.collectionId,
-        //     });
-        //     setCollection(collection);
-        //     setName(collection.name);
-        //   }
-        //   if (!isFetching && !collection) {
-        //     void getOrCreate();
-        //   }
-        // }, []);
-
         const [filteredPages, setFilteredPages] = useState<Ent<"pages">[]>();
 
         const onChangeName = () => {
-          if (name === collection.name) return;
+          if (!collection || name === collection.name) return;
 
           toast.promise(
             updateCollection({
@@ -160,25 +136,24 @@ export const BlocknoteGallery = createReactBlockSpec(
         return (
           <NodeViewWrapper className="z-10 flex w-full select-none  flex-col gap-2 rounded-lg hover:cursor-default ">
             <div className="flex  w-full items-center gap-2  ">
-              <div className="flex flex-row  gap-2 ">
-                <Input
-                  minimal
-                  value={name}
-                  onChange={(e) => setName(e.currentTarget.value)}
-                  placeholder="Untitled..."
-                  disabled={!edit}
-                  className=" bg-transparent  text-2xl  font-bold  "
-                />
-                <Button
-                  variant={"ghost"}
-                  className="p-2"
-                  size="sm"
-                  onClick={() => router.push("/c/" + collection._id)}
-                >
-                  View More
-                  <Icons.arrowUpRight className="h-5 w-5" />
-                </Button>
-              </div>
+              <Input
+                minimal
+                value={name}
+                onChange={(e) => setName(e.currentTarget.value)}
+                placeholder="Untitled..."
+                disabled={!edit}
+                className=" w-full  bg-transparent  text-2xl  font-bold"
+              />
+
+              <Button
+                variant={"ghost"}
+                className="p-2"
+                size="sm"
+                onClick={() => router.push("/c/" + collection._id)}
+              >
+                View More
+                <Icons.arrowUpRight className="h-5 w-5" />
+              </Button>
               <div className="relative ml-auto flex-1 md:grow-0">
                 <Icons.search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -255,52 +230,21 @@ export const BlocknoteGallery = createReactBlockSpec(
                 <Link
                   key={page._id}
                   href={`/${page._id}`}
-                  className=" hover:cursor-pointer group relative"
+                  className=" group relative hover:cursor-pointer"
                 >
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Icons.dots className="size-6 opacity-0 group-hover:opacity-100 transition-opacity duration-200 absolute bottom-2 right-2 z-50" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-40">
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>Delete</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
                   <MinimalCard>
-                    <div className="relative">
-                      <MinimalCardImage
-                        src={page.banner.value}
-                        alt={page.name}
-                      />
-                      <div className="absolute -bottom-6 left-4 size-[3.5rem] ">
-                        {page.icon.type === "URL" && (
-                          <Image
-                            src={page.icon.value}
-                            width={50}
-                            height={50}
-                            alt="icon"
-                            className="size-full rounded-full object-cover"
-                          />
-                        )}
-                        {page.icon.type === "EMOJI" && (
-                          <span className=" select-none text-[3rem] leading-[3rem]">
-                            {page.icon.value}
-                          </span>
-                        )}
-                        {page.icon.type === "ICON" && (
-                          <Icon name={page.icon.value} className="size-full" />
-                        )}
-                      </div>
-                    </div>
-                    <span className="px-5 text-xl font-medium">
+                    <MinimalCardImage src={page.banner.value} alt={page.name} />
+
+                    <MinimalCardTitle className="flex w-full items-center gap-2  truncate">
+                      <RenderIcon icon={page.icon} size={1.5} />
                       {page.name}
-                    </span>
+                    </MinimalCardTitle>
                   </MinimalCard>
                 </Link>
               ))}
               {collection && edit && (
                 <AddPageModal collectionId={collection._id}>
-                  <MinimalCard className="flex h-full items-center justify-center select-none hover:cursor-pointer">
+                  <MinimalCard className="flex h-full select-none items-center justify-center hover:cursor-pointer">
                     <Icons.plus className="h-5 w-5" />
                     <span>Add</span>
                   </MinimalCard>

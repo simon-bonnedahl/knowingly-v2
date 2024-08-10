@@ -4,12 +4,12 @@ import * as React from "react"
 import { Modal, ModalContent, ModalHeader, ModalTitle } from "@knowingly/ui/modal"
 import { useAction, useQuery } from "convex/react"
 import { api } from "@knowingly/backend/convex/_generated/api"
-import Image from "next/image"
 import { Avatar, AvatarImage } from "@knowingly/ui/avatar"
 import { isFile, isUrl } from "@knowingly/utils"
 import { Button } from "@knowingly/ui/button"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { Banner } from "../banner"
 
 
 interface InviteModalProps {
@@ -58,7 +58,7 @@ export function InviteModal({inviteToken} : InviteModalProps){
           </ModalHeader>
           <div className="relative">
 
-          <Image src={hubInvite.hub.banner.value} width={400} height={200} alt="hub banner" className="w-full rounded-3xl object-cover h-40"/>
+          <Banner banner={hubInvite.hub.banner} />
           <Avatar className="h-fit w-fit rounded-none absolute -top-4 -right-2">
             {(isUrl(hubInvite.hub.logo) || isFile(hubInvite.hub.logo)) ? (
                 <AvatarImage

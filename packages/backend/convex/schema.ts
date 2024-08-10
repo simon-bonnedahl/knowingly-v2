@@ -64,6 +64,7 @@ const schema = defineEntSchema({
     .edges("roles", { ref: true })
     .edges("pages", { ref: true })
     .edges("collections", { ref: true })
+    .edges("inviteRequests", { ref: true })
     .edges("emailTemplates", { ref: true })
     .vectorIndex("by_embedding", {
       vectorField: "embedding",
@@ -79,7 +80,8 @@ const schema = defineEntSchema({
   })
     .edge("hub")
     .edges("members", { ref: true })
-    .edges("hubInvites", { ref: true }),
+    .edges("hubInvites", { ref: true })
+    .edges("inviteRequests", { ref: true }),
   hubInvites: defineEnt({
     user: v.optional(v.id("users")),
     message: v.optional(v.string()),
@@ -91,6 +93,12 @@ const schema = defineEntSchema({
     .edge("role")
     .edge("hub")
     .edge("inviter", { to: "users", field: "userId" }),
+  inviteRequests: defineEnt({
+    user: v.optional(v.id("users")),
+    message: v.optional(v.string()),
+  })
+    .field("email", v.string(), { unique: true })
+    .edge("role").edge("hub"),
 
   members: defineEnt({})
     .edge("user")

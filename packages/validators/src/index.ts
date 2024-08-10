@@ -18,3 +18,11 @@ export const createHubSchema = z.object({
 });
 
 export type CreateHubSchema = z.infer<typeof createHubSchema>;
+
+export const requestInviteSchema = z.object({
+  email: z.string().email().optional(),
+  roleId: z.string(),
+  message: z.string().optional(),
+});
+
+export type RequestInviteSchema = z.infer<typeof requestInviteSchema>;

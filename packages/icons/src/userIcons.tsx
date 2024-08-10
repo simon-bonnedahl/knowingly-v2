@@ -337,7 +337,6 @@ export const userIcons = {
       <path d="M17 17l-2 2l2 2" />
     </svg>
   ),
-
   users: (props: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"

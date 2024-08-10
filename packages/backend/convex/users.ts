@@ -12,7 +12,9 @@ export const get = query({
 export const getByTokenIdentifier = query({
   args: { tokenIdentifier: v.string() },
   handler: async (ctx, args) => {
-    return await ctx.table("users").get("tokenIdentifier", args.tokenIdentifier);
+    return await ctx
+      .table("users")
+      .get("tokenIdentifier", args.tokenIdentifier);
   },
 });
 
@@ -27,14 +29,17 @@ export const getMe = query({
 export const list = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.table("users")
+    return await ctx.table("users");
   },
 });
 
 export const update = mutation({
   args: { id: v.id("users"), field: v.string(), value: v.any() },
   handler: async (ctx, args) => {
-    await ctx.table("users").getX(args.id).patch({ [args.field]: args.value });
+    await ctx
+      .table("users")
+      .getX(args.id)
+      .patch({ [args.field]: args.value });
   },
 });
 
@@ -57,25 +62,30 @@ export const createUser = internalMutation({
       pageVisits: [],
     });
     // fetch all hub invites for this email and create notifications
-    const hubInvites = await ctx.table("hubInvites").filter((q) =>
-      q.eq(q.field("email"), email)
-    );
+    const hubInvites = await ctx
+      .table("hubInvites")
+      .filter((q) => q.eq(q.field("email"), email));
     await Promise.all(
       hubInvites.map(async (invite) => {
         await invite.patch({ user });
-        const inviter = await invite.edge("inviter");
-        const title = `${inviter.name} has invited you to join a hub`;
-        const body = `You have been invited to join a hub. Click here to view the invite`;
-        const actionPath = `/?invite=${invite.inviteToken}`;
-        await ctx.table("notifications").insert({
-          title,
-          body,
-          actionPath,
-          userId: user,
-          icon: inviter.imageUrl,
-          read : false
-        });
-        })
+        try {
+          const inviter = await invite.edge("inviter");
+          const hub = await invite.edge("hub");
+          const title = `${inviter.name} has invited you to join a hub`;
+          const body = `You have been invited to join a hub. Click here to view the invite`;
+          const actionPath = `https://${hub.subdomain}.simbo.casa/?invite=${invite.inviteToken}`;  //TODO: change to relative path from root env?
+          await ctx.table("notifications").insert({
+            title,
+            body,
+            actionPath,
+            userId: user,
+            icon: inviter.imageUrl,
+            read: false,
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      }),
     );
   },
 });
@@ -95,102 +105,112 @@ export const createUser = internalMutation({
 //   },
 // });
 export const getHubs = query({
-  args: {userId : v.optional(v.id("users"))},
+  args: { userId: v.optional(v.id("users")) },
   handler: async (ctx, args) => {
-    const user = args.userId ? await ctx.table("users").get(args.userId) : await ctx.user()
-    const memberships = await user?.edge("memberships")
+    const user = args.userId
+      ? await ctx.table("users").get(args.userId)
+      : await ctx.user();
+    const memberships = await user?.edge("memberships");
     if (!memberships) {
-      return []
+      return [];
     }
-    return await Promise.all(memberships.map(async (membership) => {
-      return {
-        ... await membership.edge("hub"),
-        role: await membership.edge("role")
-
-      }
-    }
-    ))
+    return await Promise.all(
+      memberships.map(async (membership) => {
+        return {
+          ...(await membership.edge("hub")),
+          role: await membership.edge("role"),
+        };
+      }),
+    );
   },
 });
 export const addUpload = mutation({
-    args: { storageId: v.id("_storage") },
-    handler: async (ctx, args) => {
-        const user = await ctx.userX()
-        const uploads = [...user.uploads, args.storageId]
-        await user.patch({"uploads": uploads})
-        return uploads
-    }
+  args: { storageId: v.id("_storage") },
+  handler: async (ctx, args) => {
+    const user = await ctx.userX();
+    const uploads = [...user.uploads, args.storageId];
+    await user.patch({ uploads: uploads });
+    return uploads;
+  },
 });
 export const getUploads = query({
-    args: { },
-    handler: async (ctx, args) => {
-        const user = await ctx.user()
-        if (!user || !user.uploads) {
-            return []
-        }
+  args: {},
+  handler: async (ctx, args) => {
+    const user = await ctx.user();
+    if (!user || !user.uploads) {
+      return [];
+    }
 
-        const uploads =  await Promise.all(user.uploads.map(async (upload) => {
-            return await ctx.storage.getUrl(upload)
-        }
-        ))
-        return uploads.filter((u) => u !== null)
-        }
-
-    });
+    const uploads = await Promise.all(
+      user.uploads.map(async (upload) => {
+        return await ctx.storage.getUrl(upload);
+      }),
+    );
+    return uploads.filter((u) => u !== null);
+  },
+});
 export const getMyProfile = query({
-    args: {subdomain: v.string()},
-    handler: async (ctx, args) => {
-      const hub = await ctx.table("hubs").get("subdomain", args.subdomain)
-        const user =  await ctx.user()
-        const membership = await user?.edge("memberships").filter((q) => q.eq(q.field("hubId"), hub?._id)).first()
-        if (!membership) {
-            return null
-        }
-        return await membership.edge("pages").filter((q) => q.eq(q.field("type"), "PROFILE")).first()
+  args: { subdomain: v.string() },
+  handler: async (ctx, args) => {
+    const hub = await ctx.table("hubs").get("subdomain", args.subdomain);
+    const user = await ctx.user();
+    const membership = await user
+      ?.edge("memberships")
+      .filter((q) => q.eq(q.field("hubId"), hub?._id))
+      .first();
+    if (!membership) {
+      return null;
     }
-})
+    return await membership
+      .edge("pages")
+      .filter((q) => q.eq(q.field("type"), "PROFILE"))
+      .first();
+  },
+});
 export const addPageVisit = mutation({
-    args: {pageId: v.id("pages")},
-    handler: async (ctx, args) => {
-        const user = await ctx.user()
-        if (!user) {
-            return
-        }
-        const pageVisits = [args.pageId, ...user.pageVisits.filter((pageId) => pageId !== args.pageId)]
-        await user.patch({"pageVisits": pageVisits})
-        return 
+  args: { pageId: v.id("pages") },
+  handler: async (ctx, args) => {
+    const user = await ctx.user();
+    if (!user) {
+      return;
     }
-})
+    const pageVisits = [
+      args.pageId,
+      ...user.pageVisits.filter((pageId) => pageId !== args.pageId),
+    ];
+    await user.patch({ pageVisits: pageVisits });
+    return;
+  },
+});
 
 export const getLastVisitedPages = query({
   args: {},
   handler: async (ctx) => {
-      const user = await ctx.user();
-      if (!user || !user.pageVisits) {
-          return [];
-      }
+    const user = await ctx.user();
+    if (!user || !user.pageVisits) {
+      return [];
+    }
 
-      // Get the pages
-      const pages = await Promise.all(
-          user.pageVisits.slice(0, 5).map(async (pageId) => {
-              return await ctx.table("pages").get(pageId);
-          })
-      ).then((pages) => pages.filter((p) => !!p));
+    // Get the pages
+    const pages = await Promise.all(
+      user.pageVisits.slice(0, 5).map(async (pageId) => {
+        return await ctx.table("pages").get(pageId);
+      }),
+    ).then((pages) => pages.filter((p) => !!p));
 
-      const result = await Promise.all(
-          pages.map(async (page) => {
-              const subdomain = (await page.edge("hub")).subdomain;
-              return {
-                  ...page,
-                  subdomain
-              };
-          })
-      );
+    const result = await Promise.all(
+      pages.map(async (page) => {
+        const subdomain = (await page.edge("hub")).subdomain;
+        return {
+          ...page,
+          subdomain,
+        };
+      }),
+    );
 
-      return result;
-  }
+    return result;
+  },
 });
-
 
 // export const updateSubscription = internalMutation({
 //   args: { subscriptionId: v.string(), userId: v.string(), endsOn: v.number() },

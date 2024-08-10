@@ -4,7 +4,7 @@ import { userIcons } from "./userIcons";
 
 export type IconProps = React.HTMLAttributes<SVGElement>;
 
-export const STROKE_WIDTH = 2;
+export const STROKE_WIDTH = 1.25;
 
 export const Icons = {
   logo: (props: IconProps) => (

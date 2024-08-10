@@ -107,7 +107,7 @@ export default function PagePage({ params }: { params: { id: string } }) {
         <Switch checked={edit} onCheckedChange={toggleEdit} />
       </div>
       <Banner banner={page.banner} isPage />
-      <div className="w-full  px-24">
+      <div className="w-full  px-24 ">
         <PageToolbar page={page}>
           {creator && page.type === "PROFILE" && (
             <>

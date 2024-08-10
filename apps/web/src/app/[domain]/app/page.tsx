@@ -1,6 +1,7 @@
 "use client";
 import { api } from "@knowingly/backend/convex/_generated/api";
-import { MinimalCard, MinimalCardImage } from "@knowingly/ui/minimal-card";
+import { MinimalCard, MinimalCardImage, MinimalCardTitle } from "@knowingly/ui/minimal-card";
+import { truncate } from "@knowingly/utils";
 import { useQuery } from "convex/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,16 +13,11 @@ export default function Overview() {
 
 
   return (
-    <div className="flex max-w-screen-xl flex-col space-y-12 p-8">
+    <div className="flex w-full flex-col space-y-12 p-8">
       <div className="flex flex-col space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="font-cal text-3xl font-bold text-foreground">
-            Overview
-          </h1>
-        </div>
-        <div className='max-w-screen'>
+        <div className='w-full flex flex-col gap-2'>
           <h2 className="font-cal text-2xl font-bold text-foreground">
-            Last Visited Pages
+            Last Visited
           </h2>
           <div className="grid grid-cols-5 gap-2">
             {lastVisitedPages?.map((page) => (
@@ -30,16 +26,17 @@ export default function Overview() {
                   href={env.NEXT_PUBLIC_PROTOCOL + "://" + page.subdomain + "." + env.NEXT_PUBLIC_ROOT_DOMAIN + "/" + page._id}
                   className="z-50 hover:cursor-pointer"
                 >
-                  <MinimalCard>
+                  <MinimalCard className="overflow-hidden"> 
                     <div className="relative">
                     <MinimalCardImage src={page.banner.value} alt={page.name} />
-                      <div className="absolute -bottom-6 left-4 size-[3.5rem] ">
-                        <RenderIcon icon={page.icon} size={1.5} />
-                      </div>
+                     
                     </div>
-                        <span className="text-xl font-medium px-5">
-                          {page.name}
-                        </span>
+                    <MinimalCardTitle className="flex w-full gap-2 items-center  p-1">
+                    <RenderIcon icon={page.icon} size={1.5} />
+                      {truncate(page.name, 14)}
+
+                    </MinimalCardTitle>
+                       
                   </MinimalCard>
                 </Link>
             ))}

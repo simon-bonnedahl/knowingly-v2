@@ -29,6 +29,7 @@ import type * as functions from "../functions.js";
 import type * as http from "../http.js";
 import type * as hubInvites from "../hubInvites.js";
 import type * as hubs from "../hubs.js";
+import type * as inviteRequests from "../inviteRequests.js";
 import type * as meetings from "../meetings.js";
 import type * as members from "../members.js";
 import type * as messages from "../messages.js";
@@ -66,6 +67,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   hubInvites: typeof hubInvites;
   hubs: typeof hubs;
+  inviteRequests: typeof inviteRequests;
   meetings: typeof meetings;
   members: typeof members;
   messages: typeof messages;

@@ -1,33 +1,30 @@
 "use client";
 
-import React, {  useState } from "react";
+import React, { useState } from "react";
+import Image from "next/image";
 import { useMutation } from "convex/react";
+import { toast } from "sonner";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
-
-import { IconPicker } from "~/components/icon-picker";
 import { Ent, Icon as IconType } from "@knowingly/backend/convex/types";
-import { toast } from "sonner";
 import { Icon } from "@knowingly/icons";
-import { useEdit } from "~/lib/hooks/useEdit";
-import Image from "next/image";
 import { Input } from "@knowingly/ui/input";
 
-interface ToolbarProps {
+import { IconPicker } from "~/components/icon-picker";
+import { RenderIcon } from "~/components/icon-picker/render-icon";
+import { useEdit } from "~/lib/hooks/useEdit";
+
+interface PageToolbarProps {
   page: Ent<"pages">;
   children?: React.ReactNode;
 }
 
-export const PageToolbar = ({
-  page,
-  children,
-}: ToolbarProps) => {
-  const { edit} = useEdit();
+export const PageToolbar = ({ page, children }: PageToolbarProps) => {
+  const { edit } = useEdit();
   const [name, setName] = useState(page.name);
   const [icon, setIcon] = useState(page.icon);
 
   const updatePage = useMutation(api.pages.update);
-
 
   const onIconSelect = (icon: IconType) => {
     setIcon(icon);
@@ -42,14 +39,12 @@ export const PageToolbar = ({
         loading: "Updating icon",
         success: "Success: Updated icon",
         error: (error) => `Error: ${error.data}`,
-      }
+      },
     );
-
   };
 
-
   const onSaveName = () => {
-    if (!name || name === page.name) return
+    if (!name || name === page.name) return;
     toast.promise(
       updatePage({
         id: page._id,
@@ -65,64 +60,37 @@ export const PageToolbar = ({
   };
 
   return (
-    <div className=" group relative w-full py-4">
-       {edit ? (
-          <div className="absolute -top-14 size-fit">
-            <IconPicker onChange={onIconSelect}>
-              <div className="size-[6rem]">
-                {icon.type === "URL" && (
-                  <Image
-                    src={icon.value}
-                    width={400}
-                    height={400}
-                    alt="logo"
-                    className="size-full rounded-full object-cover"
-                  />
-                )}
-                {icon.type === "EMOJI" && (
-                  <span className="text-[6rem] leading-[6rem] select-none">
-                    {icon.value}
-                  </span>
-                )}
-                {icon.type === "ICON" && (
-                  <Icon name={icon.value} className="size-full" />
-                )}
-              </div>
-            </IconPicker>
-          </div>
-        ) : (
-            <div className="absolute -top-14  size-[6rem] ">
-                {icon.type === "URL" && (
-                  <Image
-                    src={icon.value}
-                    width={400}
-                    height={400}
-                    alt="logo"
-                    className="size-full rounded-full object-cover"
-                  />
-                )}
-                {icon.type === "EMOJI" && (
-                  <span className="text-[6rem] leading-[6rem] select-none">
-                    {icon.value}
-                  </span>
-                )}
-                {icon.type === "ICON" && (
-                  <Icon name={icon.value} className="size-full" />
-                )}
-              </div>
-        )}
-   
-      <div className="flex w-full items-end justify-between mt-4">
-        <Input
-          minimal
-          disabled={!edit}
-          value={name}
-          onChange={(e) => setName(e.currentTarget.value)}
-          onBlur={onSaveName}
-          className="mt-4 w-full bg-transparent text-4xl  font-bold focus:outline-none text-foreground"
-        />
-        <div className="flex items-center gap-2">{children}</div>
+    <div className=" group relative">
+      {edit ? (
+        <div className="absolute -top-12">
+          <IconPicker onChange={onIconSelect}>
+            <RenderIcon icon={icon} size={6} />
+          </IconPicker>
+        </div>
+      ) : (
+        <RenderIcon icon={icon} size={6} className="absolute -top-12" />
+      )}
+      
+      <div className="pt-14 w-full ">
+        <div className="flex w-full items-center justify-between">
+          <Input
+            minimal
+            placeholder="Hub name..."
+            disabled={!edit}
+            value={name}
+            onChange={(e) => setName(e.currentTarget.value)}
+            onBlur={onSaveName}
+            className="w-full bg-transparent text-4xl font-bold" 
+          />
+          <div className="flex items-center gap-2">{children}</div>
+        </div>
+
+        {/* <Button onClick={handleStartOnborda}>
+          start
+        </Button> */}
       </div>
+      
+
     </div>
   );
 };

@@ -74,7 +74,8 @@ export const update = mutation({
 
 export const send = action({
   args: {
-    subdomain: v.string(),
+    hubId: v.optional(v.id("hubs")),
+    subdomain: v.optional(v.string()),
     roleId: v.id("roles"),
     email: v.string(),
     message: v.optional(v.string()),
@@ -82,8 +83,9 @@ export const send = action({
   handler: async (ctx, args) => {
     const user = await ctx.runQuery(api.users.getMe);
     if(!user) throw new ConvexError("Unauthorized");
-    const hub = await ctx.runQuery(api.hubs.getHub, {
+    const hub = await ctx.runQuery(api.hubs.get, {
       subdomain: args.subdomain,
+      id: args.hubId,
     });
     if (!hub) throw new ConvexError("Hub not found");
     const hubInvite = await ctx.runMutation(api.hubInvites.create, {

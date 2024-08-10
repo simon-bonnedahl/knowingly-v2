@@ -99,7 +99,7 @@ export const FieldList = ({fields, isPage=false}: FieldListProps) => {
 
 
   return (
-    <div className="w-full py-4 ">
+    <div className="w-full py-4 -ml-6 ">
      
     {edit ? (
       <>
