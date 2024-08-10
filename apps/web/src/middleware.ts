@@ -55,7 +55,6 @@ export default clerkMiddleware(async (auth, req) => {
       new URL(`/${hostname}/shared${path === "/" ? "" : path}`, req.url),
     );
   }
-  console.log(hostname)
 
   if (hostname === `auth.${env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
     if (tokenIdentifier) {

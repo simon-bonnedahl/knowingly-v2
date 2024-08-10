@@ -95,7 +95,7 @@ export const send = action({
     if (hubInvite.user) {
       const title = `${user.name} has invited you to join a hub`;
       const body = `You have been invited to join a hub. Click here to view the invite`;
-      const actionPath = `/?invite=${hubInvite.inviteToken}`;
+      const actionPath = `https://${hub.subdomain}.simbo.casa/?invite=${hubInvite.inviteToken}`;  //TODO: change to relative path from root env?
       await ctx.runMutation(internal.notifications.create, {
         title,
         body,

@@ -1,9 +1,7 @@
 import { ConvexError, v } from "convex/values";
-import slugify from "slugify";
-import { v4 as uuid } from "uuid";
 
 import { mutation } from "./functions";
-import { defaultcontent, defaultPageContent } from "./constants";
+import {  defaultPageContent } from "./constants";
 
 export const update = mutation({
   args: { id: v.id("members"), field: v.string(), value: v.any() },
@@ -27,24 +25,19 @@ export const create = mutation({
       .table("members")
       .insert({ userId, hubId, roleId })
       .get();
-    let slug = slugify(user.name, { lower: true });
-
-    const pageExists = await ctx.table("pages").get("slug", slug);
-    if (pageExists) slug = `${slug}-${uuid()}`;
-
+   
     const profilePage = await ctx
       .table("pages")
       .insert({
-        slug: "heh",
-        icon: user.imageUrl,
-        image: hub.banner,
+        icon: { type: "URL", value: user.imageUrl },
+        banner: hub.banner,
         name: user.name,
         type: "PROFILE",
         memberId: member._id,
         hubId,
         isPublic: true,
         content: defaultPageContent("PROFILE"),
-        updatedEmbedding: false,
+        updatedAt: Date.now(),
         fields: [],
         isLocked: false,
       })

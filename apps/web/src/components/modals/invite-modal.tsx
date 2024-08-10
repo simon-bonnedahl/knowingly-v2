@@ -58,7 +58,7 @@ export function InviteModal({inviteToken} : InviteModalProps){
           </ModalHeader>
           <div className="relative">
 
-          <Image src={hubInvite.hub.banner} width={400} height={200} alt="hub banner" className="w-full rounded-3xl object-cover h-40"/>
+          <Image src={hubInvite.hub.banner.value} width={400} height={200} alt="hub banner" className="w-full rounded-3xl object-cover h-40"/>
           <Avatar className="h-fit w-fit rounded-none absolute -top-4 -right-2">
             {(isUrl(hubInvite.hub.logo) || isFile(hubInvite.hub.logo)) ? (
                 <AvatarImage

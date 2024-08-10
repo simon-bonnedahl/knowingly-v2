@@ -112,17 +112,16 @@ export const update = mutation({
   handler: async (ctx, args) => {
     const { subdomain, id, field, value } = args;
     if (!id && !subdomain) throw new ConvexError("Required parameter missing");
+    let hub = undefined;
+    if(id) hub = await ctx.table("hubs").get(id);
+    if(subdomain) hub = await ctx.table("hubs").get("subdomain", subdomain);
+    if (!hub) throw new ConvexError("Hub not found");
 
-    if(id)  await ctx
-    .table("hubs")
-    .getX(id)
-    .patch({ [field]: value, updatedAt: Date.now() });
-    if(subdomain) await ctx
-    .table("hubs")
-    .getX("subdomain", subdomain)
-    .patch({ [field]: value, updatedAt: Date.now() });
+    const permissions = await ctx.permissions(hub._id);
+    if (!permissions.canEditHub && !permissions.canDoAnything) throw new ConvexError("You do not have permission to do that");
 
-    return;
+    return await hub.patch({ [field]: value });
+
 
   },
 });
@@ -131,7 +130,11 @@ export const deleteHub = mutation({
   args: { subdomain: v.string() },
   handler: async (ctx, args) => {
     const { subdomain } = args;
-    return await ctx.table("hubs").getX("subdomain", subdomain).delete();
+    const hub = await ctx.table("hubs").get("subdomain", subdomain);
+    if (!hub) throw new ConvexError("Hub not found");
+    const permissions = await ctx.permissions(hub._id);
+    if (!permissions.canDeleteHub && !permissions.canDoAnything) throw new ConvexError("You do not have permission to do that");
+    return await hub.delete();
   },
 });
 

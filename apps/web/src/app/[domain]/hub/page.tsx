@@ -4,21 +4,22 @@ import { useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { useMutation, useQuery } from "convex/react";
+import { useTheme } from "next-themes";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
 import { Label } from "@knowingly/ui/label";
 import { Separator } from "@knowingly/ui/separator";
 import { Switch } from "@knowingly/ui/switch";
+import { adjustLightness, generateShades, hexToHSL } from "@knowingly/utils";
 
 import { Banner } from "~/components/banner";
 import { FieldList } from "~/components/field/field-list";
 import { InviteModal } from "~/components/modals/invite-modal";
-import { useSubdomain } from "~/lib/hooks/useSubdomain";
-import { HubToolbar } from "./toolbar";
 import { useEdit } from "~/lib/hooks/useEdit";
 import { useSingleQuery } from "~/lib/hooks/useSingleQuery";
-import { useTheme } from "next-themes"
-import { adjustLightness, generateShades, hexToHSL } from "@knowingly/utils";
+import { useSubdomain } from "~/lib/hooks/useSubdomain";
+import { HubToolbar } from "./toolbar";
+import { toast } from "sonner";
 
 export default function HubPage() {
   const subdomain = useSubdomain();
@@ -26,8 +27,9 @@ export default function HubPage() {
 
   const hub = useSingleQuery(api.hubs.getHub, { subdomain });
   const updateHub = useMutation(api.hubs.update);
+  const myRole = useQuery(api.hubs.getMyRole, { subdomain });
   const { edit, toggleEdit } = useEdit();
-  const {theme } = useTheme();
+  const { theme } = useTheme();
 
   const Editor = useMemo(
     () => dynamic(() => import("~/components/editor/editor"), { ssr: false }),
@@ -35,8 +37,7 @@ export default function HubPage() {
   );
 
   useEffect(() => {
-    if (hub?.brandingColor && theme)
-      setPrimaryColor(hub.brandingColor, theme);
+    if (hub?.brandingColor && theme) setPrimaryColor(hub.brandingColor, theme);
   }, [hub]);
 
   const setPrimaryColor = (
@@ -45,13 +46,18 @@ export default function HubPage() {
   ) => {
     if (!color || !document) return;
     const colorHSL = hexToHSL(color);
-    const {adjustedColor, lightness} =
-      theme === "dark" ? adjustLightness(colorHSL, 10) : adjustLightness(colorHSL, 0);
+    const { adjustedColor, lightness } =
+      theme === "dark"
+        ? adjustLightness(colorHSL, 10)
+        : adjustLightness(colorHSL, 0);
     // Set the primary color
     document.documentElement.style.setProperty("--primary", adjustedColor);
     // Determine lightness from adjustedColor and set primaryForeground
     const primaryForeground = lightness < 50 ? "0 0 100%" : "0 0 0%";
-    document.documentElement.style.setProperty("--primary-foreground", primaryForeground);
+    document.documentElement.style.setProperty(
+      "--primary-foreground",
+      primaryForeground,
+    );
     // Generate shades and set them
     const shades = generateShades(colorHSL, 5);
     if (theme === "dark") shades.reverse();
@@ -65,24 +71,32 @@ export default function HubPage() {
   }
 
   const onChange = async (content: any) => {
-    await updateHub({
+    toast.promise(
+     updateHub({
       subdomain: hub.subdomain,
       field: "content",
       value: JSON.stringify(content),
-    });
+    }),
+    {
+      error: (error) => `Error: ${error.data}`,
+    },
+  );
   };
 
   return (
     <>
       <InviteModal inviteToken={searchParams.get("invite")} />
       <div className="relative flex w-full flex-col items-center">
-        <div className="absolute right-2 top-[21rem] z-20 flex items-center gap-2">
-          <Label className="font-medium">Edit</Label>
-          <Switch checked={edit} onCheckedChange={toggleEdit} />
-        </div>
+        {myRole?.permissions.canEditHub && (
+          <div className="absolute right-2 top-[20.5rem] z-20 flex items-center gap-2">
+            <Label className="font-medium">Edit</Label>
+            <Switch checked={edit} onCheckedChange={toggleEdit} />
+          </div>
+        )}
+
         <Banner banner={hub.banner} />
         <div className="w-full  px-24">
-          <HubToolbar hub={hub}  />
+          <HubToolbar hub={hub} />
           <FieldList fields={hub.fields} />
         </div>
 
