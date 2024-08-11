@@ -31,7 +31,6 @@ export default function HubPage() {
   const hub = useSingleQuery(api.hubs.getHub, { subdomain });
   const updateHub = useMutation(api.hubs.update);
   const myRole = useQuery(api.hubs.getMyRole, { subdomain });
-  const myProfile = useQuery(api.users.getMyProfile, { subdomain });
   const { edit, toggleEdit } = useEdit();
   const { theme } = useTheme();
 
@@ -46,13 +45,8 @@ export default function HubPage() {
 
   useEffect(() => {
     if (hub && theme) setPrimaryColor(hub.brandingColor, theme);
-    console.log("hub", hub);
-    console.log("theme", theme);
-    console.log("myProfile", myProfile);
-    console.log("searchParams", searchParams.get("onboarding"))
-    if (hub && theme && myProfile && searchParams.get("onboarding") === "member") {
-      console.log("starting onborda");
-      startOnborda(memberOnboarding(hub?.name ?? "", myProfile._id));
+    if (hub && theme  && searchParams.get("onboarding") === "member") {
+      startOnborda(memberOnboarding(hub.name));
     }
   }, [hub]);
 

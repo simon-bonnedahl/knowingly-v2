@@ -1,7 +1,6 @@
-import { Icons } from "@knowingly/icons";
 import { Step } from "./types";
 
-export const steps = (hubName: string, profileId: string): Step[] => {
+export const steps = (hubName: string): Step[] => {
   return [
     {
       icon: <>👋</>,
@@ -54,7 +53,7 @@ export const steps = (hubName: string, profileId: string): Step[] => {
        
         pointerPadding: 5,
         pointerRadius: 10,
-        nextRoute: "/" + profileId
+        nextRoute: "/profile" 
       },
       {
         icon: <>👤</>,
