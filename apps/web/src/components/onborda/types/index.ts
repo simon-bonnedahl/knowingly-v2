@@ -16,7 +16,7 @@ export interface Step {
   content: React.ReactNode;
   selector: string;
   // Options
-  side?: "top" | "bottom" | "left" | "right";
+  side?: "top" | "bottom" | "left" | "right" | "center";
   showControls?: boolean;
   pointerPadding?: number;
   pointerRadius?: number;

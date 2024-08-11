@@ -217,6 +217,12 @@ const Onborda: React.FC<OnbordaProps> = ({
           top: "50%",
           marginLeft: "25px",
         };
+      case "center":
+        return {
+          transform: `translate(-50%, -50%)`,
+          left: "50%",
+          top: "50%",
+        };
       default:
         return {}; // Default case if no side is specified
     }

@@ -21,7 +21,7 @@ export const steps = (hubName: string): Step[] => {
       title: "Rich text editor with custom content",
       content: <>Some info about the rich text editor and how to use it.</>,
       selector: "#editor",
-      side: "top",
+      side: "center",
       showControls: true,
       pointerPadding: 0,
       pointerRadius: 10,
