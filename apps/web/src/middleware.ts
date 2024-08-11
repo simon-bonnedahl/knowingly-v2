@@ -45,11 +45,11 @@ export default clerkMiddleware(async (auth, req) => {
     .filter((s) => s);
 
   if (sharedPages.includes(segments[0])) {
-    // if (!auth.userId && !auth.isPublicRoute) {
-    //   return redirectToSignIn({
-    //     returnBackUrl: `${env.NEXT_PUBLIC_PROTOCOL}://${hostname}/`,
-    //   });
-    // }
+    if (!tokenIdentifier) {
+      return redirectToSignIn({
+        returnBackUrl: `${env.NEXT_PUBLIC_PROTOCOL}://${hostname}/`,
+      });
+    }
 
     return NextResponse.rewrite(
       new URL(`/${hostname}/shared${path === "/" ? "" : path}`, req.url),

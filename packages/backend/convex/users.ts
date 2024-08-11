@@ -42,6 +42,12 @@ export const update = mutation({
       .patch({ [args.field]: args.value });
   },
 });
+export const deleteUser   = mutation({
+  args: { id: v.id("users") },
+  handler: async (ctx, args) => {
+    await ctx.table("users").getX(args.id).delete();
+  },
+});
 
 export const createUser = internalMutation({
   args: {

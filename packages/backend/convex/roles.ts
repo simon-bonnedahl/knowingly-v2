@@ -43,3 +43,13 @@ export const create = mutation({
     });
   },
 });
+export const remove = mutation({
+  args: { roleId: v.id("roles") },
+  handler: async (ctx, args) => {
+    const role = await ctx.table("roles").getX(args.roleId);
+    const hub = await role.edge("hub");
+    const permissions = await ctx.permissions(hub._id);
+    if(!permissions.canEditRole && !permissions.canDoAnything) throw new ConvexError("You do not have permission to do that");
+    return await role.delete();
+  },
+});

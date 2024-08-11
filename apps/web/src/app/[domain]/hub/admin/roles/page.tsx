@@ -25,6 +25,7 @@ export default function AdminRolesPage() {
   const subdomain = useSubdomain();
   const roles = useQuery(api.hubs.getRoles, { subdomain });
   const addRole = useMutation(api.roles.create);
+  const removeRole = useMutation(api.roles.remove);
 
   const onAddRole = () => {
     toast.promise(addRole({ subdomain }), {
@@ -52,7 +53,7 @@ export default function AdminRolesPage() {
             {roles?.map((role) => (
               <div
                 key={role._id}
-                className="grid min-h-20 grid-cols-3 items-center justify-between rounded-lg bg-background p-4 shadow-sm"
+                className="grid min-h-20 p-4 grid-cols-3 items-center justify-between rounded-lg bg-background  shadow-sm"
               >
                 <div className="flex items-center">
                 <RenderIcon icon={role.icon} size={1}  className="mr-2 text-muted-foreground" />
@@ -112,7 +113,6 @@ export default function AdminRolesPage() {
                         variant={"ghost"}
                         size={"icon"}
                         onClick={() => {
-                          console.log(role);
                           setRoleToEdit(role);
                           setOpen(true);
                         }}
@@ -126,9 +126,13 @@ export default function AdminRolesPage() {
                         variant={"ghost"}
                         size={"icon"}
                         onClick={() => {
-                          console.log(role);
-                          setRoleToEdit(role);
-                          setOpen(true);
+                          toast.promise(removeRole({ roleId: role._id }), {
+                            loading: "Removing role...",
+                            success: "Success: Role removed",
+                            error: (error) => {
+                              return `Error: ${error.data}`;
+                            },
+                          });
                         }}
                       >
                         <Icons.trash

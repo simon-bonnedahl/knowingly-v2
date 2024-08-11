@@ -139,5 +139,6 @@ export const unAvailableSubdomains = [
   "admin",
   "api",
   "app",
-  "knowingly"
+  "knowingly",
+  "accounts"
 ];

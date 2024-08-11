@@ -15,6 +15,7 @@ import { env } from "~/env";
 import { Input } from "@knowingly/ui/input";
 import { Icons } from "@knowingly/icons";
 import { toast } from "sonner";
+import { Skeleton } from "@knowingly/ui/skeleton";
 
 export default function AdminSettingsPage() {
   const subdomain = useSubdomain();
@@ -99,7 +100,7 @@ export default function AdminSettingsPage() {
               Set the color that represents your brand to be used in various
               places
             </p>
-            {color && <ColorPicker value={color} onChange={setColor} />}
+            {color ? <ColorPicker value={color} onChange={setColor} className="border border-muted-foreground size-10 rounded-md " /> : <Skeleton className="size-10 rounded-md" />}
           </div>
           <div className="flex flex-col items-center justify-center space-y-2 rounded-b-lg border-t bg-card p-3 text-muted-foreground sm:flex-row sm:justify-between sm:space-y-0 sm:px-10">
             <p className="text-sm ">

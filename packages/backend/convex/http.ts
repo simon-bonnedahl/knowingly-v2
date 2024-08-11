@@ -119,10 +119,11 @@ app.post("/api/clerk", async (c, ctx) => {
 
     switch (result.type) {
       case "user.created":
+        const name = result.data.first_name ?? "" + " " + result.data.last_name ?? "";
         await c.env.runMutation(internal.users.createUser, {
           email: result.data.email_addresses[0]?.email_address,
           tokenIdentifier: result.data.id,
-          name: result.data.first_name + " " + result.data.last_name,
+          name,
           imageUrl: result.data.image_url,
         });
     }
