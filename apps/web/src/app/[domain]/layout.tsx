@@ -65,7 +65,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function Layout({
+export default  function DomainLayout({
   params,
   children,
 }: {
@@ -79,96 +79,24 @@ export default async function Layout({
     return notFound();
   }
 
-  // if(!userId ) {
-  //   return(
-  //     <div className="flex flex-col items-center justify-center min-h-screen bg-background">
-  //       <div className="flex flex-col items-center justify-center p-4 bg-card rounded-xl shadow-xl">
-  //         <h1 className="text-3xl font-bold text-center">Access Denied</h1>
-  //         <p className="text-center">You need to be logged in to access this page</p>
-  //       </div>
-  //     </div>
-  //   )
-  // }
-  if (!userId) {
-    return (
-      <OnbordaProvider>
-        <Onborda cardComponent={OnbordaCard} shadowOpacity="0.8">
+  return (
+    <OnbordaProvider>
+      <Onborda cardComponent={OnbordaCard} shadowOpacity="0.8">
+        {userId ? (
+          <>
+            <Navbar subdomain={subdomain} />
+            <DynamicIslandDemo />
+            <div className="fixed right-0 top-4 flex min-h-screen justify-center overflow-hidden rounded-tl-3xl border bg-card shadow-2xl md:w-[70vw]  lg:w-[76vw] xl:w-[82vw] ">
+              {children}
+            </div>
+          </>
+        ) : (
           <div className=" flex min-h-screen w-full justify-center  overflow-hidden bg-card">
             {children}
           </div>
-        </Onborda>
-      </OnbordaProvider>
-    );
-  }
-
-  return (
-    <>
-      <OnbordaProvider>
-        <Onborda cardComponent={OnbordaCard} shadowOpacity="0.8">
-          <Navbar subdomain={subdomain} />
-          <DynamicIslandDemo />
-          <div className="fixed right-0 top-4 flex min-h-screen justify-center overflow-hidden rounded-tl-3xl border bg-card shadow-2xl md:w-[70vw]  lg:w-[76vw] xl:w-[82vw] ">
-            {children}
-          </div>
-        </Onborda>
-      </OnbordaProvider>
-    </>
+        )}
+      </Onborda>
+    </OnbordaProvider>
   );
-  const hub = await fetchQuery(api.hubs.getHub, { subdomain });
-  if (!hub) return notFound();
-
-  if (
-    params.domain.endsWith(`.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) &&
-    hub?.customDomain &&
-    process.env.REDIRECT_TO_CUSTOM_DOMAIN_IF_EXISTS === "true"
-  ) {
-    return redirect(`${env.NEXT_PUBLIC_PROTOCOL}://${hub?.customDomain}`);
-  }
-
-  if (userId)
-    return (
-      <>
-        <Navbar subdomain={subdomain} />
-        <div className="fixed right-0 top-16 flex min-h-screen justify-center rounded-tl-3xl border border-background bg-card   shadow-xl md:w-[70vw] lg:w-[76vw] xl:w-[82vw] ">
-          {children}
-        </div>
-      </>
-      //    <div className="flex justify-between ">
-      //    <Navbar subdomain={subdomain} session={session} />
-      //    <div className="mt-4 w-full min-h-screen bg-card rounded-tl-3xl shadow-xl flex justify-center border border-background overflow-hidden">
-      //      {children}
-      //    </div>
-      //  </div>
-    );
-
-  return (
-    <div className="mt-16 min-h-screen bg-background ">
-      <div className="fixed top-0 z-30 flex w-full justify-center border-b border-white/50 bg-background shadow-md transition-all">
-        <div className="mx-5 flex h-16 w-full max-w-screen-xl items-center justify-between">
-          <Link href="/" className="font-display flex items-center text-2xl">
-            <Image
-              src="/logo-black.svg"
-              alt="Knowingly logo"
-              width={125}
-              height={75}
-              className="dark:hidden  md:scale-110"
-            />
-
-            <Image
-              src="/logo-fullwhite.svg"
-              alt="Knowingly logo"
-              width={125}
-              height={75}
-              className="hidden dark:block xl:scale-125 "
-            />
-          </Link>
-          {/* 
-              <SignInButton >
-                  Log in
-              </SignInButton> */}
-        </div>
-      </div>
-      {children}
-    </div>
-  );
+  
 }

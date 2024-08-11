@@ -33,7 +33,7 @@ export const BlurImage = ({
         isLoading ? "blur-sm scale-105" : "blur-0 scale-100",
         className
       )}
-      onLoadingComplete={() => setLoading(false)}
+      onLoad={() => setLoading(false)}
       src={src}
       width={width}
       height={height}

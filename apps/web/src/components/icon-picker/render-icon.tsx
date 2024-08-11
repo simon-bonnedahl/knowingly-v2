@@ -36,7 +36,7 @@ export const RenderIcon = ({ icon, className, size = 1, id }: RenderIconProps) =
             isLoading ? "scale-105 blur-sm" : "scale-100 blur-0",
             "size-full rounded-full object-cover",
           )}
-          onLoadingComplete={() => setLoading(false)}
+          onLoad={() => setLoading(false)}
           src={icon.value}
           width={100}
           height={100}

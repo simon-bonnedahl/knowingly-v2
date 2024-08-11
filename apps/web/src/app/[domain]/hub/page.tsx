@@ -46,7 +46,12 @@ export default function HubPage() {
 
   useEffect(() => {
     if (hub && theme) setPrimaryColor(hub.brandingColor, theme);
+    console.log("hub", hub);
+    console.log("theme", theme);
+    console.log("myProfile", myProfile);
+    console.log("searchParams", searchParams.get("onboarding"))
     if (hub && theme && myProfile && searchParams.get("onboarding") === "member") {
+      console.log("starting onborda");
       startOnborda(memberOnboarding(hub?.name ?? "", myProfile._id));
     }
   }, [hub]);

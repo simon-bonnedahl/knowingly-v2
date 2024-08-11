@@ -75,7 +75,7 @@ export const Banner = ({ banner, isPage = false }: BannerProps) => {
             isLoading ? "scale-105 blur-sm" : "scale-100 blur-0",
             "size-full object-cover ",
           )}
-          onLoadingComplete={() => setLoading(false)}
+          onLoad={() => setLoading(false)}
           src={_banner.value}
           width={600}
           height={200}
