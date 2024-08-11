@@ -27,7 +27,15 @@ export const create = mutation({
     const user = args.userId
       ? await ctx.table("users").getX(args.userId)
       : null;
-
+    const existingRequest = await ctx.table("inviteRequests").filter((q) =>
+        q.and(
+            q.eq(q.field("email"), args.email ?? user?.email),
+            q.eq(q.field("hubId"), args.hubId),
+        ),
+        );
+    if (existingRequest.length > 0) {
+        throw new ConvexError("A request already exists for this email");
+        }
     await ctx.table("inviteRequests").insert({
       user: user?._id,
       email: (args.email ?? user?.email)!,
@@ -54,7 +62,7 @@ export const create = mutation({
       if (!rolesToNotify.find((role) => role._id === member.roleId)) continue;
       await ctx.table("notifications").insert({
         title: `New invite request to join  ${hub.name}`,
-        body: `${user?.name} has sent a request to join ${hub.name}`,
+        body: `${user ? user.name : "Someone"} has sent a request to join ${hub.name}`,
         actionPath: `https://${hub.subdomain}.simbo.casa/admin/requests`, //TODO: change to relative path from root env?
         userId: member.userId,
         icon: user?.imageUrl ?? hub?.icon.value ?? "/logo-small-black.svg",

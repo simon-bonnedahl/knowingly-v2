@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Modal, ModalContent, ModalHeader, ModalTitle } from "@knowingly/ui/modal"
+import { Modal, ModalContent, ModalFooter, ModalHeader, ModalTitle } from "@knowingly/ui/modal"
 import { useAction, useQuery } from "convex/react"
 import { api } from "@knowingly/backend/convex/_generated/api"
 import { Avatar, AvatarImage } from "@knowingly/ui/avatar"
@@ -10,6 +10,8 @@ import { Button } from "@knowingly/ui/button"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { Banner } from "../banner"
+import Image from "next/image"
+import { RenderIcon } from "../icon-picker/render-icon"
 
 
 interface InviteModalProps {
@@ -36,12 +38,13 @@ export function InviteModal({inviteToken} : InviteModalProps){
     }
 
     const isExpired = hubInvite?.expiresAt && new Date(hubInvite.expiresAt) < new Date()
+    const isValid = hubInvite.status === "PENDING"
 
     const onAccept =  () => {
         toast.promise(accept({inviteToken}), {
             loading: 'Accepting...',
             success: (data) => {
-                router.push(`/${data.slug}`)
+                router.push(`/?onboarding=member`)
               return `Profile created, redirecting...`;
             },
             error: 'Error',
@@ -57,35 +60,30 @@ export function InviteModal({inviteToken} : InviteModalProps){
             <ModalTitle>Invite to join <span className="font-black">{hubInvite.hub.name}</span> </ModalTitle>
           </ModalHeader>
           <div className="relative">
-
-          <Banner banner={hubInvite.hub.banner} />
-          <Avatar className="h-fit w-fit rounded-none absolute -top-4 -right-2">
-            {(isUrl(hubInvite.hub.logo) || isFile(hubInvite.hub.logo)) ? (
-                <AvatarImage
-                  src={hubInvite.hub.logo}
-                  className="size-[4.5rem] rounded-full object-cover"
-                />
-            ) : (
-              <div className="bg-transparent">
-                <p className="text-6xl ">{hubInvite.hub.logo}</p>
-              </div>
-            )}
-          </Avatar>
-          </div>
-
-          {!isExpired ? (<div className="flex w-full flex-col gap-2">
+          <Image src={hubInvite.hub.banner.value} width={600} height={200} alt="Banner" className="w-full aspect-banner object-cover rounded-xl " />
+          <RenderIcon
+            icon={hubInvite.hub.icon}
+            size={2}
+            className="absolute -right-2 -top-4"
+          />
+        </div>
+          {(!isExpired && isValid) ? (<div className="flex w-full flex-col gap-2">
             <div>
+
             <span className="font-black">{hubInvite.user?.name}</span> has invited you as  <span className="font-black">{hubInvite.role.name}</span>
             </div>
-            <div className="w-full justify-end flex gap-2">
+            <ModalFooter className="w-full justify-end flex gap-2">
                 <Button variant="ringHover" onClick={() => setOpen(false)}>Decline</Button>
-                <Button variant="ringHover" onClick={() => onAccept()}>Accept</Button>
+                <Button variant="ringHover" onClick={onAccept}>Accept</Button>
 
-            </div>
+            </ModalFooter>
 
 
           </div>) : (<div>
-            Expired invite
+            <span className="font-black">Expired</span> or <span className="font-black">Invalid</span> invite.
+            <ModalFooter className="w-full justify-end flex gap-2">
+                <Button variant="ringHover" onClick={() => setOpen(false)}>Ok</Button>
+            </ModalFooter>
           </div>)
 
           }

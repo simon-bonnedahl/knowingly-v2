@@ -57,7 +57,7 @@ export function FieldSettings({
       {
         loading: "Updating icon",
         success: "Success: Updated icon",
-        error: (error) => `Error: ${error.data}`,
+        error: (error) => `Error: ${error.data ?? "Something went wrong"}`,
       },
     );
   }, [icon]);
@@ -73,7 +73,7 @@ export function FieldSettings({
       {
         loading: "Updating name",
         success: "Success: Updated name",
-        error: (error) => `Error: ${error.data}`,
+        error: (error) => `Error: ${error.data ?? "Something went wrong"}`,
       },
     );
   };
@@ -90,7 +90,7 @@ export function FieldSettings({
       {
         loading: "Updating options",
         success: "Success: Updated options",
-        error: (error) => `Error: ${error.data}`,
+        error: (error) => `Error: ${error.data ?? "Something went wrong"}`,
       },
     );
   }, [options]);

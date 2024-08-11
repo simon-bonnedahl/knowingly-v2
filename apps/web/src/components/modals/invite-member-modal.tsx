@@ -61,7 +61,7 @@ export function InviteMemberModal({children, initialData} : InviteMemberModalPro
           return "Success: Invite sent!";
         },
         error: (error) =>  {
-          return `Error: ${error.data}`
+          return `Error: ${error.data ?? "Something went wrong"}`
      },
       },
     );

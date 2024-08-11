@@ -38,7 +38,7 @@ export const PageToolbar = ({ page, children }: PageToolbarProps) => {
       {
         loading: "Updating icon",
         success: "Success: Updated icon",
-        error: (error) => `Error: ${error.data}`,
+        error: (error) => `Error: ${error.data ?? "Something went wrong"}`,
       },
     );
   };
@@ -54,7 +54,7 @@ export const PageToolbar = ({ page, children }: PageToolbarProps) => {
       {
         loading: "Updating name",
         success: "Success: Updated name",
-        error: (error) => `Error: ${error.data}`,
+        error: (error) => `Error: ${error.data ?? "Something went wrong"}`,
       },
     );
   };

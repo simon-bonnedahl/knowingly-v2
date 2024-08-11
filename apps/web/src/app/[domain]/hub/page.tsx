@@ -21,6 +21,8 @@ import { useSubdomain } from "~/lib/hooks/useSubdomain";
 import { HubToolbar } from "./toolbar";
 import { toast } from "sonner";
 import { RequestInviteModal } from "~/components/modals/request-invite-modal";
+import { useOnborda } from "~/components/onborda";
+import { steps as memberOnboarding } from "~/components/onborda/steps-member";
 
 export default function HubPage() {
   const subdomain = useSubdomain();
@@ -29,8 +31,13 @@ export default function HubPage() {
   const hub = useSingleQuery(api.hubs.getHub, { subdomain });
   const updateHub = useMutation(api.hubs.update);
   const myRole = useQuery(api.hubs.getMyRole, { subdomain });
+  const myProfile = useQuery(api.users.getMyProfile, { subdomain });
   const { edit, toggleEdit } = useEdit();
   const { theme } = useTheme();
+
+  const {startOnborda} = useOnborda();
+
+
 
   const Editor = useMemo(
     () => dynamic(() => import("~/components/editor/editor"), { ssr: false }),
@@ -39,6 +46,9 @@ export default function HubPage() {
 
   useEffect(() => {
     if (hub && theme) setPrimaryColor(hub.brandingColor, theme);
+    if (hub && theme && myProfile && searchParams.get("onboarding") === "member") {
+      startOnborda(memberOnboarding(hub?.name ?? "", myProfile._id));
+    }
   }, [hub]);
 
   const setPrimaryColor = (
@@ -79,7 +89,7 @@ export default function HubPage() {
       value: JSON.stringify(content),
     }),
     {
-      error: (error) => `Error: ${error.data}`,
+      error: (error) => `Error: ${error.data ?? "Something went wrong"}`,
     },
   );
   };
@@ -96,6 +106,7 @@ export default function HubPage() {
         )}
 
         <Banner banner={hub.banner} />
+
         <div className="w-full  px-24">
           <HubToolbar hub={hub}>
           {!myRole && (
@@ -106,13 +117,14 @@ export default function HubPage() {
         </div>
 
         <Separator className="w-full" />
-        <div className="w-full p-4 pb-96">
+        <div className="w-full p-4 pb-96" >
           <Editor
             onChange={onChange}
             initialContent={hub.content}
             editable={edit}
           />
         </div>
+
       </div>
     </>
   );

@@ -78,7 +78,7 @@ const Notification = ({ notification, setOpen }: { notification: Ent<"notificati
       </Avatar>
     
 
-      <h3 className="text-sm font-medium">{notification.title}</h3>
+      <h3 className="text-sm font-medium text-start">{notification.title}</h3>
 
       </div>
 

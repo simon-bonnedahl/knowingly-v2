@@ -38,6 +38,7 @@ import { capitalizeFirstLetter, truncate } from "@knowingly/utils";
 import { RenderIcon } from "~/components/icon-picker/render-icon";
 import { AddPageModal } from "~/components/modals/add-page-modal";
 import { useEdit } from "~/lib/hooks/useEdit";
+import { Skeleton } from "@knowingly/ui/skeleton";
 
 export const BlocknoteGallery = createReactBlockSpec(
   {
@@ -131,25 +132,28 @@ export const BlocknoteGallery = createReactBlockSpec(
           }
         }, [search]);
 
-        if (!collection) return null;
+        
 
         return (
           <NodeViewWrapper className="z-10 flex w-full select-none  flex-col gap-2 rounded-lg hover:cursor-default ">
             <div className="flex  w-full items-center gap-2  ">
-              <Input
+              {name ? ( <Input
                 minimal
                 value={name}
                 onChange={(e) => setName(e.currentTarget.value)}
                 placeholder="Untitled..."
                 disabled={!edit}
                 className=" w-full  bg-transparent  text-2xl  font-bold"
-              />
+              />) : (
+                <Skeleton className="w-full h-10" />
+              )}
+             
 
               <Button
                 variant={"ghost"}
                 className="p-2"
                 size="sm"
-                onClick={() => router.push("/c/" + collection._id)}
+                onClick={() => router.push("/c/" + collection?._id)}
               >
                 View More
                 <Icons.arrowUpRight className="h-5 w-5" />
@@ -226,7 +230,7 @@ export const BlocknoteGallery = createReactBlockSpec(
                 gridAutoRows: "1fr", // Ensures all rows have equal height
               }}
             >
-              {filteredPages?.map((page) => (
+              {collection ? (filteredPages?.map((page) => (
                 <Link
                   key={page._id}
                   href={`/${page._id}`}
@@ -241,7 +245,12 @@ export const BlocknoteGallery = createReactBlockSpec(
                     </MinimalCardTitle>
                   </MinimalCard>
                 </Link>
-              ))}
+              )) ) : (
+                Array.from({ length: columns }).map((_, index) => (
+                  <Skeleton key={index} className="h-40 w-full rounded-3xl" />
+                ))
+              )}
+              
               {collection && edit && (
                 <AddPageModal collectionId={collection._id}>
                   <MinimalCard className="flex h-full select-none items-center justify-center hover:cursor-pointer">

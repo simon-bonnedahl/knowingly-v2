@@ -55,7 +55,7 @@ export function EditorPreview(props: EditorPreviewProps) {
     toast.promise( send({ json: JSON.stringify(json), subject, from, replyTo, to, previewText }), {
       loading: "Sending...",
       success: "Success: Email sent",
-      error: (error) => `Error: ${error.data}`,
+      error: (error) => `Error: ${error.data ?? "Something went wrong"}`,
     });
 
   }

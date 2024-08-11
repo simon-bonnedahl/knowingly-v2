@@ -40,6 +40,11 @@ export function RequestInviteModal({ hub }: RequestInviteModalProps) {
 
   const form = useForm<RequestInviteSchema>({
     resolver: zodResolver(requestInviteSchema),
+    defaultValues: {
+      email: "",
+      roleId: "",
+      message: "",
+    },
   });
 
   useEffect(() => {
@@ -68,7 +73,7 @@ export function RequestInviteModal({ hub }: RequestInviteModalProps) {
           return "Success: Request sent!";
         },
         error: (error) =>  {
-          return `Error: ${error.data}`
+          return `Error: ${error.data ?? "Something went wrong"}`;
      },
       },
     );

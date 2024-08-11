@@ -37,7 +37,7 @@ const FloatingAssistantButton = forwardRef<
 
   return (
     <TooltipIconButton
-      id="onborda-step1"
+      id="ai-chat"
       variant="default"
       tooltip={tooltip}
       side="left"

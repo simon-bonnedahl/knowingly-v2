@@ -81,7 +81,7 @@ export default function AdminSettingsPage() {
     }), {
       loading: "Updating subdomain",
       success: "Success: Updated subdomain",
-      error: (error) => `Error: ${error.data}`,
+      error: (error) => `Error: ${error.data ?? "Something went wrong"}`,
     });
   };
 

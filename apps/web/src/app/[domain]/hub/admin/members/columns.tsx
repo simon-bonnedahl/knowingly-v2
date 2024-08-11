@@ -184,7 +184,7 @@ export function getColumns(): ColumnDef<DataTableMember>[] {
                             success: "Success: Member role updated",
                             error(error) {
                               console.log(error.data);
-                              return `Error: ${error.data}`;
+                              return `Error: ${error.data ?? "Something went wrong"}`;
                             },
                           },
                         );

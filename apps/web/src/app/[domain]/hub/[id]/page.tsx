@@ -26,6 +26,9 @@ import { stringify } from "querystring";
 import { useSingleQuery } from "~/lib/hooks/useSingleQuery";
 import { cn } from "@knowingly/ui";
 import Link from "next/link";
+import { useOnborda } from "~/components/onborda";
+import { useSearchParams } from "next/navigation";
+import { steps } from "~/components/onborda/steps-member";
 
 // export async function generateStaticParams() {
 //   const allHubs = await db.hub.findMany({
@@ -55,6 +58,7 @@ export default function PagePage({ params }: { params: { id: string } }) {
   const creator = useQuery(api.pages.getCreator, { id });
   const addPageVist = useMutation(api.users.addPageVisit);
   const updatePage = useMutation(api.pages.update);
+
 
   const { edit, toggleEdit } = useEdit();
 
@@ -88,7 +92,7 @@ export default function PagePage({ params }: { params: { id: string } }) {
       {
         loading: "Updating",
         success: "Success: Updated content",
-        error: (error) => `Error: ${error.data}`,
+        error: (error) => `Error: ${error.data ?? "Something went wrong"}`,
       }
     );
   };
@@ -102,7 +106,7 @@ export default function PagePage({ params }: { params: { id: string } }) {
         <Icons.arrowLeft className="size-5" />
       </Link>
     
-      <div className="absolute right-2 top-[21rem] z-20 flex items-center gap-2">
+      <div className="absolute right-2 top-[21rem] z-20 flex items-center gap-2" id="edit-mode">
         <Label className="font-medium">Edit</Label>
         <Switch checked={edit} onCheckedChange={toggleEdit} />
       </div>

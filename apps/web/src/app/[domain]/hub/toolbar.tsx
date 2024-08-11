@@ -44,7 +44,7 @@ export const HubToolbar = ({ hub, children }: HubToolbarProps) => {
       {
         loading: "Updating icon",
         success: "Success: Updated icon",
-        error: (error) => `Error: ${error.data}`,
+        error: (error) => `Error: ${error.data ?? "Something went wrong"}`,
       },
     );
   };
@@ -60,7 +60,7 @@ export const HubToolbar = ({ hub, children }: HubToolbarProps) => {
       {
         loading: "Updating name",
         success: "Success: Updated name",
-        error: (error) => `Error: ${error.data}`,
+        error: (error) => `Error: ${error.data ?? "Something went wrong"}`,
       },
     );
   };
@@ -76,25 +76,26 @@ export const HubToolbar = ({ hub, children }: HubToolbarProps) => {
       {
         loading: "Updating description",
         success: "Success: Updated description",
-        error: (error) => `Error: ${error.data}`,
+        error: (error) => `Error: ${error.data ?? "Something went wrong"}`,
       },
     );
   };
 
   return (
-    <div className=" group relative">
+    <div className=" group relative" id="hub-toolbar">
         {edit ? (
-          <div className="absolute -top-12">
+          <div className="absolute -top-12" id="hub-icon">
             <IconPicker onChange={onIconSelect}>
               <RenderIcon icon={icon} size={6} />
             </IconPicker>
           </div>
         ) : (
-          <RenderIcon icon={icon} size={6} className="absolute -top-12" />
+          <RenderIcon icon={icon} size={6} className="absolute -top-12" id="hub-icon"/>
         )}
       <div className="pt-14 w-full ">
         <div className="flex w-full items-center justify-between">
           <Input
+            id="hub-name"
             minimal
             placeholder="Hub name..."
             disabled={!edit}

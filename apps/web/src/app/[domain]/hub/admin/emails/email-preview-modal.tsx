@@ -33,7 +33,7 @@ export function EmailPreviewModal() {
         setHtml(data)
         return "Success: Preview generated"
       },
-      error: (error) =>  `Error: ${error.data}`,
+      error: (error) =>  `Error: ${error.data ?? "Something went wrong"}`,
     });
   },[open])
   

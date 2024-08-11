@@ -82,7 +82,7 @@ export default function AdminBlogpostPage() {
       {
         loading: "Updating banner",
         success: "Success: Updated banner",
-        error: (error) => `Error: ${error.data}`,
+        error: (error) => `Error: ${error.data ?? "Something went wrong"}`,
       },
     );
   }

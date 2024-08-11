@@ -54,7 +54,7 @@ export function UpdateRoleSheet({ role, ...props }: UpdateRoleSheetProps) {
         success: "Success: Role updated",
         error: (error) => {
           setPermissions(role.permissions);
-          return `Error: ${error.data}`;
+          return `Error: ${error.data ?? "Something went wrong"}`;
         },
       },
     );
@@ -73,7 +73,7 @@ export function UpdateRoleSheet({ role, ...props }: UpdateRoleSheetProps) {
         success: "Success: Role updated",
         error: (error) => {
           setName(role.name);
-          return `Error: ${error.data}`;
+          return `Error: ${error.data ?? "Something went wrong"}`;
         },
       },
     );
@@ -92,7 +92,7 @@ export function UpdateRoleSheet({ role, ...props }: UpdateRoleSheetProps) {
         success: "Success: Role updated",
         error: (error) => {
           setIcon(role.icon);
-          return `Error: ${error.data}`;
+          return `Error: ${error.data ?? "Something went wrong"}`;
         },
       },
     );

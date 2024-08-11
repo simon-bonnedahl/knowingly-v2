@@ -6,6 +6,7 @@ import { api } from "@knowingly/backend/convex/_generated/api";
 import { AIAssistantProvider } from "../AIAssistantProvider";
 import { auth } from "@clerk/nextjs/server";
 import { DesktopNavbar } from "./desktop-navbar";
+import { cn } from "@knowingly/ui";
 
 
 
@@ -21,7 +22,7 @@ export default async function HubLayout({
   return (
     <AIAssistantProvider>
 
-    <div className="relative flex h-screen  w-full flex-col overflow-y-scroll ">
+    <div className={cn("relative flex h-screen  w-full flex-col overflow-y-scroll ")}>
         {(aiChatFlag && userId) && <AssistantModal />}
       {!userId && (
        <DesktopNavbar />

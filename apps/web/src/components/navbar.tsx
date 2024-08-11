@@ -54,6 +54,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
       {
         name: "Home",
         href: "/",
+        id: "home",
         isActive: segments.length === 1,
         icon: <Icons.home className="h-5 w-5" />,
         visible: subdomain !== "admin",
@@ -61,6 +62,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
       {
         name: "Discover",
         href: "/discover",
+        id:"discover",
         isActive: segments[1] === "discover",
         icon: <Icons.compass className="h-5 w-5" />,
         visible: subdomain === "app",
@@ -76,6 +78,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
       {
         name: "Meetings",
         href: "/meetings",
+        id: "meetings",
         isActive: segments[1] === "meetings",
         icon: <Icons.calendarEvent className="h-5 w-5" />,
         visible: subdomain !== "admin",
@@ -83,6 +86,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
       {
         name: "Conversations",
         href: "/conversations",
+        id: "conversations",
         isActive: segments[1] === "conversations",
         icon: <Icons.messages className="h-5 w-5" />,
         count: unreadMessages,
@@ -92,6 +96,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
       {
         name: "Profile",
         href: "/profile",
+        id: "profile",
         isActive: segments[1] === "profile",
         icon: <Icons.userSquareRounded className="h-5 w-5" />,
         visible: subdomain !== "app" && subdomain !== "admin" && currentHub,
@@ -99,6 +104,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
       {
         name: "Admin",
         href: "/admin",
+        id: "admin",
         isActive: segments[1] === "admin",
         icon: <Icons.userShield className="h-5 w-5" />,
         visible: isAdminVisible,
@@ -119,6 +125,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
       {
         name: "AI Assistant",
         href: "/assistant",
+        id: "assistant",
         isActive: segments[1] === "assistant",
         icon: <Icons.sparkles className="h-5 w-5" />,
         visible: true,
@@ -126,6 +133,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
       {
         name: "Help / Support",
         href: "/support",
+        id: "support",
         isActive: segments[1] === "support",
         icon: <Icons.heartHandshake className="h-5 w-5" />,
         visible: true,
@@ -186,8 +194,9 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
         <div className="mt-2 flex h-full flex-col justify-between  pt-2">
           <div className="flex flex-col gap-2">
             {(subdomain !== "app" && currentHub) && <Search />}
-            {tabs.top.map(({ name, href, isActive, icon, visible, count }) => (
+            {tabs.top.map(({ name, href, isActive, icon, visible, count, id }) => (
               <Link
+                id={id}
                 key={name}
                 href={href}
                 className={cn(

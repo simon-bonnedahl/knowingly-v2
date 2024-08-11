@@ -104,6 +104,7 @@ export function Search() {
   return (
     <>
       <button
+        id="search"
         className={cn(
           "flex items-center gap-3 rounded-md bg-transparent px-4  py-2 text-sm font-normal text-foreground transition-all duration-150 ease-in-out hover:bg-card ",
         )}

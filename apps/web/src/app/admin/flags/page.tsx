@@ -18,7 +18,7 @@ export default function KnowinglyAdminFlagsPage() {
             {
                 loading: "Updating flag",
                 success: "Success: Updated flag",
-                error: (error) => `Error: ${error.data}`
+                error: (error) => `Error: ${error.data ?? "Something went wrong"}`
             }
         )
     }

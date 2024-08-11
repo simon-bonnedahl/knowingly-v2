@@ -9,12 +9,11 @@ import { CardComponentProps, OnbordaProps } from "./types";
 
 const Onborda: React.FC<OnbordaProps> = ({
   children,
-  steps,
   shadowRgb = "0, 0, 0",
   shadowOpacity = "0.2",
   cardComponent: CardComponent,
 }) => {
-  const { currentStep, setCurrentStep, isOnbordaVisible } = useOnborda();
+  const { currentStep, setCurrentStep, isOnbordaVisible, steps } = useOnborda();
   const [elementToScroll, setElementToScroll] = useState<Element | null>(null);
   const [pointerPosition, setPointerPosition] = useState<{
     x: number;
@@ -84,10 +83,10 @@ const Onborda: React.FC<OnbordaProps> = ({
           const isInViewportWithOffset =
             rect.top >= -offset && rect.bottom <= window.innerHeight + offset;
 
-          if (!isInView || !isInViewportWithOffset) {
-            console.log("Onborda: Scrolling to Element");
-            element.scrollIntoView({ behavior: "smooth", block: "center" });
-          }
+          // if (!isInView || !isInViewportWithOffset) {
+          //   console.log("Onborda: Scrolling to Element");
+          //   element.scrollIntoView({ behavior: "smooth", block: "center" });
+          // }
         }
       }
     }
@@ -99,10 +98,11 @@ const Onborda: React.FC<OnbordaProps> = ({
       const rect = elementToScroll.getBoundingClientRect();
       const isAbove = rect.top < 0;
       elementToScroll.scrollIntoView({
-        behavior: "smooth",
-        block: isAbove ? "center" : "center",
+        behavior: "auto",
+        block: isAbove ? "start" : "end",
         inline: "center",
       });
+      updatePointerPosition();
     }
   }, [elementToScroll, isInView, isOnbordaVisible]);
 

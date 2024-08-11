@@ -33,7 +33,7 @@ export const create = mutation({
     const user = await ctx.table("users").get("email", email);
     if(user) {
       const membership = await user.edge("memberships").filter(q => q.eq(q.field("hubId"), hubId));
-      if(membership) throw new ConvexError("User is already a member of this hub");
+      if(membership.length > 0) throw new ConvexError("User is already a member of this hub");
     }
     const status = "PENDING";
     const expiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 days
@@ -95,7 +95,7 @@ export const send = action({
       message: args.message,
     });
     if (hubInvite.user) {
-      const title = `${user.name} has invited you to join a hub`;
+      const title = `${user.name} has invited you to join ${hub.name}`;
       const body = `You have been invited to join a hub. Click here to view the invite`;
       const actionPath = `https://${hub.subdomain}.simbo.casa/?invite=${hubInvite.inviteToken}`;  //TODO: change to relative path from root env?
       await ctx.runMutation(internal.notifications.create, {
@@ -117,10 +117,11 @@ export const accept = action({
   handler: async (ctx, args) => {
     const tokenIdentifier = (await ctx.auth.getUserIdentity())?.subject;
     const user = await ctx.runQuery(api.users.getByTokenIdentifier, { tokenIdentifier });
-    if (!user) throw new Error("User not found");
+    if (!user) throw new ConvexError("User not found");
     //fetch invite
     const invite = await ctx.runQuery(api.hubInvites.get, { inviteToken: args.inviteToken });
-    if (!invite) throw new Error("Invite not found");
+    if (!invite) throw new ConvexError("Invite not found");
+    if(invite.status !== "PENDING") throw new ConvexError("Invite has already been accepted or rejected");
     //update invite status
     await ctx.runMutation(api.hubInvites.update, { id: invite._id, field: "status", value: "ACCEPTED" });
     //create member
@@ -129,7 +130,7 @@ export const accept = action({
       hubId: invite.hub._id,
       roleId: invite.role._id,
     });
-    if(!profilePage) throw new Error("Profile page not created");
+    if(!profilePage) throw new ConvexError("Profile page could not created");
     return profilePage;
   },
 });

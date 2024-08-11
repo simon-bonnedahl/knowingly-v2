@@ -100,10 +100,10 @@ export default async function Layout({
   return (
     <>
       <OnbordaProvider>
-        <Onborda steps={steps} cardComponent={OnbordaCard} shadowOpacity="0.8">
+        <Onborda  cardComponent={OnbordaCard} shadowOpacity="0.8">
             <Navbar subdomain={subdomain} />
             <DynamicIslandDemo />
-            <div className="fixed right-0 top-4 flex min-h-screen justify-center overflow-hidden rounded-tl-3xl border bg-card shadow-2xl md:w-[70vw]  lg:w-[76vw] xl:w-[82vw]">
+            <div className="fixed right-0 top-4 flex min-h-screen justify-center overflow-hidden rounded-tl-3xl border bg-card shadow-2xl md:w-[70vw]  lg:w-[76vw] xl:w-[82vw] " >
               {children}
             </div>
         </Onborda>

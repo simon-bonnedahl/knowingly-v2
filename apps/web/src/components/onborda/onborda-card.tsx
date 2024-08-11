@@ -36,7 +36,7 @@ const OnbordaCard: React.FC<CardComponentProps> = ({
   }
 
   return (
-    <Card className="border-0 rounded-3xl max-w-vw" style={
+    <Card className="rounded-3xl max-w-vw border" style={
       {
         transform: `translate(${step.offset?.x || 0}px, ${step.offset?.y || 0}px)`,
       }

@@ -77,9 +77,9 @@ export const createUser = internalMutation({
         try {
           const inviter = await invite.edge("inviter");
           const hub = await invite.edge("hub");
-          const title = `${inviter.name} has invited you to join a hub`;
+          const title = `${inviter.name} has invited you to join ${hub.name}`;
           const body = `You have been invited to join a hub. Click here to view the invite`;
-          const actionPath = `https://${hub.subdomain}.simbo.casa/?invite=${invite.inviteToken}`;  //TODO: change to relative path from root env?
+          const actionPath = `https://${hub.subdomain}.simbo.casa/?invite=${invite.inviteToken}`;  //TODO: change to relative path from project root env?
           await ctx.table("notifications").insert({
             title,
             body,

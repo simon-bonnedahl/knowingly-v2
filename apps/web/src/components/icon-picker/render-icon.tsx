@@ -14,13 +14,15 @@ interface RenderIconProps {
   icon: IconType;
   className?: string;
   size?: number;
+  id?: string;
 }
 
-export const RenderIcon = ({ icon, className, size = 1 }: RenderIconProps) => {
+export const RenderIcon = ({ icon, className, size = 1, id }: RenderIconProps) => {
   const [isLoading, setLoading] = useState(true);
 
   return (
     <div
+      id={id}
       className={cn(`flex items-center justify-center`, className)}
       style={{
         width: size + "rem",

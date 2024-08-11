@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
 
 // Types
-import { OnbordaContextType } from "./types";
+import { OnbordaContextType, Step } from "./types";
 
 // Example Hooks Usage:
 // const { setCurrentStep, closeOnborda, startOnborda } = useOnborda();
@@ -27,6 +27,7 @@ const useOnborda = () => {
 const OnbordaProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const [steps, setStepsState] = useState<Step[]>([]);
   const [currentStep, setCurrentStepState] = useState(0);
   const [isOnbordaVisible, setOnbordaVisible] = useState(false);
 
@@ -46,8 +47,10 @@ const OnbordaProvider: React.FC<{ children: React.ReactNode }> = ({
     setOnbordaVisible(false);
   }, []);
 
-  const startOnborda = useCallback(() => {
-    console.log("startOnborda");
+
+
+  const startOnborda = useCallback((steps: Step[]) => {
+    setStepsState(steps);
     setCurrentStepState(0);
     setOnbordaVisible(true);
   }, []);
@@ -55,6 +58,7 @@ const OnbordaProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <OnbordaContext.Provider
       value={{
+        steps,
         currentStep,
         setCurrentStep,
         closeOnborda,

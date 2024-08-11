@@ -32,7 +32,7 @@ export default function AdminRolesPage() {
       loading: "Creating role...",
       success: "Success: Role created",
       error: (error) => {
-        return `Error: ${error.data}`;
+        return `Error: ${error.data ?? "Something went wrong"}`;
       },
     });
   };
@@ -130,7 +130,7 @@ export default function AdminRolesPage() {
                             loading: "Removing role...",
                             success: "Success: Role removed",
                             error: (error) => {
-                              return `Error: ${error.data}`;
+                              return `Error: ${error.data ?? "Something went wrong"}`;
                             },
                           });
                         }}

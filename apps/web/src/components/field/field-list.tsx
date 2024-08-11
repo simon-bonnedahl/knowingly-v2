@@ -47,7 +47,7 @@ export const FieldList = ({fields, isPage=false}: FieldListProps) => {
           field: "fields",
           value: fieldList,
         }), {
-          error: (error) => `Error: ${error.data}`,
+          error: (error) => `Error: ${error.data ?? "Something went wrong"}`,
         })
         return
       }
@@ -56,7 +56,7 @@ export const FieldList = ({fields, isPage=false}: FieldListProps) => {
         field: "fields",
         value: fieldList,
       }), {
-        error: (error) => `Error: ${error.data}`,
+        error: (error) => `Error: ${error.data ?? "Something went wrong"}`,
       })
 
 

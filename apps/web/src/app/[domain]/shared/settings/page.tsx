@@ -33,7 +33,7 @@ export default function SettingsGeneralPage() {
       {
         loading: "Updating name...",
         success: "Success: Name updated",
-        error: (error) => `Error: ${error.data}`,
+        error: (error) => `Error: ${error.data ?? "Something went wrong"}`,
       },
     );
   };
@@ -50,7 +50,7 @@ export default function SettingsGeneralPage() {
           void signOut()
           return "Success: Account deleted";
         },
-        error: (error) => `Error: ${error.data}`,
+        error: (error) => `Error: ${error.data ?? "Something went wrong"}`,
       },
     );
   }

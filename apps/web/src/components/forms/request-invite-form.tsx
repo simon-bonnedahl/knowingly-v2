@@ -4,7 +4,7 @@ import type { UseFormReturn } from "react-hook-form";
 import * as React from "react";
 import { useQuery } from "convex/react";
 
-import type { InviteMemberSchema } from "@knowingly/validators";
+import type { InviteMemberSchema, RequestInviteSchema } from "@knowingly/validators";
 import { api } from "@knowingly/backend/convex/_generated/api";
 import {
     Form,
@@ -33,9 +33,9 @@ import { Ent } from "@knowingly/backend/convex/types";
 interface RequestInviteFormProps
   extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
   children: React.ReactNode;
-  form: UseFormReturn<InviteMemberSchema>;
+  form: UseFormReturn<RequestInviteSchema>;
   user: Ent<"users"> | undefined | null;
-  onSubmit: (data: InviteMemberSchema) => void;
+  onSubmit: (data: RequestInviteSchema) => void;
 }
 
 export function RequestInviteForm({
