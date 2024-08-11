@@ -48,7 +48,7 @@ export default function HubPage() {
     if (hub && theme  && searchParams.get("onboarding") === "member") {
       startOnborda(memberOnboarding(hub.name));
     }
-  }, [hub]);
+  }, [hub, searchParams, theme, startOnborda]);
 
   const setPrimaryColor = (
     color: string | undefined,
