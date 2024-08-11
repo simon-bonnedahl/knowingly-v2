@@ -47,7 +47,7 @@ export function InviteModal({inviteToken} : InviteModalProps){
                 router.push(`/?onboarding=member`)
               return `Profile created, redirecting...`;
             },
-            error: 'Error',
+            error: (error) => `Error: ${error.data ?? "Something went wrong"}`,
           });
         setOpen(false)
     }

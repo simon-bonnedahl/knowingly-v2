@@ -91,21 +91,25 @@ export default async function Layout({
   // }
   if (!userId) {
     return (
-      <div className=" w-full flex min-h-screen justify-center  overflow-hidden bg-card">
-        {children}
-      </div>
+      <OnbordaProvider>
+        <Onborda cardComponent={OnbordaCard} shadowOpacity="0.8">
+          <div className=" flex min-h-screen w-full justify-center  overflow-hidden bg-card">
+            {children}
+          </div>
+        </Onborda>
+      </OnbordaProvider>
     );
   }
 
   return (
     <>
       <OnbordaProvider>
-        <Onborda  cardComponent={OnbordaCard} shadowOpacity="0.8">
-            <Navbar subdomain={subdomain} />
-            <DynamicIslandDemo />
-            <div className="fixed right-0 top-4 flex min-h-screen justify-center overflow-hidden rounded-tl-3xl border bg-card shadow-2xl md:w-[70vw]  lg:w-[76vw] xl:w-[82vw] " >
-              {children}
-            </div>
+        <Onborda cardComponent={OnbordaCard} shadowOpacity="0.8">
+          <Navbar subdomain={subdomain} />
+          <DynamicIslandDemo />
+          <div className="fixed right-0 top-4 flex min-h-screen justify-center overflow-hidden rounded-tl-3xl border bg-card shadow-2xl md:w-[70vw]  lg:w-[76vw] xl:w-[82vw] ">
+            {children}
+          </div>
         </Onborda>
       </OnbordaProvider>
     </>
