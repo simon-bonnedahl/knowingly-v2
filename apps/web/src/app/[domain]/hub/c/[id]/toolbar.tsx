@@ -101,8 +101,9 @@ export const CollectionToolbar = ({
       <div className="flex w-full items-end justify-between mt-4">
         <Input
           minimal
+          placeholder="Untitled..."
           type="text"
-          disabled={!edit}
+          disabled={!edit}  
           value={name}
           onChange={(e) => setName(e.currentTarget.value)}
           onBlur={onSaveName}

@@ -30,7 +30,7 @@ export default function HubPage() {
 
   const hub = useSingleQuery(api.hubs.getHub, { subdomain });
   const updateHub = useMutation(api.hubs.update);
-  const myRole = useQuery(api.hubs.getMyRole, { subdomain });
+  const permissions = useQuery(api.hubs.getMyPermissions, { subdomain });
   const { edit, toggleEdit } = useEdit();
   const { theme } = useTheme();
 
@@ -97,7 +97,7 @@ export default function HubPage() {
     <>
       <InviteModal inviteToken={searchParams.get("invite")} />
       <div className="relative flex w-full flex-col items-center">
-        {myRole?.permissions.canEditHub && (
+        {(permissions?.canEditHub  || permissions?.canDoAnything) && (
           <div className="absolute right-2 top-[20.5rem] z-20 flex items-center gap-2">
             <Label className="font-medium">Edit</Label>
             <Switch checked={edit} onCheckedChange={toggleEdit} />
@@ -108,7 +108,7 @@ export default function HubPage() {
 
         <div className="w-full  px-24">
           <HubToolbar hub={hub}>
-          {!myRole && (
+          {!permissions && (
               <RequestInviteModal hub={hub} />
           )}
           </HubToolbar>

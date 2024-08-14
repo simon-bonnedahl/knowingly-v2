@@ -168,3 +168,6 @@ html {
 .inline-content {
   flex-grow: 1;
 }
+.bn-editor {
+  padding-inline: 0;
+}

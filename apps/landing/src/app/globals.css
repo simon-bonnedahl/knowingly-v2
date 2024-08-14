@@ -18,6 +18,9 @@
 
 body {
 }
+.bn-editor {
+  padding-inline: 0;
+}
 
 @layer utilities {
   .text-balance {

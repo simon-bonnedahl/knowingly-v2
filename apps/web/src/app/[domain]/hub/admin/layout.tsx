@@ -19,7 +19,7 @@ export default function HubAdminLayout({ children }: { children: ReactNode }) {
   const user = useQuery(api.users.getMe);
   const userRole = useQuery(api.hubs.getMyRole, { subdomain });
 
-  if(!user || !userRole) {
+  if(!user || (!userRole && user?.role !== "SUPERUSER")) {
     return null;
   }
 

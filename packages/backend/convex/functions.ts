@@ -79,7 +79,17 @@ async function queryCtx(baseCtx: QueryCtx) {
     return ent;
   };
   (ctx as any).userX = userX;
-  return { ...ctx, table, user, userX, userId };
+  const permissions = async (hubId: Id<"hubs">): Promise<Permissions & { canDoAnything: boolean}> => {
+    const hub = await table("hubs").getX(hubId);
+    const user = await userX();
+    const membership = user
+      .edge("memberships")
+      .filter((q) => q.eq(q.field("hubId"), hub._id))
+      .firstX();
+    const permissions = (await membership.edge("role")).permissions;
+    return { ...permissions, canDoAnything: user.role ==="SUPERUSER" };
+  };
+  return { ...ctx, table, user, userX, userId, permissions };
 }
 
 async function mutationCtx(baseCtx: MutationCtx) {

@@ -428,6 +428,7 @@ export const Fields: FieldTypes = {
       let src = value;
       const format = options.format ?? "spotify";
       const [loading, setLoading] = useState(true);
+      if(!value) return <div>Empty</div>
       switch (format) {
         case "spotify":
           src = value.replace("open.spotify.com", "open.spotify.com/embed");

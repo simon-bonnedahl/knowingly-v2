@@ -167,6 +167,16 @@ export const getMyRole = query({
   },
 });
 
+export const getMyPermissions = query({
+  args: { subdomain: v.string() },
+  handler: async (ctx, args) => {
+    const { subdomain } = args;
+    const hub = await ctx.table("hubs").get("subdomain", subdomain);
+    if(!hub) throw new ConvexError("Hub not found");
+    return await ctx.permissions(hub._id);
+  },
+});
+
 export const getMembers = query({
   args: { subdomain: v.string() },
   handler: async (ctx, args) => {

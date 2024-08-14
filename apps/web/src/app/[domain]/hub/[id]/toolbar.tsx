@@ -75,7 +75,7 @@ export const PageToolbar = ({ page, children }: PageToolbarProps) => {
         <div className="flex w-full items-center justify-between">
           <Input
             minimal
-            placeholder="Hub name..."
+            placeholder="Name..."
             disabled={!edit}
             value={name}
             onChange={(e) => setName(e.currentTarget.value)}

@@ -137,7 +137,7 @@ export const BlocknoteGallery = createReactBlockSpec(
         return (
           <NodeViewWrapper className="z-10 flex w-full select-none  flex-col gap-2 rounded-lg hover:cursor-default ">
             <div className="flex  w-full items-center gap-2  ">
-              {name ? ( <Input
+              {collection ? ( <Input
                 minimal
                 value={name}
                 onChange={(e) => setName(e.currentTarget.value)}
