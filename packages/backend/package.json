@@ -19,6 +19,7 @@
     "convex-test": "^0.0.21",
     "hono": "^4.4.9",
     "openai": "^4.52.1",
+    "plausible": "^2.0.2",
     "resend": "^3.5.0",
     "slugify": "^1.6.6",
     "stripe": "^16.0.0",

@@ -1,6 +1,9 @@
 "use client";
 
+
+
 export default function KnowinglyAdminAnalyticsPage() {
+
    
     return(
         <div className="flex max-w-screen-xl flex-col space-y-12 p-8">

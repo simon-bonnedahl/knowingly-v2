@@ -14,6 +14,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as analytics from "../analytics.js";
 import type * as blocknote from "../blocknote.js";
 import type * as blogPosts from "../blogPosts.js";
 import type * as calls from "../calls.js";
@@ -53,6 +54,7 @@ import type * as utils from "../utils.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  analytics: typeof analytics;
   blocknote: typeof blocknote;
   blogPosts: typeof blogPosts;
   calls: typeof calls;
