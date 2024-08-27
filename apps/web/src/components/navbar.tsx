@@ -29,6 +29,7 @@ import useWindowSize from "~/lib/hooks/useWindowSize";
 import HubSwitcher from "./hub-switcher";
 import { Notifications } from "./notifications";
 import { Search } from "./search";
+import { Support } from "./support";
 
 export default function Navbar({ subdomain }: { subdomain: string }) {
   const segments = useSelectedLayoutSegments();
@@ -124,18 +125,10 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
     const botTabs = [
       {
         name: "AI Assistant",
-        href: "/assistant",
+        href: "#",
         id: "assistant",
         isActive: segments[1] === "assistant",
         icon: <Icons.sparkles className="h-5 w-5" />,
-        visible: true,
-      },
-      {
-        name: "Help / Support",
-        href: "/support",
-        id: "support",
-        isActive: segments[1] === "support",
-        icon: <Icons.heartHandshake className="h-5 w-5" />,
         visible: true,
       },
     ];
@@ -231,6 +224,7 @@ export default function Navbar({ subdomain }: { subdomain: string }) {
                 <span className="text-sm font-normal">{name}</span>
               </Link>
             ))}
+            <Support/>
           </div>
         </div>
         {/* profile */}

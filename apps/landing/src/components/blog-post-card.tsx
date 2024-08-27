@@ -17,7 +17,7 @@ export const BlogPostCard = ({ blogPost }: { blogPost: FunctionReturnType<typeof
       href={`/blog/${blogPost.slug}`}
     >
         <BlurImage
-          src={blogPost.banner}
+          src={blogPost.banner.value}
           alt={blogPost.title}
           height="800"
           width="800"

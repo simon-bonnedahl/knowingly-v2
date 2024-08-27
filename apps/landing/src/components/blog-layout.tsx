@@ -50,7 +50,7 @@ export function BlogLayout({
       </div>
       <div className="mx-auto max-w-4xl">
           <Image
-            src={blogPost.banner}
+            src={blogPost.banner.value}
             height="800"
             width="800"
             className="aspect-square h-64 md:h-96 w-full rounded-3xl object-cover "

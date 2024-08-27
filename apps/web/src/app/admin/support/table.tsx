@@ -7,50 +7,53 @@ import { usePreloadedQuery, useQuery } from "convex/react";
 
 import { api } from "@knowingly/backend/convex/_generated/api";
 
-import type {  DataTableUser } from "./columns";
 import type { DataTableFilterField } from "~/components/data-table/types";
 import { DataTable } from "~/components/data-table/data-table";
 import { DataTableToolbar } from "~/components/data-table/data-table-toolbar";
 import { useDataTable } from "~/lib/hooks/useDataTable";
-import { getColumns } from "./columns";
+import { DataTableSupportTicket, getColumns } from "./columns";
+import { capitalizeFirstLetter } from "@knowingly/utils";
 
-
-export function UsersTable({
+export function SupportTicketTable({
   preloaded,
 }: {
-  preloaded: Preloaded<typeof api.users.list>;
+  preloaded: Preloaded<typeof api.supportTickets.list>;
 }) {
   const columns = React.useMemo(() => getColumns(), []);
 
   const data = usePreloadedQuery(preloaded);
 
-  const filterFields: DataTableFilterField<DataTableUser>[] = [
+  const filterFields: DataTableFilterField<DataTableSupportTicket>[] = [
     {
-      label: "Name",
-      value: "name",
-      placeholder: "Filter names...",
+      label: "Title",
+      value: "title",
+      placeholder: "Filter titles...",
     },
-
-    // {
-    //   label: "Priority",
-    //   value: "priority",
-    //   options: tasks.priority.enumValues.map((priority) => ({
-    //     label: priority[0]?.toUpperCase() + priority.slice(1),
-    //     value: priority,
-    //     icon: getPriorityIcon(priority),
-    //     withCount: true,
-    //   })),
-    // },
+    {
+      label: "Status",
+      value: "status",
+      options: ["OPEN", "PENDING", "CLOSED"].map((status) => {
+        return {
+          label: capitalizeFirstLetter(status),
+          value: status,
+          withCount: true,
+        };
+      }),
+    },
+  
   ];
 
   const tableData = React.useMemo(
     () =>
-      data.map((user) => ({
-        id: user._id,
-        name: user.name,
-        role : user.role,
-        email: user.email,
-        _creationTime: user._creationTime,
+      data.map((ticket) => ({
+        id: ticket._id,
+        user: ticket.user,
+        title: ticket.title,
+        category: ticket.category,
+        status: ticket.status,
+        body: ticket.body,
+        files: ticket.files,
+        _creationTime: ticket._creationTime,
       })),
     [data],
   );

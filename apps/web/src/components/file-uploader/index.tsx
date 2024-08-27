@@ -6,9 +6,7 @@ import Image from "next/image";
 import { useUploadFiles } from "@xixixao/uploadstuff/react";
 import { useMutation } from "convex/react";
 import Dropzone from "react-dropzone";
-import ReactCrop from "react-image-crop";
 import { toast } from "sonner";
-import { set } from "zod";
 
 import type { Id } from "@knowingly/backend/convex/_generated/dataModel";
 import { api } from "@knowingly/backend/convex/_generated/api";
@@ -105,6 +103,8 @@ interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
    */
 
   recommendedAspect?: number;
+
+  withCropping?: boolean;
 }
 
 export function FileUploader(props: FileUploaderProps) {
@@ -118,6 +118,7 @@ export function FileUploader(props: FileUploaderProps) {
     multiple = false,
     disabled = false,
     recommendedAspect = undefined,
+    withCropping = true,
     className,
     ...dropzoneProps
   } = props;
@@ -214,7 +215,7 @@ export function FileUploader(props: FileUploaderProps) {
 
   return (
     <div className="relative flex flex-col gap-6 overflow-hidden">
-      {isCropping ? (
+      {(isCropping && withCropping) ? (
         <ImageCropper aspect={recommendedAspect} selectedFile={files?.[0]} setSelectedFile={(file) =>{
           setCroppedFile(file)
           setIsCropping(false)

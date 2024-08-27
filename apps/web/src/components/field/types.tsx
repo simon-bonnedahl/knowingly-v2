@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Link from "next/link";
-import { fetch } from "fetch-opengraph";
 
 import type {
   FieldOptions,
@@ -206,7 +205,9 @@ export const Fields: FieldTypes = {
     defaultValue: [],
     renderSettings: ({ options, setOptions }) => <div className="w-full"></div>,
     valueInput: ({ value, setValue, onBlur }) => {
-      if (!Array.isArray(value)) throw new Error("Value must be an array");
+      console.log(value);
+      if (!Array.isArray(value)) 
+        value = [];
       const tags: Tag[] = value.map((tag) => {
         return {
           id: tag,
@@ -261,7 +262,7 @@ export const Fields: FieldTypes = {
     renderSettings: ({ options, setOptions, onBlur }) => (
       <div className="w-full"></div>
     ),
-    valueInput: ({ value, setValue }) => (
+    valueInput: ({ value, setValue, onBlur }) => (
       <Input
         onBlur={onBlur}
         value={value as string}
@@ -280,7 +281,7 @@ export const Fields: FieldTypes = {
     renderSettings: ({ options, setOptions, onBlur }) => (
       <div className="w-full"></div>
     ),
-    valueInput: ({ value, setValue }) => (
+    valueInput: ({ value, setValue, onBlur }) => (
       <Input
         onBlur={onBlur}
         value={value as string}
@@ -299,7 +300,7 @@ export const Fields: FieldTypes = {
     renderSettings: ({ options, setOptions, onBlur }) => (
       <div className="w-full"></div>
     ),
-    valueInput: ({ value, setValue }) => (
+    valueInput: ({ value, setValue, onBlur }) => (
       <Input
         onBlur={onBlur}
         value={value as string}
@@ -318,7 +319,7 @@ export const Fields: FieldTypes = {
     renderSettings: ({ options, setOptions, onBlur }) => (
       <div className="w-full"></div>
     ),
-    valueInput: ({ value, setValue }) => (
+    valueInput: ({ value, setValue, onBlur }) => (
       <Input
         onBlur={onBlur}
         value={value as string}

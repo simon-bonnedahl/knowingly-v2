@@ -119,8 +119,17 @@ export const role = v.union(
 export type Role = Infer<typeof role>;
 
 export const supportTicketStatus = v.union(
+  v.literal("PENDING"),
   v.literal("OPEN"),
   v.literal("CLOSED"),
 );
 
 export type SupportTicketStatus = Infer<typeof supportTicketStatus>;
+
+export const supportCategory = v.union(
+  v.literal("SUPPORT"),
+  v.literal("BUG"),
+  v.literal("FEATURE_REQUEST"),
+);
+
+export type SupportCategory = Infer<typeof supportCategory>;

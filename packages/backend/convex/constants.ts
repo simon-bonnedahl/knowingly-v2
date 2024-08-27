@@ -126,6 +126,21 @@ export const defaultRoles: Record<string, Omit<WithoutSystemFields<Doc<"roles">>
   },
 };
 
+export const noPermissions: Permissions = {
+  canCreatePage: false,
+  canEditPage: false,
+  canDeletePage: false,
+  canCreateField: false,
+  canEditField: false,
+  canDeleteField: false,
+  canInviteMember: false,
+  canRemoveMember: false,
+  canEditRole: false,
+  canSeeAdminPanel: false,
+  canEditHub: false,
+  canDeleteHub: false,
+};
+
 export const defaultCollections : Record<string, Omit<WithoutSystemFields<Doc<"collections">>, "hubId">> = {
   gallery: {
     name: "",
@@ -142,3 +157,4 @@ export const unAvailableSubdomains = [
   "knowingly",
   "accounts"
 ];
+

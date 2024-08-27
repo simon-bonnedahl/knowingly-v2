@@ -21,6 +21,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@knowingly/backend": "workspace:*",
     "@knowingly/eslint-config": "workspace:*",
     "@knowingly/prettier-config": "workspace:*",
     "@knowingly/tsconfig": "workspace:*",

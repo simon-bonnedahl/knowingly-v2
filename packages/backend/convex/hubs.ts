@@ -7,6 +7,7 @@ import {
   defaultContent,
   defaultIcon,
   defaultRoles,
+  noPermissions,
   unAvailableSubdomains,
 } from "./constants";
 import { action, mutation, query } from "./functions";
@@ -171,6 +172,7 @@ export const getMyPermissions = query({
   args: { subdomain: v.string() },
   handler: async (ctx, args) => {
     const { subdomain } = args;
+    if(!ctx.userId) return noPermissions;
     const hub = await ctx.table("hubs").get("subdomain", subdomain);
     if(!hub) throw new ConvexError("Hub not found");
     return await ctx.permissions(hub._id);
@@ -188,8 +190,8 @@ export const getMembers = query({
       .map(async (member) => {
         return {
           ...member,
-          user: await ctx.table("users").get(member.userId),
-          role: await ctx.table("roles").get(member.roleId),
+          user: await member.edge("user"),
+          role: await member.edge("role"),
         };
       });
   },

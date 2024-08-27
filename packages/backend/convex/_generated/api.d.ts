@@ -39,6 +39,7 @@ import type * as roles from "../roles.js";
 import type * as rules from "../rules.js";
 import type * as seed_flags from "../seed/flags.js";
 import type * as stripe from "../stripe.js";
+import type * as supportTickets from "../supportTickets.js";
 import type * as types from "../types.js";
 import type * as users from "../users.js";
 import type * as utils from "../utils.js";
@@ -77,6 +78,7 @@ declare const fullApi: ApiFromModules<{
   rules: typeof rules;
   "seed/flags": typeof seed_flags;
   stripe: typeof stripe;
+  supportTickets: typeof supportTickets;
   types: typeof types;
   users: typeof users;
   utils: typeof utils;

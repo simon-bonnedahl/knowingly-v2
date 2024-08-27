@@ -11,6 +11,7 @@ import {
   pageType,
   permissions,
   role,
+  supportCategory,
   supportTicketStatus,
   tier,
 } from "./types";
@@ -191,9 +192,11 @@ const schema = defineEntSchema({
     .field("slug", v.string(), { unique: true })
     .edge("author", { to: "users", field: "userId" }),
   supportTickets: defineEnt({
+    category: supportCategory,
     title: v.string(),
     body: v.string(),
     status: supportTicketStatus,
+    files: v.array(v.id("_storage")),
     response: v.optional(v.string()),
   }).edge("user"),
   flags: defineEnt({

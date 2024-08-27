@@ -20,10 +20,8 @@ import {
   DropdownMenuTrigger,
 } from "@knowingly/ui/dropdown-menu"
 import { DataTableColumnHeader } from "~/components/data-table/data-table-column-header"
-import type { IconKey } from "@knowingly/icons";
 import { Icon } from "@knowingly/icons"
 import { capitalizeFirstLetter } from "@knowingly/utils"
-import { useSubdomain } from "~/lib/hooks/useSubdomain"
 import { useMutation, useQuery } from "convex/react"
 import { api } from "@knowingly/backend/convex/_generated/api"
 import type { Id } from "@knowingly/backend/convex/_generated/dataModel"
