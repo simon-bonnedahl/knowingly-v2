@@ -5,6 +5,7 @@ import { cn } from "@knowingly/ui";
 import { ViewTransitions } from "next-view-transitions";
 import { ThemeProvider } from "~/context/theme-provider";
 import { TailwindIndicator } from "~/components/tailwind-indicator";
+import PlausibleProvider from "next-plausible";
 
 export const metadata: Metadata = {
   title: "Knowingly",
@@ -21,6 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <PlausibleProvider domain="simbo.casa">
     <ViewTransitions>
       <html lang="en">
         <body
@@ -41,5 +43,6 @@ export default function RootLayout({
         </body>
       </html>
     </ViewTransitions>
+    </PlausibleProvider>
   );
 }

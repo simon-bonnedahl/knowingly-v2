@@ -1,8 +1,6 @@
 import { v } from "convex/values";
 import { action, mutation, query } from "./functions";
 import { defaultCollections } from "./constants";
-import { api } from "./_generated/api";
-import { Id } from "./_generated/dataModel";
 
 export const get = query({
     args: { id: v.id("collections") },

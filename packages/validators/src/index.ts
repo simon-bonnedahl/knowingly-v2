@@ -1,5 +1,4 @@
 import { z } from "zod";
-import type { SupportCategory, Tier, } from "@knowingly/backend/convex/types";
 
 export const inviteMemberSchema = z.object({
   email: z.string().email(),
@@ -15,7 +14,7 @@ export const createHubSchema = z.object({
   subdomain: z.string(),
   isPublic: z.boolean(),
   description: z.string().optional(),
-  tier: z.enum(["FREE", "PRO", "ENTERPRISE"] as [Tier, ...Tier[]]),
+  tier: z.enum(["FREE", "PRO", "ENTERPRISE"]),
 });
 
 export type CreateHubSchema = z.infer<typeof createHubSchema>;
@@ -30,7 +29,7 @@ export type RequestInviteSchema = z.infer<typeof requestInviteSchema>;
 
 
 export const supportTicketSchema = z.object({
-  category: z.enum( ["SUPPORT", "BUG", "FEATURE_REQUEST"] as [SupportCategory, ...SupportCategory[]]),
+  category: z.enum( ["SUPPORT", "BUG", "FEATURE_REQUEST"]),
   title: z.string(),
   body: z.string(),
   files: z.array(z.string()).optional(),
