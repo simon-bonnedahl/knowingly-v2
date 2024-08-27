@@ -41,7 +41,7 @@ export const GridFeatures = () => {
     {
       title: "Money back guarantee",
       description:
-        "If you donot like EveryAI, we will convince you to like us.",
+        "If you do not like Knowingly, we will convince you to like us.",
       icon: <Icons.moodSmile className="size-6"/>,
     },
     {
