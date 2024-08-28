@@ -1,6 +1,6 @@
 import {withSentryConfig} from "@sentry/nextjs";
 import  withNextBundleAnalyzer from '@next/bundle-analyzer'
-const { withPlausibleProxy } = require('next-plausible')
+import { withPlausibleProxy } from 'next-plausible'
 
 /** @type {import("next").NextConfig} */
 const config = {
