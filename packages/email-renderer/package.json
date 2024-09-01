@@ -34,11 +34,11 @@
     "node": ">=18.0.0"
   },
   "devDependencies": {
+    "@babel/preset-react": "^7.23.3",
     "@knowingly/eslint-config": "workspace:*",
     "@knowingly/prettier-config": "workspace:*",
     "@knowingly/tailwind-config": "workspace:*",
     "@knowingly/tsconfig": "workspace:*",
-    "@babel/preset-react": "^7.23.3",
     "@tiptap/core": "^2.4.0",
     "@types/lodash": "^4.14.202",
     "@types/react": "^18.3.3",
