@@ -37,7 +37,6 @@ export default async function KnowinglyAdminAnalyticsPage({searchParams} : {sear
 
             <DateFilter />
           </div>
-          {analytics ? (
             <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
             <Card>
@@ -74,13 +73,11 @@ export default async function KnowinglyAdminAnalyticsPage({searchParams} : {sear
             <PagevisitsChart data={analytics.dimensions["event:page"]} />
             <DevicesChart data={analytics.dimensions["visit:device"]} />
             </div>
-
-
-            <pre>{JSON.stringify(analytics, null, 2)}</pre>
             </>
-          ) : (
-            <p>Loading analytics...</p>
-          )}
+
+
+          
+          
         </div>
       </div>
     </div>

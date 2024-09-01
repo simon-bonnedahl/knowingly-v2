@@ -21,6 +21,7 @@ import {
 import { getEntDefinitionsWithRules, getUserId } from "./rules";
 import { entDefinitions } from "./schema";
 import { Ent, Permissions } from "./types";
+import { noPermissions } from "./constants";
 
 export const query = customQuery(
   baseQuery,
@@ -85,8 +86,10 @@ async function queryCtx(baseCtx: QueryCtx) {
     const membership = user
       .edge("memberships")
       .filter((q) => q.eq(q.field("hubId"), hub._id))
-      .firstX();
-    const permissions = (await membership.edge("role")).permissions;
+      .first();
+    if (!membership) 
+      return { ...noPermissions, canDoAnything: user.role ==="SUPERUSER" };
+    const permissions = (await membership.edge("role"))!.permissions;
     return { ...permissions, canDoAnything: user.role ==="SUPERUSER" };
   };
   return { ...ctx, table, user, userX, userId, permissions };
@@ -119,8 +122,10 @@ async function mutationCtx(baseCtx: MutationCtx) {
     const membership = user
       .edge("memberships")
       .filter((q) => q.eq(q.field("hubId"), hub._id))
-      .firstX();
-    const permissions = (await membership.edge("role")).permissions;
+      .first();
+    if (!membership) 
+      return { ...noPermissions, canDoAnything: user.role ==="SUPERUSER" };
+    const permissions = (await membership.edge("role"))!.permissions;
     return { ...permissions, canDoAnything: user.role ==="SUPERUSER" };
   };
 
@@ -151,9 +156,11 @@ async function actionCtx(baseCtx: ActionCtx) {
     const membership = user
       .edge("memberships")
       .filter((q) => q.eq(q.field("hubId"), hub._id))
-      .firstX();
-    const permissions = (await membership.edge("role")).permissions;
-     return { ...permissions, canDoAnything: user.role ==="SUPERUSER" };;
+      .first();
+    if (!membership) 
+      return { ...noPermissions, canDoAnything: user.role ==="SUPERUSER" };
+    const permissions = (await membership.edge("role"))!.permissions;
+    return { ...permissions, canDoAnything: user.role ==="SUPERUSER" };
   };
 
   return { ...baseCtx,  user, userX,  permissions };

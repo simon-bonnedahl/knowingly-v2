@@ -30,7 +30,6 @@ const Onborda: React.FC<OnbordaProps> = ({
   // - -
   // Route Changes
   const router = useRouter();
-  const pathname = usePathname();
 
   // - -
   // Initialisze
