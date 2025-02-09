@@ -1,6 +1,6 @@
 # Knowingly Web App
 
-Knowingly Web App is a **multi-tenant** platform that provides each client with a unique **subdomain** or **custom domain** for their **hub**. It includes powerful features designed to help communities grow and engage effectively.
+Knowingly Web App is a **multi-tenant** SaaS platform that provides each client with a unique **subdomain** or **custom domain** for their **hub**. It includes powerful features designed to help communities grow and engage effectively.
 
 ## Hub Features
 
@@ -50,4 +50,3 @@ apps/web/
 
 ---
 
-Let me know if you need any refinements! 🚀
