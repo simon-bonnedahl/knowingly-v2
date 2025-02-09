@@ -32,17 +32,12 @@ apps/web/
 ├── public/            # Static assets (favicons, images, etc.)
 ├── src/               # Application source code
 │   ├── app/           # Next.js app directory (routing, layouts, etc.)
-│   ├── components/    # Shared UI components
-│   ├── config/        # Configuration files
-│   ├── features/      # Feature-specific modules (chat, meetings, AI, etc.)
-│   ├── hooks/         # Reusable React hooks
-│   ├── lib/           # Utility functions and third-party integrations
-│   ├── providers/     # Context providers for state management
-│   ├── services/      # API services and backend interactions
-│   ├── styles/        # Global and component styles (TailwindCSS)
-│   ├── types/         # TypeScript types and interfaces
-│   ├── utils/         # Helper functions
-├── .env.example       # Example environment variable file
+│   ├── components/    # Components specificly for this app
+│   ├── lib/           # Utility functions & hooks
+│   ├── providers/     # Modal provider and Convex client
+│   ├── styles/        # Tailwindcss styles
+│   ├── env.ts         # Enviroment variable handling
+│   ├── middleware.ts  # Nextjs middleware with advanced routing & permission control
 ├── package.json       # Project metadata and dependencies
 ├── tsconfig.json      # TypeScript configuration
 └── README.md          # Project documentation
