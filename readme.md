@@ -1,5 +1,7 @@
 # Knowingly v2
 
+Knowingly is a platform designed to connect individuals with the right experts to solve their problems. It offers features like brand customization, growth analytics, booking and availability management, AI-powered member matching, video calls, messaging, and 24/7 support. These tools aim to enhance community interaction and skill development.
+
 **Knowingly v2** is a monorepo project built with TypeScript and managed using `pnpm`. It is structured to support multiple applications and shared packages efficiently.
 
 ## Features
