@@ -33,7 +33,7 @@ apps/web/
 ├── src/               # Application source code
 │   ├── app/           # Next.js app directory (routing, layouts, etc.)
 │   ├── components/    # Components specificly for this app
-│   ├── lib/           # Utility functions & hooks
+│   ├── lib/           # Functions & Hooks
 │   ├── providers/     # Modal provider and Convex client
 │   ├── styles/        # Tailwindcss styles
 │   ├── env.ts         # Enviroment variable handling
