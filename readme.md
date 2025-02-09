@@ -8,7 +8,6 @@ Knowingly is a platform designed to connect individuals with the right experts t
 
 - Monorepo architecture using `pnpm workspaces`
 - Turborepo for optimized builds and task running
-- Node.js version management via `.nvmrc`
 - GitHub workflows for CI/CD automation
 
 ## Project Structure
@@ -19,8 +18,8 @@ knowingly-v2/
 ├── .vscode/           # VS Code workspace settings
 ├── apps/              # Application-specific code
 │   ├── expo/          # Mobile application built with Expo (React Native)
-│   ├── landing/       # Landing page for Knowingly
-│   ├── web/           # Main web application for Knowingly
+│   ├── landing/       # Landing page for Knowingly (Nextjs & React)
+│   ├── web/           # Main web application with multi-tenancy support (Nextjs & React)
 ├── packages/          # Shared libraries and utilities
 │   ├── backend/       # Convex backend
 │   ├── email-editor/  # Components and logic for email composition
@@ -47,7 +46,7 @@ knowingly-v2/
 
 ### Prerequisites
 
-- [**Node.js**](https://nodejs.org/) (version specified in `.nvmrc`)
+- [**Node.js**](https://nodejs.org/) 
 - [**pnpm**](https://pnpm.io/) (install with `npm install -g pnpm`)
 
 ### Steps to Set Up Locally
