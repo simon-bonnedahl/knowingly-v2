@@ -15,20 +15,32 @@ Knowingly is a platform designed to connect individuals with the right experts t
 
 ```
 knowingly-v2/
-│── .github/           # GitHub workflows and configurations
-│── .trunk/            # Trunk-based development settings (if applicable)
-│── .vscode/           # VS Code workspace settings
-│── apps/              # Application-specific code
-│── packages/          # Shared libraries and utilities
-│── tooling/           # Development tools and scripts
-│── turbo/             # Turborepo configuration
-│── .gitignore         # Git ignore rules
-│── .npmrc             # npm settings
-│── .nvmrc             # Node.js version settings
-│── package.json       # Root package metadata
-│── pnpm-lock.yaml     # Dependency lock file
-│── pnpm-workspace.yaml # Workspace configuration
-│── turbo.json         # Turborepo settings
+├── .github/           # GitHub workflows and configurations
+├── .vscode/           # VS Code workspace settings
+├── apps/              # Application-specific code
+│   ├── expo/          # Mobile application built with Expo (React Native)
+│   ├── landing/       # Landing page for Knowingly
+│   ├── web/           # Main web application for Knowingly
+├── packages/          # Shared libraries and utilities
+│   ├── backend/       # Convex backend
+│   ├── email-editor/  # Components and logic for email composition
+│   ├── email-renderer/ # Renders email templates for preview and sending
+│   ├── icons/         # Collection of shared icons for the UI
+│   ├── ui/            # Shared UI components based on Shadcn/ui
+│   ├── utils/         # General-purpose utility functions
+│   ├── validators/    # Input and data validation utilities
+├── tooling/           # Development tools and scripts
+│   ├── eslint/        # ESLint configuration for code linting
+│   ├── github/        # GitHub-related automation and workflows
+│   ├── prettier/      # Prettier configuration for consistent formatting
+│   ├── tailwind/      # Tailwind CSS configurations
+│   ├── typescript/    # TypeScript configurations and typings
+├── turbo/             # Turborepo configuration
+├── .gitignore         # Git ignore rules
+├── package.json       # Root package metadata
+├── pnpm-lock.yaml     # Dependency lock file
+├── pnpm-workspace.yaml # Workspace configuration
+└── turbo.json         # Turborepo settings
 ```
 
 ## Setup & Installation
@@ -64,8 +76,4 @@ knowingly-v2/
    ```sh
    pnpm run dev
    ```
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
 
