@@ -38,9 +38,7 @@ apps/web/
 │   ├── styles/        # Tailwindcss styles
 │   ├── env.ts         # Enviroment variable handling
 │   ├── middleware.ts  # Nextjs middleware with advanced routing & permission control
-├── package.json       # Project metadata and dependencies
-├── tsconfig.json      # TypeScript configuration
-└── README.md          # Project documentation
+└── package.json       # Project metadata and dependencies
 ```
 
 ---
